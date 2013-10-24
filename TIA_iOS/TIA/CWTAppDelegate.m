@@ -9,11 +9,8 @@
 
 #import "CWTAppDelegate.h"
 #import "CWTViewController.h"
-
 #import "Reachability.h"
 #import "QuartzCore/CALayer.h"
-
-
 #import <Parse/Parse.h>
 
 
@@ -30,7 +27,6 @@
     
     [TestFlight takeOff:@"54ff1c20-dfe4-44df-9cda-bb3c4957749e"];
 
-    
     [Parse setApplicationId:@"oQcxap8X48yinv2iH3VqXZnztrNGZjDpytGdfobc"
                   clientKey:@"cQrK85aVhZ1YzeqSDeeKrTRcQ6lQ52dQTYvysJJy"];
     
@@ -67,12 +63,9 @@
     self.overlay.animation = MTStatusBarOverlayAnimationShrink;
     self.overlay.detailViewMode = MTDetailViewModeHistory;
     self.overlay.delegate = self;
-    //overlay.hidesActivity=TRUE;
-    
     self.headingAccuracy=-2;
     
     
-
     // Allocate a reachability object
     Reachability* reach = [Reachability reachabilityWithHostname:@"www.google.com"];
     
@@ -92,28 +85,10 @@
     
     // Start the notifier, which will cause the reachability object to retain itself!
     [reach startNotifier];
-    
 
-    
-    
     return YES;
 }
 
-
-
-
-
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if(alertView.tag==1){
-		if(buttonIndex==1){
-			//if([store canMakePurchases]) [store unlockcrowsflight];
-		}
-		
-	}
-
-    
-}
 
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
