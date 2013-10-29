@@ -49,7 +49,6 @@
 		446D51611819C79800E6DBE7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 446D512E1819C79800E6DBE7 /* Reachability.m */; };
 		446D51621819C79800E6DBE7 /* SourceSansPro-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 446D512F1819C79800E6DBE7 /* SourceSansPro-Light.ttf */; };
 		446D51631819C79800E6DBE7 /* PointingAtYou-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 446D51331819C79800E6DBE7 /* PointingAtYou-Info.plist */; };
-		446D51641819C79800E6DBE7 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 446D51361819C79800E6DBE7 /* libTestFlight.a */; };
 		446D51651819C79800E6DBE7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 446D51371819C79800E6DBE7 /* Settings.bundle */; };
 		447965CD175008C300A45031 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447965CC175008C300A45031 /* MessageUI.framework */; };
 		448AC1AA17BD687700281208 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448AC1A917BD687700281208 /* SystemConfiguration.framework */; };
@@ -57,6 +56,7 @@
 		44C1D1441759A0CE007798A6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C1D1431759A0CE007798A6 /* QuartzCore.framework */; };
 		44C7F757174F3BC600112096 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C7F756174F3BC500112096 /* MapKit.framework */; };
 		44CDC4F617AB6AC3006ABAA4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CDC4F517AB6AC3006ABAA4 /* Crashlytics.framework */; };
+		44DA53D7182034500050DEEE /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DA53D6182034500050DEEE /* libTestFlight.a */; };
 		44DAE01C17359AC900C17F07 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE01B17359AC900C17F07 /* UIKit.framework */; };
 		44DAE01E17359AC900C17F07 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE01D17359AC900C17F07 /* Foundation.framework */; };
 		44DAE02017359AC900C17F07 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE01F17359AC900C17F07 /* CoreGraphics.framework */; };
@@ -127,6 +127,7 @@
 		44C7F756174F3BC500112096 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		44C97DE817A433F300974240 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		44CDC4F517AB6AC3006ABAA4 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		44DA53D6182034500050DEEE /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		44DAE01817359AC900C17F07 /* TIA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TIA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44DAE01B17359AC900C17F07 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		44DAE01D17359AC900C17F07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -152,7 +153,7 @@
 				44C1D1441759A0CE007798A6 /* QuartzCore.framework in Frameworks */,
 				447965CD175008C300A45031 /* MessageUI.framework in Frameworks */,
 				44C7F757174F3BC600112096 /* MapKit.framework in Frameworks */,
-				446D51641819C79800E6DBE7 /* libTestFlight.a in Frameworks */,
+				44DA53D7182034500050DEEE /* libTestFlight.a in Frameworks */,
 				44DAE0601735A08C00C17F07 /* CoreLocation.framework in Frameworks */,
 				44DAE01C17359AC900C17F07 /* UIKit.framework in Frameworks */,
 				44DAE01E17359AC900C17F07 /* Foundation.framework in Frameworks */,
@@ -231,6 +232,7 @@
 		446D51351819C79800E6DBE7 /* TIAFrameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44DA53D6182034500050DEEE /* libTestFlight.a */,
 				446D512B1819C79800E6DBE7 /* MTStatusBarOverlay.h */,
 				446D512C1819C79800E6DBE7 /* MTStatusBarOverlay.m */,
 				446D512D1819C79800E6DBE7 /* Reachability.h */,
@@ -525,7 +527,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"/Users/cwwang/Dropbox/MIT/Che-Wei/PointingAtYou",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TIA/TIA-Prefix.pch";
@@ -533,9 +534,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\\\\\"$(SRCROOT)/Crowsflight\\\\\\\"",
-					"/Users/cwwang/Dropbox/MIT/Che-Wei/TIA_iOS/TIA",
-					"/Users/cwwang/Dropbox/MIT/Che-Wei/TIA_iOS/TIA/TIAFrameworks",
+					/Users/cwwang/Documents/TIA/TIA_iOS/TIA/TIAFrameworks,
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = TIA;
@@ -555,7 +554,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
-					"/Users/cwwang/Dropbox/MIT/Che-Wei/PointingAtYou",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TIA/TIA-Prefix.pch";
@@ -563,9 +561,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\\\\\\\"$(SRCROOT)/Crowsflight\\\\\\\"",
-					"/Users/cwwang/Dropbox/MIT/Che-Wei/TIA_iOS/TIA",
-					"/Users/cwwang/Dropbox/MIT/Che-Wei/TIA_iOS/TIA/TIAFrameworks",
+					/Users/cwwang/Documents/TIA/TIA_iOS/TIA/TIAFrameworks,
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = TIA;
