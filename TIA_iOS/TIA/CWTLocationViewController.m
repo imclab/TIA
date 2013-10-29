@@ -38,15 +38,12 @@
     
     dele = [[UIApplication sharedApplication] delegate];
     CGRect screen = [[UIScreen mainScreen] applicationFrame];
-    
-    //    self.arrowImage=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrow-line.png"]];
-    //    self.arrowImage.center=CGPointMake(screen.size.width*.5, screen.size.height*.5);
-    //    [self.view addSubview:self.arrowImage];
+
     
     
     //main arrow
-    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 650,650)];
-    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5)];
+    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 650,1200)];
+    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+200)];
     self.arrow.backgroundColor=[UIColor clearColor];
     [self.view addSubview:self.arrow];
     [self.arrow setHidden:TRUE];
@@ -55,7 +52,7 @@
     int moreYpos=30;
     
     //stats
-    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(10, screen.size.height-moreYpos-44-35, 200, 60)];
+    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(10, screen.size.height-moreYpos-44, 200, 60)];
     self.displayText.numberOfLines=6;
     self.displayText.backgroundColor=[UIColor clearColor];
     self.displayText.textColor=[UIColor colorWithWhite:.3 alpha:1];
@@ -63,39 +60,10 @@
     [self.view addSubview:self.displayText];
     
 
-    //progress arc
-    [self loadArc];
-    
-    //accuracyText
-    self.accuracyText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 100, 10)];
-    [self.accuracyText setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:9.0]];
-    [self.accuracyText setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5-30)];
-    self.accuracyText.backgroundColor=[UIColor clearColor];
-    self.accuracyText.textAlignment=NSTextAlignmentCenter;
-    [self.view addSubview:self.accuracyText];
-    
-    
-    //unitText
-    self.unitText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 100, 10)];
-    [self.unitText setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:9.0]];
-    [self.unitText setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+30)];
-    self.unitText.backgroundColor=[UIColor clearColor];
-    self.unitText.textAlignment=NSTextAlignmentCenter;
-    [self.view addSubview:self.unitText];
-    
-    //main dist
-    self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 140, 60)];
-    [self.distanceText setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5)];
-    self.distanceText.numberOfLines=1;
-    self.distanceText.textAlignment=NSTextAlignmentCenter;
-    [self.distanceText setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:25.0]];
-    //self.distanceText.adjustsFontSizeToFitWidth = YES;
-    self.distanceText.backgroundColor=[UIColor clearColor];
-    [self.view addSubview:self.distanceText];
     
     //add satSearchImage
     self.satSearchImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    self.satSearchImage.center=CGPointMake(screen.size.width*.5, screen.size.height*.5-30);
+    self.satSearchImage.center=CGPointMake(screen.size.width*.95,30);
     self.satSearchImage.animationImages = [NSArray arrayWithObjects:
                                            [UIImage imageNamed:@"satellite_0003.png"],
                                            [UIImage imageNamed:@"satellite_0002.png"],
@@ -172,23 +140,9 @@
 }
 
 -(void)viewDidLayoutSubviews{
-    self.arrow.center=CGPointMake(self.distanceText.center.x, self.distanceText.center.y);
-    self.arcProgressView.center=CGPointMake(self.distanceText.center.x, self.distanceText.center.y);
+    //self.arrow.center=CGPointMake(self.distanceText.center.x, self.distanceText.center.y);
 }
 
--(void)loadArc{
-    CGRect myImageRect;
-    myImageRect = CGRectMake(self.distanceText.center.x-230*.5, self.distanceText.center.y-230*.5, 230, 230);
-    
-    self.arcProgressView= [[CWTDrawArc alloc] initWithFrame:myImageRect];
-	self.arcProgressView.backgroundColor = [UIColor clearColor];
-	[self.view addSubview:self.arcProgressView];
-    
-    self.arcProgressView.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tapGesture =
-    [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pickUnits)];
-    [self.arcProgressView addGestureRecognizer:tapGesture];
-}
 
 -(void)loadLocation{
     //[self calculateMaxDist];
@@ -198,13 +152,6 @@
     //[self getBearing];
 }
 
--(void)updateDestinationName{
-    
-    NSMutableDictionary * dictionary = [dele.locationDictionaryArray objectAtIndex:self.page];
-    
-    [self.destinationButton setTitle:[[dictionary objectForKey:@"searchedText"] uppercaseString] forState: UIControlStateNormal];
-    // NSString *theText=[[dictionary objectForKey:@"searchedText"] uppercaseString] ;
-}
 
 -(void)updateDistanceWithLatLng: (float)duration{
     
@@ -256,12 +203,6 @@
         
         
     }
-    
-    //set arc to log scale
-    self.progress =((log(1+self.distance)/log(100))*.275-.2)*[self.arcProgressView maxArc];
-    
-    [self.arcProgressView updateProgress:self.progress];
-
     
     
     //always update distance
@@ -496,15 +437,13 @@
                              [self.displayText setAlpha: 0.0f];
                              [self.pageNText setAlpha: 0.0f];
                              [self.accuracyText setAlpha: 0.0f];
-                             [self.arrow showExtras: FALSE];
-                             [self.arcProgressView showExtras:FALSE];
+                             //[self.arrow showExtras: FALSE];
                          }
                          else {
                              [self.displayText setAlpha: 1.0f];
                              [self.pageNText setAlpha: 1.0f];
                              [self.accuracyText setAlpha: 1.0f];
-                             [self.arrow showExtras: TRUE];
-                             [self.arcProgressView showExtras:TRUE];
+                             //[self.arrow showExtras: TRUE];
                          }
                      }
                      completion:nil];
@@ -564,20 +503,7 @@
 
 }
 
-- (void) alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    //    CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
-    //
-    //    //edit location name
-    //	if(alertView.tag==5){
-    //		if(buttonIndex==1){
-    //            self.destinationButton.titleLabel.text=self.nameField.text;
-    //
-    //			[dele editDestination:self.nameField.text newlat:0 newlng:0];
-    //
-    //		}
-    //	}
-    
-}
+
 
 -(void) hideArrow:(BOOL) state
 {

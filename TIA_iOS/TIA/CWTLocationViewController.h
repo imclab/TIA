@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CWTDrawArc.h"
 #import "CWTAppDelegate.h"
 
 #import "CWTArrow.h"
@@ -56,7 +55,6 @@
 -(void)loadLocation;
 
 
-@property (nonatomic,strong)  CWTDrawArc * arcProgressView;
 -(void)updateDestinationName;
 
 -(void)updateDistanceWithLatLng: (float)duration;

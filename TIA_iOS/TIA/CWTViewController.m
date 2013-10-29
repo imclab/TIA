@@ -11,7 +11,6 @@
 #import "CWTLocationViewController.h"
 
 #import "QuartzCore/CALayer.h"
-#import "CWTToolbar.h"
 
 
 #define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
@@ -52,15 +51,7 @@
     
     self.view.layer.masksToBounds=NO;
     
-    //add compass
-    self.compassImage=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"compass-background.png"]];
-    self.compassImage.center=CGPointMake(screen.size.width*.5, screen.size.height*.5);
-    [self.view addSubview:self.compassImage];
-    
-    self.compassN=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"compass-n.png"]];
-    self.compassN.center=CGPointMake(screen.size.width*.5, screen.size.height*.5);
-    [self.view addSubview:self.compassN];
-    
+
     
     
     self.pageView=[[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
@@ -85,7 +76,7 @@
     //more info button
     iconWidth=50;
     moreInfo = [UIButton buttonWithType:UIButtonTypeCustom];
-    moreInfo.frame=CGRectMake(screen.size.width*.5-iconWidth*.5, screen.size.height-60.0-iconWidth, iconWidth,iconWidth);    
+    moreInfo.frame=CGRectMake(screen.size.width*.5-iconWidth*.5, 60.0-iconWidth, iconWidth,iconWidth);
     [moreInfo addTarget:self action:@selector(setShowInfo) forControlEvents:UIControlEventTouchUpInside];
     [moreInfo setImage:[UIImage imageNamed:@"more-info2.png"] forState:UIControlStateNormal];
     [moreInfo setImage:[UIImage imageNamed:@"less-info.png"] forState:UIControlStateSelected];
@@ -348,21 +339,6 @@
 }
 
 
-
-#pragma mark - Add Location'
-
-- (CWTLocationViewController *)viewControllerAtIndex:(NSUInteger)index {
-   //no pages. disable pages
-    return nil;
-    
-    if (([dele.locationDictionaryArray count] == 0) || (index >= [dele.locationDictionaryArray count])) {
-        return nil;
-    }
-    CWTLocationViewController* newLoc = [[CWTLocationViewController alloc] init];
-    newLoc.page =  index;
-    return newLoc;
-    
-}
 
 
 

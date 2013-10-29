@@ -18,8 +18,6 @@
 		446D513C1819C79800E6DBE7 /* CWTLocationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 446D50FC1819C79700E6DBE7 /* CWTLocationViewController.m */; };
 		446D513E1819C79800E6DBE7 /* CWTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 446D51001819C79700E6DBE7 /* CWTAppDelegate.m */; };
 		446D513F1819C79800E6DBE7 /* CWTArrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 446D51021819C79700E6DBE7 /* CWTArrow.m */; };
-		446D51401819C79800E6DBE7 /* CWTDrawArc.m in Sources */ = {isa = PBXBuildFile; fileRef = 446D51041819C79700E6DBE7 /* CWTDrawArc.m */; };
-		446D51431819C79800E6DBE7 /* CWTToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 446D51091819C79700E6DBE7 /* CWTToolbar.m */; };
 		446D51441819C79800E6DBE7 /* CWTViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 446D510B1819C79700E6DBE7 /* CWTViewController.m */; };
 		446D51461819C79800E6DBE7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D510D1819C79700E6DBE7 /* Default-568h@2x.png */; };
 		446D51471819C79800E6DBE7 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D510E1819C79700E6DBE7 /* Default.png */; };
@@ -79,10 +77,6 @@
 		446D51001819C79700E6DBE7 /* CWTAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTAppDelegate.m; sourceTree = "<group>"; };
 		446D51011819C79700E6DBE7 /* CWTArrow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTArrow.h; sourceTree = "<group>"; };
 		446D51021819C79700E6DBE7 /* CWTArrow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTArrow.m; sourceTree = "<group>"; };
-		446D51031819C79700E6DBE7 /* CWTDrawArc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTDrawArc.h; sourceTree = "<group>"; };
-		446D51041819C79700E6DBE7 /* CWTDrawArc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTDrawArc.m; sourceTree = "<group>"; };
-		446D51081819C79700E6DBE7 /* CWTToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTToolbar.h; sourceTree = "<group>"; };
-		446D51091819C79700E6DBE7 /* CWTToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTToolbar.m; sourceTree = "<group>"; };
 		446D510A1819C79700E6DBE7 /* CWTViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTViewController.h; sourceTree = "<group>"; };
 		446D510B1819C79700E6DBE7 /* CWTViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTViewController.m; sourceTree = "<group>"; };
 		446D510D1819C79700E6DBE7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -119,7 +113,6 @@
 		446D51321819C79800E6DBE7 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFlight.h; path = ../TestFlight.h; sourceTree = "<group>"; };
 		446D51331819C79800E6DBE7 /* PointingAtYou-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PointingAtYou-Info.plist"; sourceTree = "<group>"; };
 		446D51341819C79800E6DBE7 /* TIA-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TIA-Prefix.pch"; sourceTree = "<group>"; };
-		446D51361819C79800E6DBE7 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		446D51371819C79800E6DBE7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		447965CC175008C300A45031 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		448AC1A917BD687700281208 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -177,10 +170,6 @@
 				446D50FC1819C79700E6DBE7 /* CWTLocationViewController.m */,
 				446D51011819C79700E6DBE7 /* CWTArrow.h */,
 				446D51021819C79700E6DBE7 /* CWTArrow.m */,
-				446D51031819C79700E6DBE7 /* CWTDrawArc.h */,
-				446D51041819C79700E6DBE7 /* CWTDrawArc.m */,
-				446D51081819C79700E6DBE7 /* CWTToolbar.h */,
-				446D51091819C79700E6DBE7 /* CWTToolbar.m */,
 				446D51671819CA0A00E6DBE7 /* Fonts */,
 				446D50F91819C79700E6DBE7 /* Audio */,
 				446D51161819C79700E6DBE7 /* Images */,
@@ -240,7 +229,6 @@
 				446D51301819C79800E6DBE7 /* TestFlight+AsyncLogging.h */,
 				446D51311819C79800E6DBE7 /* TestFlight+ManualSessions.h */,
 				446D51321819C79800E6DBE7 /* TestFlight.h */,
-				446D51361819C79800E6DBE7 /* libTestFlight.a */,
 				446D51371819C79800E6DBE7 /* Settings.bundle */,
 			);
 			path = TIAFrameworks;
@@ -438,9 +426,7 @@
 				446D513F1819C79800E6DBE7 /* CWTArrow.m in Sources */,
 				446D51611819C79800E6DBE7 /* Reachability.m in Sources */,
 				446D513E1819C79800E6DBE7 /* CWTAppDelegate.m in Sources */,
-				446D51431819C79800E6DBE7 /* CWTToolbar.m in Sources */,
 				446D51601819C79800E6DBE7 /* MTStatusBarOverlay.m in Sources */,
-				446D51401819C79800E6DBE7 /* CWTDrawArc.m in Sources */,
 				446D515F1819C79800E6DBE7 /* main.m in Sources */,
 				446D51441819C79800E6DBE7 /* CWTViewController.m in Sources */,
 			);

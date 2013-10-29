@@ -10,7 +10,6 @@
 #import "CWTLocationViewController.h"
 #import <MapKit/MapKit.h>
 #import "CWTAppDelegate.h"
-#import "CWTToolBar.h"
 #import <AudioToolbox/AudioToolbox.h>
 
 #import <Parse/Parse.h>
@@ -29,7 +28,6 @@
 
 @property (nonatomic,strong) UIPageViewController *pageView;
 @property (nonatomic,strong) CWTLocationViewController* locationViewController;
-@property (nonatomic,strong)  CWTToolbar *toolBar;
 
 
 
