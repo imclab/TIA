@@ -508,8 +508,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = armv7;
-				CODE_SIGN_IDENTITY = "iPhone Developer: cw wang (XZCX966PV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -524,8 +524,8 @@
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = TIA;
-				PROVISIONING_PROFILE = "C61ED96F-207B-490C-B950-19680F68FE3D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C61ED96F-207B-490C-B950-19680F68FE3D";
+				PROVISIONING_PROFILE = "6499DF90-0B07-4704-AD9A-B11609FAFFE3";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6499DF90-0B07-4704-AD9A-B11609FAFFE3";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -535,8 +535,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = armv7;
-				CODE_SIGN_IDENTITY = "iPhone Developer: cw wang (XZCX966PV5)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: cw wang (XZCX966PV5)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -551,8 +551,8 @@
 				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = TIA;
-				PROVISIONING_PROFILE = "C61ED96F-207B-490C-B950-19680F68FE3D";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "C61ED96F-207B-490C-B950-19680F68FE3D";
+				PROVISIONING_PROFILE = "6499DF90-0B07-4704-AD9A-B11609FAFFE3";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6499DF90-0B07-4704-AD9A-B11609FAFFE3";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

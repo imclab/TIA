@@ -52,6 +52,11 @@
 
 @property (nonatomic) BOOL spinning;
 
+
+@property (nonatomic) NSString * otherUserVendorIDString;
+
+
+
 -(void)loadLocation;
 
 

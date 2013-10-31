@@ -49,11 +49,11 @@
     [self.arrow setHidden:TRUE];
     
     
-    int moreYpos=30;
+    int moreYpos=50;
     
     //stats
-    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(10, screen.size.height-moreYpos-44, 200, 60)];
-    self.displayText.numberOfLines=6;
+    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(10, screen.size.height-moreYpos-44, 200, 90)];
+    self.displayText.numberOfLines=10;
     self.displayText.backgroundColor=[UIColor clearColor];
     self.displayText.textColor=[UIColor colorWithWhite:.3 alpha:1];
     [self.displayText setFont:[UIFont fontWithName:@"Andale Mono" size:7.0]];
@@ -239,28 +239,70 @@
 
 -(void)getFriendPosition{
     
-    //self.dlat=0;
-    //self.dlng=0;
-    
-    PFQuery *query = [PFQuery queryWithClassName:@"userlocation"];
-    [query whereKey:@"userid" notEqualTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
+    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection"];
+    [query whereKey:@"vendorUUID" notEqualTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
     [query orderByDescending:@"updatedAt"];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            // The find succeeded. entry exists
+            NSLog(@"Successfully retrieved %d objects.", objects.count);
+            // Do something with the found objects. there should only be one!
+            for (PFObject *object in objects)
+            {
+                NSLog(@"%@", object.objectId);
+                
+                //check if user1 is myself
+                if(object[@"user1"]!=[UIDevice currentDevice].identifierForVendor.UUIDString){
+                    self.otherUserVendorIDString=object[@"user1"];
+                }else{
+                    self.otherUserVendorIDString=object[@"user2"];
+                }
+                
+                
+                
+                //retrieve otheruser's location
+                PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
+                [query whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString ];
+                [query orderByDescending:@"updatedAt"];
+                
+                
+                [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                    
+                    if (!object) {
+                        NSLog(@"The getFirstObject request failed.");
+                    } else {
+                        // The find succeeded.
+                        NSLog(@"Successfully retrieved the object.");
+                        self.dlat= [[object objectForKey:@"lat"] floatValue];
+                        self.dlng= [[object objectForKey:@"lng"] floatValue];
+                        
+                        
+                        NSLog(@"myID is: %@",[UIDevice currentDevice].identifierForVendor.UUIDString );
+
+                        NSLog(@"pointing at userid: %@",[object objectForKey:@"vendorUUID"] );
+                    }
+                    
+                }];
+
+                
+                self.dlat= [[object objectForKey:@"lat"] floatValue];
+                self.dlng= [[object objectForKey:@"lng"] floatValue];
+                
+            }
+            
+        }
+        else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            
+        }
+    }];
 
     
-    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            
-        if (!object) {
-            NSLog(@"The getFirstObject request failed.");
-        } else {
-            // The find succeeded.
-            NSLog(@"Successfully retrieved the object.");
-            self.dlat= [[object objectForKey:@"lat"] floatValue];
-            self.dlng= [[object objectForKey:@"lng"] floatValue];
-            
-            NSLog(@"userid: %@",[object objectForKey:@"userid"] );
-        }
-        
-    }];
+
+    
+    
     
 }
 
@@ -479,14 +521,19 @@
                    "bearing : %i° ±%i°\n"
                    "altitude: %@\n"
                    "target  : %f,%f \n"
-                   "current : %@"
+                   "current : %@\n"
+                   "atUUID  : %@\n"
+                   "myUUID  : %@\n"
+
                    ,
                    speedString,
                    (int)dele.heading,(int)headingAccuracy,
                    (int)self.locBearing,(int)bearingAccuracy,
                    altitudeString,
                    self.dlat , self.dlng,
-                   currentString
+                   currentString,
+                   self.otherUserVendorIDString,
+                   [UIDevice currentDevice].identifierForVendor.UUIDString
                    ];
     
     self.displayText.text=statusString;
