@@ -241,9 +241,9 @@
     
     //self.dlat=0;
     //self.dlng=0;
-    
-    PFQuery *query = [PFQuery queryWithClassName:@"userlocation"];
-    [query whereKey:@"userid" notEqualTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
+    /*
+    PFQuery *query = [PFQuery queryWithClassName:@"TIA"];
+    [query whereKey:@"vendorUUID" notEqualTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
     [query orderByDescending:@"updatedAt"];
 
     
@@ -261,6 +261,84 @@
         }
         
     }];
+     */
+    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection"];
+    [query whereKey:@"vendorUUID" notEqualTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
+    [query orderByDescending:@"updatedAt"];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            // The find succeeded. entry exists
+            NSLog(@"Successfully retrieved %d objects.", objects.count);
+            // Do something with the found objects. there should only be one!
+            for (PFObject *object in objects)
+            {
+                NSLog(@"%@", object.objectId);
+                
+                
+                NSString * otherUserVendorIDString;
+                
+                //check if user1 is myself
+                if(object[@"user1"]!=[UIDevice currentDevice].identifierForVendor.UUIDString){
+                    otherUserVendorIDString=object[@"user1"];
+                }else{
+                    otherUserVendorIDString=object[@"user2"];
+                }
+                
+                
+                
+                //retrieve otheruser's location
+                
+                PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
+                [query whereKey:@"vendorUUID" equalTo:otherUserVendorIDString ];
+                [query orderByDescending:@"updatedAt"];
+                
+                
+                [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                    
+                    if (!object) {
+                        NSLog(@"The getFirstObject request failed.");
+                    } else {
+                        // The find succeeded.
+                        NSLog(@"Successfully retrieved the object.");
+                        self.dlat= [[object objectForKey:@"lat"] floatValue];
+                        self.dlng= [[object objectForKey:@"lng"] floatValue];
+                        
+                        
+                        NSLog(@"myID is: %@",[UIDevice currentDevice].identifierForVendor.UUIDString );
+
+                        NSLog(@"pointing at userid: %@",[object objectForKey:@"vendorUUID"] );
+                    }
+                    
+                }];
+
+                
+                
+                self.dlat= [[object objectForKey:@"lat"] floatValue];
+                self.dlng= [[object objectForKey:@"lng"] floatValue];
+                
+                
+                
+
+            
+                
+            }
+            
+        }
+        else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            
+            
+            
+            
+        }
+    }];
+
+    
+
+    
+    
     
 }
 

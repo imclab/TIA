@@ -27,10 +27,11 @@
     
     [TestFlight takeOff:@"54ff1c20-dfe4-44df-9cda-bb3c4957749e"];
 
-    [Parse setApplicationId:@"oQcxap8X48yinv2iH3VqXZnztrNGZjDpytGdfobc"
-                  clientKey:@"cQrK85aVhZ1YzeqSDeeKrTRcQ6lQ52dQTYvysJJy"];
     
-
+    //playfulsystems on parse.com
+    [Parse setApplicationId:@"yk0JyC64oKQCprmJwXiyJ13JmIS1HyfSvmfMAQ6w"
+                  clientKey:@"sFvZ0SLtYB2kxQe4pX7QNtqIDwvaYYwuRqB4o1W5"];
+    
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.viewController = [[CWTViewController alloc] init];
@@ -86,9 +87,64 @@
     // Start the notifier, which will cause the reachability object to retain itself!
     [reach startNotifier];
 
+    
     return YES;
 }
 
+
+
+-(void)updateUserLocation{
+    
+    NSLog(@"Update User Location");
+
+    
+    //send location to parse
+    //get parse Class
+    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
+    
+    //get existing entry of this device
+    [query whereKey:@"vendorUUID" equalTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
+
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            // The find succeeded. entry exists
+            NSLog(@"Successfully retrieved %d objects.", objects.count);
+            // Do something with the found objects. there should only be one!
+            for (PFObject *object in objects)
+            {
+                NSLog(@"%@", object.objectId);
+                
+                   //update lat lng of user
+                    object[@"lat"] = [NSNumber numberWithFloat:self.myLat];
+                    object[@"lng"] = [NSNumber numberWithFloat:self.myLng];
+                    [object saveInBackground];
+                    
+            }
+            
+            //user not found
+            if(objects.count==0){
+                //add user to parse Class
+                PFObject *pObject = [PFObject objectWithClassName:@"TIA_Users"];
+                [pObject setObject:[UIDevice currentDevice].identifierForVendor.UUIDString forKey:@"vendorUUID"];
+                [pObject setObject:[NSNumber numberWithFloat:self.myLat] forKey:@"lat"];
+                [pObject setObject:[NSNumber numberWithFloat:self.myLng] forKey:@"lng"];
+                [pObject saveInBackground];
+            }
+        }
+        else {
+            // Log details of the failure
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            
+            
+
+            
+        }
+    }];
+    
+    
+
+
+}
 
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
@@ -116,13 +172,8 @@
 
         [(CWTViewController*)self.window.rootViewController updateViewControllersWithLatLng: [[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]];
         
-        
-        //send location to parse
-        PFObject *pObject = [PFObject objectWithClassName:@"userlocation"];
-        [pObject setObject:[UIDevice currentDevice].identifierForVendor.UUIDString forKey:@"userid"];
-        [pObject setObject:[NSNumber numberWithFloat:self.myLat] forKey:@"lat"];
-        [pObject setObject:[NSNumber numberWithFloat:self.myLng] forKey:@"lng"];
-        [pObject saveInBackground];
+        [self updateUserLocation];
+ 
     }
     
     
