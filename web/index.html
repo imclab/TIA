@@ -5,41 +5,135 @@
 <script>
 
 function ready(){
+	
+
 	Parse.initialize("yk0JyC64oKQCprmJwXiyJ13JmIS1HyfSvmfMAQ6w", "vsZ2rKF8QiqmWJbHgDYNPZkH5mM1MbEnHOrZXiNY");
 	var UsersClass = Parse.Object.extend("TIA_Users");
 	var usersClass = new UsersClass();
+
+	var ConnectionClass = Parse.Object.extend("TIA_Connection");
+
+	var allUsers = [];
+
+	$("#newConnectionForm").submit(function(){
+		var connection = new ConnectionClass();
+		connection.set("user1", $("#user1").val());
+		connection.set("user2", $("#user2").val());
+
+		connection.save(null, {
+		  success: function(gameScore) {
+		    // Execute any logic that should take place after the object is saved.
+		    	loadConnections();
+
+		  },
+		  error: function(gameScore, error) {
+		    // Execute any logic that should take place if the save fails.
+		    // error is a Parse.Error with an error code and description.
+		    alert('Failed to create new connection, with error code: ' + error.description);
+		  }
+		});
+
+		return false;
+	});
+
+	function loadConnections(){
+		var query = new Parse.Query(ConnectionClass);
+		query.ascending("createdAt");
+		query.find({
+		  success: function(results) {
+		  	$("#connectionList").empty();
+		  		var connectionGraph = {};
+
+		  		console.log(allUsers);
+		  	for(var i =0; i < allUsers.length; i++){
+		  		for (var j = 0; j < results.length; j++) { 
+		  			var object = results[j];
+
+		  			if(allUsers[i].attributes.vendorUUID == object.attributes.user1){
+		  				connectionGraph[allUsers[i].attributes.vendorUUID] = object.attributes.user2;
+		  			}
+
+		  			if(allUsers[i].attributes.vendorUUID == object.attributes.user2){
+		  				connectionGraph[allUsers[i].attributes.vendorUUID] = object.attributes.user1;
+		  			}
+
+	      		}
+		  	}
+
+		  	
+		  	
+
+	      	for(connection in connectionGraph){
+	      		$("#connectionList").append("<li>" +connection+ " TO " + connectionGraph[connection] + "</li>");
+	      	}
+
+		  },
+		  error: function(error) {}
+		});
+	}
+
+	function displayNameForUser(user){
+		var displayName = user.attributes.vendorUUID;
+		if(typeof(user.attributes.name) != 'undefined'){
+			displayName = user.attributes.name;
+		}
+		return displayName;
+	}
+
+	function userHasDisplayName(user){
+		return (typeof(user.attributes.name) != 'undefined');
+	}
+
 	
 	var query = new Parse.Query(UsersClass);
-	
 	query.find({
 	  success: function(results) {
-	    // alert("Successfully retrieved " + results.length + " users.");
-	    // Do something with the returned Parse.Object values
 	    for (var i = 0; i < results.length; i++) { 
 	      var object = results[i];
-	      console.log(object);
-			$("#userList").append("<li>" + object.attributes.vendorUUID + " is at: " + object.attributes.lat +","+object.attributes.lng+"</li>");
-	      //alert(object.id + ' - ' + object.get('playerName'));
+	      	allUsers.push(object);
+
+			var displayName = displayNameForUser(object);
+
+			var li = "<li>" + displayName;
+			if(userHasDisplayName(object)){
+				li += " ("+ object.attributes.vendorUUID +")";
+			}
+			li += "</li>";
+
+			$("#userList").append(li);
+
+		
+
+			$("#user1").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
+			$("#user2").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
+			loadConnections();
+
 	    }
 	  },
 	  error: function(error) {
 	    alert("Error: " + error.code + " " + error.message);
 	  }
 	});
+
+
 }
 document.addEventListener("DOMContentLoaded", ready, false);
-
-
-// testObject.save({foo: "bar"}, {
-//   success: function(object) {
-//     alert("yay! it worked");
-//   }
-// });
 
 </script>
 </head>
 <body>
 	<h1>TIA ADMIN</h1>
+	<form id="newConnectionForm" action="#">
+		Connect
+		<select id="user1"></select>
+		to
+		<select id="user2"></select>
+		<input type="submit" value="Go" />
+	</form>
+	<h3>All connections</h3>
+	<ul id="connectionList"></ul>
+	<h3>All users</h3>
 	<ul id="userList"></ul>
+
 </body>
 </html>
