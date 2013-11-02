@@ -45,27 +45,38 @@ function ready(){
 		  		var connectionGraph = {};
 
 		  		console.log(allUsers);
-		  	for(var i =0; i < allUsers.length; i++){
-		  		for (var j = 0; j < results.length; j++) { 
-		  			var object = results[j];
+		  		for(var i =0; i < allUsers.length; i++){
+		  			for (var j = 0; j < results.length; j++) { 
+		  				var object = results[j];
+	
+		  				if(allUsers[i].attributes.vendorUUID == object.attributes.user1){
+		  					
+		  					var fromUser = displayNameForUser(allUsers[i]);
+		  					var toUser = displayNameForUser($.grep(allUsers, function(u){
+		  					 	return (u.attributes.vendorUUID == object.attributes.user2);
+		  					})[0]);
 
-		  			if(allUsers[i].attributes.vendorUUID == object.attributes.user1){
-		  				connectionGraph[allUsers[i].attributes.vendorUUID] = object.attributes.user2;
-		  			}
-
-		  			if(allUsers[i].attributes.vendorUUID == object.attributes.user2){
-		  				connectionGraph[allUsers[i].attributes.vendorUUID] = object.attributes.user1;
-		  			}
-
-	      		}
-		  	}
+		  					connectionGraph[fromUser] = toUser;
+		  				}
+	
+		  				if(allUsers[i].attributes.vendorUUID == object.attributes.user2){
+		  					var fromUser = displayNameForUser(allUsers[i]);
+		  					var toUser = displayNameForUser($.grep(allUsers, function(u){
+		  					 	return (u.attributes.vendorUUID == object.attributes.user1);
+		  					})[0]);
+		  				}
+	
+	      			}
+		  		}
 
 		  	
-		  	
+		  		// console.log(connectionGraph);
 
-	      	for(connection in connectionGraph){
-	      		$("#connectionList").append("<li>" +connection+ " TO " + connectionGraph[connection] + "</li>");
-	      	}
+	      	  for(connection in connectionGraph){
+	      	 // 	console.log( connectionGraph[connection] );
+
+	      	  	$("#connectionList").append("<li>" +connection + " TO " + connectionGraph[connection] + "</li>");
+	      	  }
 
 		  },
 		  error: function(error) {}
