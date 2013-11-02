@@ -15,18 +15,35 @@ function ready(){
 
 	var allUsers = [];
 
+	$("#newUserForm").submit(function(){
+		var newUser = new UsersClass();
+		newUser.set("vendorUUID", $("#newUserForm input[name=uuid]").val());
+		newUser.set("name", $("#newUserForm input[name=name]").val());
+		newUser.save(null, {
+			success : function(u){
+				console.log("created successfully");
+				// TODO: refresh user list
+			},
+			error : function(u, error){
+				alert("couldn't create user: " + error);
+			}
+		});
+
+		return false;
+	});
+
 	$("#newConnectionForm").submit(function(){
 		var connection = new ConnectionClass();
 		connection.set("user1", $("#user1").val());
 		connection.set("user2", $("#user2").val());
 
 		connection.save(null, {
-		  success: function(gameScore) {
+		  success: function(conn) {
 		    // Execute any logic that should take place after the object is saved.
 		    	loadConnections();
 
 		  },
-		  error: function(gameScore, error) {
+		  error: function(conn, error) {
 		    // Execute any logic that should take place if the save fails.
 		    // error is a Parse.Error with an error code and description.
 		    alert('Failed to create new connection, with error code: ' + error.description);
@@ -70,11 +87,8 @@ function ready(){
 		  		}
 
 		  	
-		  		// console.log(connectionGraph);
 
 	      	  for(connection in connectionGraph){
-	      	 // 	console.log( connectionGraph[connection] );
-
 	      	  	$("#connectionList").append("<li>" +connection + " TO " + connectionGraph[connection] + "</li>");
 	      	  }
 
@@ -143,7 +157,6 @@ function ready(){
 			$("#user1").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
 			$("#user2").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
 			loadConnections();
-
 	    }
 	  },
 	  error: function(error) {
@@ -156,6 +169,18 @@ function ready(){
 document.addEventListener("DOMContentLoaded", ready, false);
 
 </script>
+
+<style>
+#newUserForm p{
+	margin: 0;
+}
+#newUserForm label{
+	float:left;
+	width:90px;
+	text-align:right;
+	margin-right: 10px;
+}
+</style>
 </head>
 <body>
 	<h1>TIA ADMIN</h1>
@@ -168,7 +193,14 @@ document.addEventListener("DOMContentLoaded", ready, false);
 	</form>
 	<h3>All connections</h3>
 	<ul id="connectionList"></ul>
+	<h3>Add User</h3>
+	<form id="newUserForm" action="#">
+		<p><label>Phone UUID:</label> <input type="text" size="50" name="uuid" /></p>
+		<p><label>Name:</label> <input type="text" name="name" /></p>
+		<p><label>&nbsp;</label><input type="submit" name="Add" /></p>
+	</form>
 	<h3>All users</h3>
+
 	<ul id="userList"></ul>
 
 </body>
