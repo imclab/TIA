@@ -94,14 +94,39 @@ function ready(){
 
 			var displayName = displayNameForUser(object);
 
+
+
 			var li = "<li>" + displayName;
-			if(userHasDisplayName(object)){
-				li += " ("+ object.attributes.vendorUUID +")";
+			if(!userHasDisplayName(object)){
+				var form = "<form class='userNameForm' action='#' >";
+				form += "<input type='hidden' name='parseID' value='"+ object.id +"'></input>";
+				form += "<label>Name:</label> <input name='name'></input>";
+				form += "<input type='submit' value='add'></input>";
+				form += "</form>";
+				li += form;
 			}
 			li += "</li>";
 
 			$("#userList").append(li);
 
+			$(".userNameForm").submit(function(event){
+				var userQuery = new Parse.Query(UsersClass);
+				var parseID = $(event.target).children("input[name=parseID]").val();
+				userQuery.get(parseID, {
+					success : function(user){
+						var name = $(event.target).children("input[name=name]").val();
+						console.log(name);
+						user.set("name", name);
+						user.save(null, {success : function(userResult){
+							console.log("saved");
+						}});
+					},
+					error : function(object, error){
+						alert("couldn't gind user: " + error);
+					}
+				});
+				return false;
+			});
 		
 
 			$("#user1").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
