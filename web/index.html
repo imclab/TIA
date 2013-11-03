@@ -14,6 +14,7 @@ function ready(){
 	var ConnectionClass = Parse.Object.extend("TIA_Connection");
 
 	var allUsers = [];
+	var userDisplayNames = {};
 
 	$("#newUserForm").submit(function(){
 		var newUser = new UsersClass();
@@ -59,37 +60,27 @@ function ready(){
 		query.find({
 		  success: function(results) {
 		  	$("#connectionList").empty();
-		  		var connectionGraph = {};
+		  		var connections = [];
+		  		//console.log(allUsers);
+		  		var userConnections = {};
+		  		
 
-		  		console.log(allUsers);
-		  		for(var i =0; i < allUsers.length; i++){
-		  			for (var j = 0; j < results.length; j++) { 
-		  				var object = results[j];
-	
-		  				if(allUsers[i].attributes.vendorUUID == object.attributes.user1){
-		  					
-		  					var fromUser = displayNameForUser(allUsers[i]);
-		  					var toUser = displayNameForUser($.grep(allUsers, function(u){
-		  					 	return (u.attributes.vendorUUID == object.attributes.user2);
-		  					})[0]);
+		  		for (var j = 0; j < results.length; j++) { 
+		  			var object = results[j];
+		  			for(key in userConnections){
+		  				if(userConnections[key] == object.attributes.user1 || 
+		  					userConnections[key] == object.attributes.user2){
+		  					delete userConnections[key];
+		  				}
+		  			}
 
-		  					connectionGraph[fromUser] = toUser;
-		  				}
-	
-		  				if(allUsers[i].attributes.vendorUUID == object.attributes.user2){
-		  					var fromUser = displayNameForUser(allUsers[i]);
-		  					var toUser = displayNameForUser($.grep(allUsers, function(u){
-		  					 	return (u.attributes.vendorUUID == object.attributes.user1);
-		  					})[0]);
-		  				}
-	
-	      			}
+		  			userConnections[object.attributes.user1] = object.attributes.user2;
+		  			userConnections[object.attributes.user2] = object.attributes.user1;
+		  			
 		  		}
 
-		  	
-
-	      	  for(connection in connectionGraph){
-	      	  	$("#connectionList").append("<li>" +connection + " TO " + connectionGraph[connection] + "</li>");
+	      	  for(connection in userConnections){
+	      	  	$("#connectionList").append("<li>" +userDisplayNames[connection] + " TO " + userDisplayNames[userConnections[connection]] + "</li>");
 	      	  }
 
 		  },
@@ -122,6 +113,8 @@ function ready(){
 	
 				var displayName = displayNameForUser(object);
 	
+				userDisplayNames[object.attributes.vendorUUID] = displayName;
+
 				var li = "<li>" + displayName;
 				if(!userHasDisplayName(object)){
 					var form = "<form class='userNameForm' action='#' >";
@@ -141,7 +134,7 @@ function ready(){
 					userQuery.get(parseID, {
 						success : function(user){
 							var name = $(event.target).children("input[name=name]").val();
-							console.log(name);
+							//console.log(name);
 							user.set("name", name);
 							user.save(null, {success : function(userResult){
 								console.log("saved");
@@ -187,6 +180,7 @@ document.addEventListener("DOMContentLoaded", ready, false);
 </head>
 <body>
 	<h1>TIA ADMIN</h1>
+	<h3>Add Connection</h3>
 	<form id="newConnectionForm" action="#">
 		Connect
 		<select id="user1"></select>
