@@ -21,8 +21,8 @@ function ready(){
 		newUser.set("name", $("#newUserForm input[name=name]").val());
 		newUser.save(null, {
 			success : function(u){
-				console.log("created successfully");
-				// TODO: refresh user list
+				$("#newUserForm input").val("");
+				loadUsers();
 			},
 			error : function(u, error){
 				alert("couldn't create user: " + error);
@@ -109,62 +109,63 @@ function ready(){
 		return (typeof(user.attributes.name) != 'undefined');
 	}
 
+	function loadUsers(){
+		var query = new Parse.Query(UsersClass);
+		query.find({
+		  success: function(results) {
+		  	$("#userList").empty();
+		    for (var i = 0; i < results.length; i++) { 
+		      var object = results[i];
+		      	allUsers.push(object);
 	
-	var query = new Parse.Query(UsersClass);
-	query.find({
-	  success: function(results) {
-	    for (var i = 0; i < results.length; i++) { 
-	      var object = results[i];
-	      	allUsers.push(object);
-
-			var displayName = displayNameForUser(object);
-
-
-
-			var li = "<li>" + displayName;
-			if(!userHasDisplayName(object)){
-				var form = "<form class='userNameForm' action='#' >";
-				form += "<input type='hidden' name='parseID' value='"+ object.id +"'></input>";
-				form += "<label>Name:</label> <input name='name'></input>";
-				form += "<input type='submit' value='add'></input>";
-				form += "</form>";
-				li += form;
-			}
-			li += "</li>";
-
-			$("#userList").append(li);
-
-			$(".userNameForm").submit(function(event){
-				var userQuery = new Parse.Query(UsersClass);
-				var parseID = $(event.target).children("input[name=parseID]").val();
-				userQuery.get(parseID, {
-					success : function(user){
-						var name = $(event.target).children("input[name=name]").val();
-						console.log(name);
-						user.set("name", name);
-						user.save(null, {success : function(userResult){
-							console.log("saved");
-						}});
-					},
-					error : function(object, error){
-						alert("couldn't gind user: " + error);
-					}
+				var displayName = displayNameForUser(object);
+	
+				var li = "<li>" + displayName;
+				if(!userHasDisplayName(object)){
+					var form = "<form class='userNameForm' action='#' >";
+					form += "<input type='hidden' name='parseID' value='"+ object.id +"'></input>";
+					form += "<label>Name:</label> <input name='name'></input>";
+					form += "<input type='submit' value='add'></input>";
+					form += "</form>";
+					li += form;
+				}
+				li += "</li>";
+	
+				$("#userList").append(li);
+	
+				$(".userNameForm").submit(function(event){
+					var userQuery = new Parse.Query(UsersClass);
+					var parseID = $(event.target).children("input[name=parseID]").val();
+					userQuery.get(parseID, {
+						success : function(user){
+							var name = $(event.target).children("input[name=name]").val();
+							console.log(name);
+							user.set("name", name);
+							user.save(null, {success : function(userResult){
+								console.log("saved");
+							}});
+						},
+						error : function(object, error){
+							alert("couldn't gind user: " + error);
+						}
+					});
+					return false;
 				});
-				return false;
-			});
-		
+			
+	
+				$("#user1").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
+				$("#user2").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
 
-			$("#user1").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
-			$("#user2").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
-			loadConnections();
-	    }
-	  },
-	  error: function(error) {
-	    alert("Error: " + error.code + " " + error.message);
-	  }
-	});
+				loadConnections();
+		    }
+		  },
+		  error: function(error) {
+		    alert("Error: " + error.code + " " + error.message);
+		  }
+		});
+	}
 
-
+	loadUsers();
 }
 document.addEventListener("DOMContentLoaded", ready, false);
 
