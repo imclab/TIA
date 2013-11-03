@@ -126,6 +126,8 @@ function ready(){
 		return false;
 	}
 
+
+
 	function loadUsers(){
 		var query = new Parse.Query(UsersClass);
 		query.find({
@@ -146,7 +148,7 @@ function ready(){
 					li += formForUser(object.id, "", object.attributes.vendorUUID);
 				} else {
 
-					li += " <span class='uuid'>"+ object.attributes.vendorUUID +"</span><span style='display:none' class='parseID'>"+object.id+"</span><span style='display:none' class='name'>"+displayName+"</span>[<a class='editUser' href='#'>edit</a>]";
+					li += " <span class='uuid'>"+ object.attributes.vendorUUID +"</span><span style='display:none' class='parseID'>"+object.id+"</span><span style='display:none' class='name'>"+displayName+"</span> [<a class='editUser' href='#'>edit</a>] [<a class='deleteUser' href='#'>delete</a>]";
 				}
 				li += "</li>";
 	
@@ -170,6 +172,26 @@ function ready(){
 		    	$(".userUpdateForm").submit(updateUser);
 
 		    	return false;
+		    });
+		    $("a.deleteUser").click(function(event){
+		    	var userQuery = new Parse.Query(UsersClass);
+		    	var parseID = $(event.target).parent().find(".parseID").html();
+				userQuery.get(parseID, {
+					success : function(user){
+						user.destroy({
+							success : function(userResult){
+								console.log("destroyed");
+								loadUsers();
+							}
+						});
+					},
+					error : function(object, error){
+						alert("couldn't find user: " + error);
+					}
+				});
+
+				return false;
+
 		    });
 		
 
