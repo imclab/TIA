@@ -56,11 +56,8 @@ function ready(){
 		query.find({
 		  success: function(results) {
 		  	$("#connectionList").empty();
-		  		var connections = [];
-		  		//console.log(allUsers);
 		  		var userConnections = {};
 		  		
-
 		  		for (var j = 0; j < results.length; j++) { 
 		  			var object = results[j];
 		  			for(key in userConnections){
@@ -71,8 +68,7 @@ function ready(){
 		  			}
 
 		  			userConnections[object.attributes.user1] = object.attributes.user2;
-		  			userConnections[object.attributes.user2] = object.attributes.user1;
-		  			
+		  			userConnections[object.attributes.user2] = object.attributes.user1;	
 		  		}
 
 	      	  for(connection in userConnections){
