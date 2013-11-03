@@ -40,13 +40,9 @@ function ready(){
 
 		connection.save(null, {
 		  success: function(conn) {
-		    // Execute any logic that should take place after the object is saved.
 		    	loadConnections();
-
 		  },
 		  error: function(conn, error) {
-		    // Execute any logic that should take place if the save fails.
-		    // error is a Parse.Error with an error code and description.
 		    alert('Failed to create new connection, with error code: ' + error.description);
 		  }
 		});
@@ -141,7 +137,6 @@ function ready(){
 		  	$("#userList").empty();
 		  	$("#user1").empty();
 		  	$("#user2").empty();
-		  	console.log(results);
 		    for (var i = 0; i < results.length; i++) { 
 		      var object = results[i];
 		      	allUsers.push(object);
@@ -152,13 +147,6 @@ function ready(){
 
 				var li = "<li><span class='name'>" + displayName + "</span>";
 				if(!userHasDisplayName(object)){
-					// var form = "<form class='userUpdateForm userForm' action='#' >";
-					// form += "<input type='hidden' name='parseID' value='"+ parseID +"'></input>";
-					// form += "<label>UUID:</label> <input name='uuid'></input>";
-					// form += "<label>Name:</label> <input name='name'></input>";
-
-					// form += "<input type='submit' value='add'></input>";
-					// form += "</form>";
 					li += formForUser(object.id, "", object.attributes.vendorUUID);
 				} else {
 
