@@ -97,7 +97,41 @@ function ready(){
 	}
 
 	function userHasDisplayName(user){
-		return (typeof(user.attributes.name) != 'undefined');
+		return (typeof(user.attributes.name) != 'undefined' && user.attributes.name != "");
+	}
+
+	function formForUser(parseID, name, uuid){
+		var form = "<form class='userUpdateForm userForm' action='#'>";
+		form += "<input type='hidden' name='parseID' value='"+ parseID +"'></input>";
+		form += "<p><label>Phone UUID:</label> <input name='uuid' type='text' size='50' value='"+uuid+"'></input></p>";
+		form += "<p><label>Name:</label> <input type='text' name='name' value='"+name+"'></input></p>";
+		form += "<p><label>&nbsp;</label><input type='submit' value='Update'></input></p>";
+
+		form += "</form>";
+
+		return form;
+	}
+
+	function updateUser(event){
+		var userQuery = new Parse.Query(UsersClass);
+		var parseID = $(event.target).children("input[name=parseID]").val();
+		userQuery.get(parseID, {
+			success : function(user){
+				var name = $(event.target).find("input[name=name]").val();
+				var uuid = $(event.target).find("input[name=uuid]").val();
+			
+				user.set("name", name);
+				user.set("vendorUUID", uuid);
+				user.save(null, {success : function(userResult){
+					console.log("saved");
+					loadUsers();
+				}});
+			},
+			error : function(object, error){
+				alert("couldn't find user: " + error);
+			}
+		});
+		return false;
 	}
 
 	function loadUsers(){
@@ -107,6 +141,7 @@ function ready(){
 		  	$("#userList").empty();
 		  	$("#user1").empty();
 		  	$("#user2").empty();
+		  	console.log(results);
 		    for (var i = 0; i < results.length; i++) { 
 		      var object = results[i];
 		      	allUsers.push(object);
@@ -115,44 +150,45 @@ function ready(){
 	
 				userDisplayNames[object.attributes.vendorUUID] = displayName;
 
-				var li = "<li>" + displayName;
+				var li = "<li><span class='name'>" + displayName + "</span>";
 				if(!userHasDisplayName(object)){
-					var form = "<form class='userNameForm' action='#' >";
-					form += "<input type='hidden' name='parseID' value='"+ object.id +"'></input>";
-					form += "<label>Name:</label> <input name='name'></input>";
-					form += "<input type='submit' value='add'></input>";
-					form += "</form>";
-					li += form;
+					// var form = "<form class='userUpdateForm userForm' action='#' >";
+					// form += "<input type='hidden' name='parseID' value='"+ parseID +"'></input>";
+					// form += "<label>UUID:</label> <input name='uuid'></input>";
+					// form += "<label>Name:</label> <input name='name'></input>";
+
+					// form += "<input type='submit' value='add'></input>";
+					// form += "</form>";
+					li += formForUser(object.id, "", object.attributes.vendorUUID);
+				} else {
+
+					li += " <span class='uuid'>"+ object.attributes.vendorUUID +"</span><span style='display:none' class='parseID'>"+object.id+"</span><span style='display:none' class='name'>"+displayName+"</span>[<a class='editUser' href='#'>edit</a>]";
 				}
 				li += "</li>";
 	
 				$("#userList").append(li);
 	
-				$(".userNameForm").submit(function(event){
-					var userQuery = new Parse.Query(UsersClass);
-					var parseID = $(event.target).children("input[name=parseID]").val();
-					userQuery.get(parseID, {
-						success : function(user){
-							var name = $(event.target).children("input[name=name]").val();
-							//console.log(name);
-							user.set("name", name);
-							user.save(null, {success : function(userResult){
-								console.log("saved");
-							}});
-						},
-						error : function(object, error){
-							alert("couldn't gind user: " + error);
-						}
-					});
-					return false;
-				});
+				$(".userUpdateForm").submit(updateUser);
 			
 			
 				$("#user1").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
 				$("#user2").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
 
-				loadConnections();
 		    }
+		    loadConnections();
+		    $("a.editUser").click(function(event){
+		    	var uuid = $(event.target).parent().find(".uuid").html();
+		    	var name = $(event.target).parent().find(".name").html();
+		    	var parseID = $(event.target).parent().find(".parseID").html();
+
+		    	var form  = formForUser(parseID, name, uuid);
+		    	$(event.target).parent().html(form);
+		    	$(".userUpdateForm").submit(updateUser);
+
+		    	return false;
+		    });
+		
+
 		  },
 		  error: function(error) {
 		    alert("Error: " + error.code + " " + error.message);
@@ -167,15 +203,24 @@ document.addEventListener("DOMContentLoaded", ready, false);
 </script>
 
 <style>
-#newUserForm p{
+.userForm p{
 	margin: 0;
 }
-#newUserForm label{
+.userForm label{
 	float:left;
 	width:90px;
 	text-align:right;
 	margin-right: 10px;
 }
+
+.uuid {
+	color: #ccc;
+}
+
+#userList form {
+	display: inline;
+}
+
 </style>
 </head>
 <body>
@@ -191,7 +236,7 @@ document.addEventListener("DOMContentLoaded", ready, false);
 	<h3>All connections</h3>
 	<ul id="connectionList"></ul>
 	<h3>Add User</h3>
-	<form id="newUserForm" action="#">
+	<form id="newUserForm" class="userForm" action="#">
 		<p><label>Phone UUID:</label> <input type="text" size="50" name="uuid" /></p>
 		<p><label>Name:</label> <input type="text" name="name" /></p>
 		<p><label>&nbsp;</label><input type="submit" name="Add" /></p>
