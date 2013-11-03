@@ -114,6 +114,8 @@ function ready(){
 		query.find({
 		  success: function(results) {
 		  	$("#userList").empty();
+		  	$("#user1").empty();
+		  	$("#user2").empty();
 		    for (var i = 0; i < results.length; i++) { 
 		      var object = results[i];
 		      	allUsers.push(object);
@@ -152,7 +154,7 @@ function ready(){
 					return false;
 				});
 			
-	
+			
 				$("#user1").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
 				$("#user2").append("<option value='"+object.attributes.vendorUUID+"'>"+displayName+"</option>");
 
