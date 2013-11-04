@@ -53,6 +53,7 @@ function ready(){
 	function loadConnections(){
 		var query = new Parse.Query(ConnectionClass);
 		query.ascending("createdAt");
+		query.doesNotExist("completedAt");
 		query.find({
 		  success: function(results) {
 		  	$("#connectionList").empty();
@@ -61,19 +62,40 @@ function ready(){
 		  		for (var j = 0; j < results.length; j++) { 
 		  			var object = results[j];
 		  			for(key in userConnections){
-		  				if(userConnections[key] == object.attributes.user1 || 
-		  					userConnections[key] == object.attributes.user2){
+		  				if(userConnections[key].user == object.attributes.user1 || 
+		  					userConnections[key].user == object.attributes.user2){
 		  					delete userConnections[key];
 		  				}
 		  			}
 
-		  			userConnections[object.attributes.user1] = object.attributes.user2;
-		  			userConnections[object.attributes.user2] = object.attributes.user1;	
+		  			userConnections[object.attributes.user1] = {user:object.attributes.user2, parseID:object.id};
+		  			userConnections[object.attributes.user2] = {user:object.attributes.user1, parseID:object.id};	
+		  		
 		  		}
 
 	      	  for(connection in userConnections){
-	      	  	$("#connectionList").append("<li>" +userDisplayNames[connection] + " TO " + userDisplayNames[userConnections[connection]] + "</li>");
+	      	  	$("#connectionList").append("<li>" +userDisplayNames[connection] + " TO " + userDisplayNames[userConnections[connection].user] + " [<a class='endConnectionLink' id='"+userConnections[connection].parseID+"' href='#'>end</a>]</li>");
 	      	  }
+
+	      	  $(".endConnectionLink").click(function(event){
+	      	  	var parseID = $(event.target).attr("id");
+	      	  	var query = new Parse.Query(ConnectionClass);
+	      	  	query.get(parseID, {
+				success : function(conn){
+						var now = new Date();
+						conn.set("completedAt", now), 
+						
+						conn.save(null, {success : function(userResult){
+							console.log("saved");
+							loadConnections();
+						}});
+					},
+					error : function(object, error){
+						alert("couldn't find connection: " + error);
+					}
+				});
+	      	  	return false;
+	      	  });
 
 		  },
 		  error: function(error) {}
