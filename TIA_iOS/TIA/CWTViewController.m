@@ -16,9 +16,6 @@
 #define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
 
 
-
-
-
 @interface CWTViewController ()<UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
 
@@ -50,10 +47,7 @@
     
     
     self.view.layer.masksToBounds=NO;
-    
-
-    
-//    
+ 
     self.pageView=[[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageView.dataSource = self;
     self.pageView.delegate = self;
@@ -79,10 +73,7 @@
     
     [self.view addSubview:moreInfo];
 
-    
-
-
-    
+  
     
 }
 
@@ -107,7 +98,6 @@
     }
      ];
     
-    //[self.scrollView addSubview:self.locationViewController.view];
     
     //hide or unhide info
     self.showInfo=[[NSUserDefaults standardUserDefaults] boolForKey:@"showInfo"];
