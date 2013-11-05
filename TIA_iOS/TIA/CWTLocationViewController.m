@@ -243,24 +243,28 @@
     [query whereKey:@"vendorUUID" notEqualTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
     [query orderByDescending:@"updatedAt"];
     
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         if (!error) {
             // The find succeeded. entry exists
-            NSLog(@"Successfully retrieved %d objects.", objects.count);
+            //NSLog(@"Successfully retrieved %d objects.", objects.count);
             // Do something with the found objects. there should only be one!
-            for (PFObject *object in objects)
+            //for (PFObject *object in objects)
             {
-                NSLog(@"%@", object.objectId);
-                
+                NSLog(@"objectId  %@", object.objectId);
+                NSLog(@"user 1    %@", object[@"user1"]);
+                NSLog(@"user 2    %@", object[@"user2"]);
+                NSLog(@"i am      %@", [UIDevice currentDevice].identifierForVendor.UUIDString);
+
                 //check if user1 is myself
-                if(object[@"user1"]!=[UIDevice currentDevice].identifierForVendor.UUIDString){
-                    self.otherUserVendorIDString=object[@"user1"];
-                }else{
+                if([object[@"user1"] isEqualToString: [UIDevice currentDevice].identifierForVendor.UUIDString]){
                     self.otherUserVendorIDString=object[@"user2"];
+                }else{
+                    self.otherUserVendorIDString=object[@"user1"];
                 }
                 
                 
-                
+                NSLog(@"retrieving %@", self.otherUserVendorIDString);
+
                 //retrieve otheruser's location
                 PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
                 [query whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString ];
@@ -278,9 +282,8 @@
                         self.dlng= [[object objectForKey:@"lng"] floatValue];
                         
                         
-                        NSLog(@"myID is: %@",[UIDevice currentDevice].identifierForVendor.UUIDString );
 
-                        NSLog(@"pointing at userid: %@",[object objectForKey:@"vendorUUID"] );
+                        NSLog(@"pointing: %@",[object objectForKey:@"vendorUUID"] );
                     }
                     
                 }];

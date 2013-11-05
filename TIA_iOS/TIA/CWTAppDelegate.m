@@ -117,18 +117,24 @@
                    //update lat lng of user
                     object[@"lat"] = [NSNumber numberWithFloat:self.myLat];
                     object[@"lng"] = [NSNumber numberWithFloat:self.myLng];
+                    object[@"speed"] = [NSNumber numberWithFloat:self.speed];
+                    object[@"altitude"] = [NSNumber numberWithFloat:self.altitude];
+
                     [object saveInBackground];
                     
             }
             
-            //user not found
+            //user not found. save new entry to database
             if(objects.count==0){
                 //add user to parse Class
-                PFObject *pObject = [PFObject objectWithClassName:@"TIA_Users"];
-                [pObject setObject:[UIDevice currentDevice].identifierForVendor.UUIDString forKey:@"vendorUUID"];
-                [pObject setObject:[NSNumber numberWithFloat:self.myLat] forKey:@"lat"];
-                [pObject setObject:[NSNumber numberWithFloat:self.myLng] forKey:@"lng"];
-                [pObject saveInBackground];
+                PFObject *object = [PFObject objectWithClassName:@"TIA_Users"];
+                [object setObject:[UIDevice currentDevice].identifierForVendor.UUIDString forKey:@"vendorUUID"];
+                [object setObject:[NSNumber numberWithFloat:self.myLat] forKey:@"lat"];
+                [object setObject:[NSNumber numberWithFloat:self.myLng] forKey:@"lng"];
+                [object setObject:[NSNumber numberWithFloat:self.speed] forKey:@"speed"];
+                [object setObject:[NSNumber numberWithFloat:self.altitude] forKey:@"altitude"];
+
+                [object saveInBackground];
             }
         }
         else {
