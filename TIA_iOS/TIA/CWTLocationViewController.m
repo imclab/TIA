@@ -86,7 +86,7 @@
     [self.time setTextAlignment:NSTextAlignmentCenter];
 
     [self.view addSubview:self.time];
-    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
 
 
     
@@ -249,7 +249,11 @@
 
 
 - (void)timerTick:(NSTimer *)tick {
+    
+    //NSDate date is in GMT
     NSDate *now = [NSDate date];
+    
+    //launch time pulled from parse is in GMT
     NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.launchTime];
     self.time.text=[self stringFromTimeInterval:timeInterval];
    // [self.time setCenter:CGPointMake(self.view.frame.size.width*.5, self.view.frame.size.height-44-150)];
@@ -263,7 +267,7 @@
     NSInteger hours = (ti / 3600) % 24;
     NSInteger years = (ti / 86400) % 365;
 
-    return [NSString stringWithFormat:@"%02i:%02i:%02i:%02i",years, hours, minutes, seconds];
+    return [NSString stringWithFormat:@"%04i:%02i:%02i:%02i",years, hours, minutes, seconds];
 }
 
 
