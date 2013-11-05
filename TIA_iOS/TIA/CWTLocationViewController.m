@@ -58,7 +58,7 @@
 
     
     //add down arrow
-    self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 6, 6)];
+    self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
     self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
     //[self.dnArrow  setAlpha:.5];
@@ -89,7 +89,7 @@
     
     //add satSearchImage
     self.satSearchImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    self.satSearchImage.center=CGPointMake(screen.size.width*.95,30);
+    self.satSearchImage.center=CGPointMake(screen.size.width*.95,80);
     self.satSearchImage.animationImages = [NSArray arrayWithObjects:
                                            [UIImage imageNamed:@"satellite_0003.png"],
                                            [UIImage imageNamed:@"satellite_0002.png"],
@@ -310,9 +310,11 @@
 
 
 -(void)getFriendPosition:(id)sender{
+
+    //get connection data
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(user1 = %@ OR user2 = %@)",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
+    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
     
-    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection"];
-    [query whereKey:@"vendorUUID" notEqualTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
     [query orderByDescending:@"updatedAt"];
     
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
@@ -365,6 +367,9 @@
         else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
+            //I don't exist in the connection database! yet...
+            
+            
             
         }
     }];

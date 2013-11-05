@@ -30,7 +30,8 @@
     //playfulsystems on parse.com
     [Parse setApplicationId:@"yk0JyC64oKQCprmJwXiyJ13JmIS1HyfSvmfMAQ6w"
                   clientKey:@"sFvZ0SLtYB2kxQe4pX7QNtqIDwvaYYwuRqB4o1W5"];
-    
+    NSLog(@"i am      %@", [UIDevice currentDevice].identifierForVendor.UUIDString);
+
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.viewController = [[CWTViewController alloc] init];
@@ -75,6 +76,7 @@
     // Start the notifier, which will cause the reachability object to retain itself!
     [reach startNotifier];
 
+    //[self updateUserLocation];
     
     return YES;
 }
