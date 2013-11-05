@@ -71,10 +71,10 @@
     
     
     CGContextAddEllipseInRect(context, ellipse);
-    
+
     CGContextSetFillColorWithColor(context, [UIColor colorWithWhite:0 alpha:1].CGColor);
-    CGContextStrokePath(context);
     CGContextFillPath(context);
+
     
 
 }

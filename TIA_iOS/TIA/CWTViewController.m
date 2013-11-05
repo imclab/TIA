@@ -53,20 +53,16 @@
     
 
     
-    
+//    
     self.pageView=[[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
     self.pageView.dataSource = self;
     self.pageView.delegate = self;
     self.pageView.view.layer.masksToBounds=FALSE;
     [self.view addSubview:self.pageView.view];
     self.pageView.view.frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds)+40);
-    
+
     
     self.locationViewController=[[CWTLocationViewController alloc] init];
-
-    
-    
-
 
     
     int iconWidth=44;
@@ -76,19 +72,19 @@
     //more info button
     iconWidth=50;
     moreInfo = [UIButton buttonWithType:UIButtonTypeCustom];
-    moreInfo.frame=CGRectMake(screen.size.width*.5-iconWidth*.5, 60.0-iconWidth, iconWidth,iconWidth);
+    moreInfo.frame=CGRectMake(10-iconWidth*.5, screen.size.height-15, iconWidth,iconWidth);
     [moreInfo addTarget:self action:@selector(setShowInfo) forControlEvents:UIControlEventTouchUpInside];
     [moreInfo setImage:[UIImage imageNamed:@"more-info2.png"] forState:UIControlStateNormal];
     [moreInfo setImage:[UIImage imageNamed:@"less-info.png"] forState:UIControlStateSelected];
     
     [self.view addSubview:moreInfo];
 
+    
 
 
     
     
 }
-
 
 
 
@@ -110,6 +106,8 @@
         //code
     }
      ];
+    
+    //[self.scrollView addSubview:self.locationViewController.view];
     
     //hide or unhide info
     self.showInfo=[[NSUserDefaults standardUserDefaults] boolForKey:@"showInfo"];

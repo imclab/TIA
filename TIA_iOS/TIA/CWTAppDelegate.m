@@ -37,7 +37,6 @@
     self.viewController = [[CWTViewController alloc] init];
     self.window.rootViewController = self.viewController;
     
-    
     [self.viewController.view setFrame:[[UIScreen mainScreen] bounds]];
     
     self.navController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
@@ -47,24 +46,13 @@
     [self.window makeKeyAndVisible];
     [self.window addSubview:self.navController.view];
     
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0)
-    {
-        NSLog(@"Running in IOS-7");
-
-        CGRect screenBounds = [[UIScreen mainScreen] applicationFrame];
-        self.window.frame=[[UIScreen mainScreen] applicationFrame];
-        self.viewController.view.frame=[[UIScreen mainScreen] applicationFrame];
-
-        UIView* status=[[UIView alloc] initWithFrame:CGRectMake(0, -20, screenBounds.size.width, 20)];
-        status.backgroundColor=[UIColor whiteColor];
-        [self.window addSubview:status];
-    }
     
 //    self.overlay = [MTStatusBarOverlay sharedInstance];
 //    self.overlay.animation = MTStatusBarOverlayAnimationShrink;
 //    self.overlay.detailViewMode = MTDetailViewModeHistory;
 //    self.overlay.delegate = self;
     self.headingAccuracy=-2;
+    
     
     
     // Allocate a reachability object
@@ -81,7 +69,6 @@
     {
         NSLog(@"UNREACHABLE!");
         self.hasInternet=FALSE;
-
     };
     
     // Start the notifier, which will cause the reachability object to retain itself!
@@ -278,8 +265,20 @@
 
     
     //heading
-    self.locationManager.headingFilter = kCLHeadingFilterNone;
-    [self.locationManager startUpdatingHeading];
+    // check if the hardware has a compass
+    if ([CLLocationManager headingAvailable] == NO) {
+        // No compass is available. This application cannot function without a compass,
+        // so a dialog will be displayed and no magnetic data will be measured.
+        self.locationManager = nil;
+        UIAlertView *noCompassAlert = [[UIAlertView alloc] initWithTitle:@"No Compass" message:@"This device does not have a compass." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [noCompassAlert show];
+    } else {
+        // heading service configuration
+        self.locationManager.headingFilter = kCLHeadingFilterNone;
+        [self.locationManager startUpdatingHeading];
+    }
+    
+
     
 
 }

@@ -17,6 +17,5 @@
 @property (nonatomic,assign) BOOL showExtras;
 
 -(void) updateSpread:(CGFloat)newSpread;
--(void) showExtras:(BOOL)show;
 
 @end

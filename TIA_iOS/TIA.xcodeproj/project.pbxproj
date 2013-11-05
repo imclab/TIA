@@ -26,8 +26,6 @@
 		446D514B1819C79800E6DBE7 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D51141819C79700E6DBE7 /* Icon.png */; };
 		446D514C1819C79800E6DBE7 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D51151819C79700E6DBE7 /* Icon@2x.png */; };
 		446D514D1819C79800E6DBE7 /* arrow-line.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D51171819C79700E6DBE7 /* arrow-line.png */; };
-		446D514E1819C79800E6DBE7 /* compass-background.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D51181819C79700E6DBE7 /* compass-background.png */; };
-		446D514F1819C79800E6DBE7 /* compass-background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D51191819C79700E6DBE7 /* compass-background@2x.png */; };
 		446D51501819C79800E6DBE7 /* compass-n.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D511A1819C79700E6DBE7 /* compass-n.png */; };
 		446D51511819C79800E6DBE7 /* compass-n@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D511B1819C79700E6DBE7 /* compass-n@2x.png */; };
 		446D51521819C79800E6DBE7 /* less-info.png in Resources */ = {isa = PBXBuildFile; fileRef = 446D511C1819C79700E6DBE7 /* less-info.png */; };
@@ -51,6 +49,8 @@
 		447965CD175008C300A45031 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447965CC175008C300A45031 /* MessageUI.framework */; };
 		448AC1AA17BD687700281208 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448AC1A917BD687700281208 /* SystemConfiguration.framework */; };
 		44A3E7CF1819C5F4006409E7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 442F15DC17A6FF0700571D19 /* AudioToolbox.framework */; };
+		44C147CD1829520300704D85 /* arrow-dn.png in Resources */ = {isa = PBXBuildFile; fileRef = 44C147CB1829520300704D85 /* arrow-dn.png */; };
+		44C147CE1829520300704D85 /* arrow-dn@2X.png in Resources */ = {isa = PBXBuildFile; fileRef = 44C147CC1829520300704D85 /* arrow-dn@2X.png */; };
 		44C1D1441759A0CE007798A6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C1D1431759A0CE007798A6 /* QuartzCore.framework */; };
 		44C7F757174F3BC600112096 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C7F756174F3BC500112096 /* MapKit.framework */; };
 		44CDC4F617AB6AC3006ABAA4 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44CDC4F517AB6AC3006ABAA4 /* Crashlytics.framework */; };
@@ -86,8 +86,6 @@
 		446D51141819C79700E6DBE7 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		446D51151819C79700E6DBE7 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		446D51171819C79700E6DBE7 /* arrow-line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-line.png"; sourceTree = "<group>"; };
-		446D51181819C79700E6DBE7 /* compass-background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compass-background.png"; sourceTree = "<group>"; };
-		446D51191819C79700E6DBE7 /* compass-background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compass-background@2x.png"; sourceTree = "<group>"; };
 		446D511A1819C79700E6DBE7 /* compass-n.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compass-n.png"; sourceTree = "<group>"; };
 		446D511B1819C79700E6DBE7 /* compass-n@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "compass-n@2x.png"; sourceTree = "<group>"; };
 		446D511C1819C79700E6DBE7 /* less-info.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "less-info.png"; sourceTree = "<group>"; };
@@ -116,6 +114,8 @@
 		446D51371819C79800E6DBE7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		447965CC175008C300A45031 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		448AC1A917BD687700281208 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		44C147CB1829520300704D85 /* arrow-dn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-dn.png"; sourceTree = "<group>"; };
+		44C147CC1829520300704D85 /* arrow-dn@2X.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow-dn@2X.png"; sourceTree = "<group>"; };
 		44C1D1431759A0CE007798A6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		44C7F756174F3BC500112096 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		44C97DE817A433F300974240 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -189,9 +189,9 @@
 		446D51161819C79700E6DBE7 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				44C147CB1829520300704D85 /* arrow-dn.png */,
+				44C147CC1829520300704D85 /* arrow-dn@2X.png */,
 				446D51171819C79700E6DBE7 /* arrow-line.png */,
-				446D51181819C79700E6DBE7 /* compass-background.png */,
-				446D51191819C79700E6DBE7 /* compass-background@2x.png */,
 				446D511A1819C79700E6DBE7 /* compass-n.png */,
 				446D511B1819C79700E6DBE7 /* compass-n@2x.png */,
 				446D511C1819C79700E6DBE7 /* less-info.png */,
@@ -373,6 +373,7 @@
 				446D515C1819C79800E6DBE7 /* satellite_0003.png in Resources */,
 				446D51501819C79800E6DBE7 /* compass-n.png in Resources */,
 				446D515A1819C79800E6DBE7 /* satellite_0002.png in Resources */,
+				44C147CD1829520300704D85 /* arrow-dn.png in Resources */,
 				446D514C1819C79800E6DBE7 /* Icon@2x.png in Resources */,
 				446D51511819C79800E6DBE7 /* compass-n@2x.png in Resources */,
 				446D515D1819C79800E6DBE7 /* satellite_0003@2x.png in Resources */,
@@ -382,12 +383,11 @@
 				446D51521819C79800E6DBE7 /* less-info.png in Resources */,
 				446D51621819C79800E6DBE7 /* SourceSansPro-Light.ttf in Resources */,
 				446D513B1819C79800E6DBE7 /* Crowsflight_Create_001.wav in Resources */,
+				44C147CE1829520300704D85 /* arrow-dn@2X.png in Resources */,
 				446D51581819C79800E6DBE7 /* satellite_0001.png in Resources */,
 				446D51551819C79800E6DBE7 /* more-info2@2x.png in Resources */,
 				446D51541819C79800E6DBE7 /* more-info2.png in Resources */,
 				446D51471819C79800E6DBE7 /* Default.png in Resources */,
-				446D514E1819C79800E6DBE7 /* compass-background.png in Resources */,
-				446D514F1819C79800E6DBE7 /* compass-background@2x.png in Resources */,
 				446D515B1819C79800E6DBE7 /* satellite_0002@2x.png in Resources */,
 				446D514B1819C79800E6DBE7 /* Icon.png in Resources */,
 				446D514D1819C79800E6DBE7 /* arrow-line.png in Resources */,

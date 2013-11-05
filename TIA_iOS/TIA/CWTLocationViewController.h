@@ -13,7 +13,7 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 
-@interface CWTLocationViewController : UIViewController<UITextFieldDelegate>{
+@interface CWTLocationViewController : UIViewController<UIScrollViewDelegate>{
     CWTAppDelegate* dele;
     
     int bearingAccuracy;
@@ -24,6 +24,7 @@
 @property (nonatomic,strong)  CWTArrow* arrow;
 
 @property (nonatomic,strong) IBOutlet UIImageView *satSearchImage;
+@property (nonatomic,strong) IBOutlet UIImageView *dnArrow;
 
 
 @property (nonatomic,strong) IBOutlet UIButton *destinationButton;
@@ -74,5 +75,9 @@
 -(void)showHideInfo: (float)duration;
 //- (void) hideArrow: (BOOL) state;
 //-(void) hideCompass:(BOOL) state;
+
+@property (nonatomic,strong) UIScrollView *scrollView;
+@property (nonatomic,strong) UIView *mainView;
+
 
 @end

@@ -38,26 +38,52 @@
     
     dele = [[UIApplication sharedApplication] delegate];
     CGRect screen = [[UIScreen mainScreen] applicationFrame];
+    
+    
+    //scrollview for pull to refresh
+    self.scrollView=[[UIScrollView alloc] init];
+    self.scrollView.delegate = self;
+    self.scrollView.scrollEnabled=YES;
+    [self.view addSubview:self.scrollView];
+    self.scrollView.frame=CGRectMake(0,-50, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds)+50);
+    self.scrollView.contentSize = screen.size;
 
+    self.mainView=[[UIView alloc] init];
+    self.mainView.frame=CGRectMake(0,50, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds));
+    //self.mainView.backgroundColor=[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
+    
+    [self.scrollView addSubview:self.mainView];
+    
+    self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width , self.view.frame.size.height+55);
+
+    
+    //add down arrow
+    self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 6, 6)];
+    self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
+    [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
+    //[self.dnArrow  setAlpha:.5];
+    [self.mainView addSubview: self.dnArrow];
+ 
+    
     
     
     //main arrow
-    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 650,1200)];
-    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+200)];
+    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 10,screen.size.height*2)];
+    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+250)];
     self.arrow.backgroundColor=[UIColor clearColor];
-    [self.view addSubview:self.arrow];
     [self.arrow setHidden:TRUE];
-    
+    [self.scrollView addSubview:self.arrow];
+
     
     int moreYpos=50;
     
     //stats
-    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(10, screen.size.height-moreYpos-44, 200, 90)];
+    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height-moreYpos-44+20, 200, 90)];
     self.displayText.numberOfLines=10;
     self.displayText.backgroundColor=[UIColor clearColor];
     self.displayText.textColor=[UIColor colorWithWhite:.3 alpha:1];
     [self.displayText setFont:[UIFont fontWithName:@"Andale Mono" size:7.0]];
-    [self.view addSubview:self.displayText];
+    [self.mainView addSubview:self.displayText];
     
 
     
@@ -72,27 +98,35 @@
     self.satSearchImage.animationDuration = 2.0f;
     self.satSearchImage.animationRepeatCount = 0;
     [self.satSearchImage startAnimating];
-    [self.view addSubview: self.satSearchImage];
+    [self.scrollView addSubview: self.satSearchImage];
     self.satSearchImage.hidden=TRUE;
     
     [self updateHeading];
     
 
-    //stats
-    self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height-moreYpos-44-80, screen.size.width, 90)];
+    //time from launch
+    self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height*.5, screen.size.width, 20)];
     self.time.numberOfLines=10;
     self.time.textColor=[UIColor colorWithWhite:.3 alpha:1];
     [self.time setFont:[UIFont fontWithName:@"Andale Mono" size:20.0]];
     [self.time setTextAlignment:NSTextAlignmentCenter];
 
-    [self.view addSubview:self.time];
+    [self.mainView addSubview:self.time];
     [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
 
 
     
     
-    NSTimer* timer = [NSTimer timerWithTimeInterval:20.0f target:self selector:@selector(getFriendPosition) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    //NSTimer* timer = [NSTimer timerWithTimeInterval:20.0f target:self selector:@selector(getFriendPosition) userInfo:nil repeats:YES];
+    //[[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    
+    
+    //pull to refresh
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(getFriendPosition:)forControlEvents:UIControlEventValueChanged];
+    
+    [self.mainView addSubview:refreshControl];
+    
     
     
     
@@ -155,9 +189,25 @@
 }
 
 
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    //NSLog(@"scrolling");
+
+    
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    
+//    if(scrollView.contentOffset.y>-30){
+//        NSLog(@"refresh");
+//        
+//    }
+}
+
+
+
 -(void)loadLocation{
     //[self calculateMaxDist];
-    [self getFriendPosition];
+    [self getFriendPosition:nil];
     
     [self updateDistanceWithLatLng:0];
     //[self getBearing];
@@ -271,7 +321,7 @@
 }
 
 
--(void)getFriendPosition{
+-(void)getFriendPosition:(id)sender{
     
     PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection"];
     [query whereKey:@"vendorUUID" notEqualTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
@@ -343,7 +393,7 @@
     
 
     
-    
+    [(UIRefreshControl *)sender endRefreshing];
     
 }
 
@@ -561,8 +611,8 @@
                    "heading : %i° ±%i°\n"
                    "bearing : %i° ±%i°\n"
                    "altitude: %@\n"
-                   "target  : %f,%f \n"
                    "current : %@\n"
+                   "target  : %f,%f \n"
                    "atUUID  : %@\n"
                    "myUUID  : %@\n"
 
@@ -571,8 +621,8 @@
                    (int)dele.heading,(int)headingAccuracy,
                    (int)self.locBearing,(int)bearingAccuracy,
                    altitudeString,
-                   self.dlat , self.dlng,
                    currentString,
+                   self.dlat , self.dlng,
                    self.otherUserVendorIDString,
                    [UIDevice currentDevice].identifierForVendor.UUIDString
                    ];
