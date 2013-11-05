@@ -55,6 +55,8 @@
 
 @property (nonatomic) NSString * otherUserVendorIDString;
 
+@property (nonatomic)  NSDate *launchTime;
+@property (nonatomic,strong) IBOutlet  UILabel *time;
 
 
 -(void)loadLocation;

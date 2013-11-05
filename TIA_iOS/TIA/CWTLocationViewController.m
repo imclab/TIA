@@ -78,9 +78,20 @@
     [self updateHeading];
     
 
+    //stats
+    self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height-moreYpos-44-80, screen.size.width, 90)];
+    self.time.numberOfLines=10;
+    self.time.textColor=[UIColor colorWithWhite:.3 alpha:1];
+    [self.time setFont:[UIFont fontWithName:@"Andale Mono" size:20.0]];
+    [self.time setTextAlignment:NSTextAlignmentCenter];
+
+    [self.view addSubview:self.time];
+    [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
+
+
     
     
-    NSTimer* timer = [NSTimer timerWithTimeInterval:10.0f target:self selector:@selector(getFriendPosition) userInfo:nil repeats:YES];
+    NSTimer* timer = [NSTimer timerWithTimeInterval:20.0f target:self selector:@selector(getFriendPosition) userInfo:nil repeats:YES];
     [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
     
     
@@ -237,6 +248,25 @@
 }
 
 
+- (void)timerTick:(NSTimer *)tick {
+    NSDate *now = [NSDate date];
+    NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.launchTime];
+    self.time.text=[self stringFromTimeInterval:timeInterval];
+   // [self.time setCenter:CGPointMake(self.view.frame.size.width*.5, self.view.frame.size.height-44-150)];
+
+ }
+
+- (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
+    NSInteger ti = (NSInteger)interval;
+    NSInteger seconds = ti % 60;
+    NSInteger minutes = (ti / 60) % 60;
+    NSInteger hours = (ti / 3600) % 24;
+    NSInteger years = (ti / 86400) % 365;
+
+    return [NSString stringWithFormat:@"%02i:%02i:%02i:%02i",years, hours, minutes, seconds];
+}
+
+
 -(void)getFriendPosition{
     
     PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection"];
@@ -251,6 +281,10 @@
             //for (PFObject *object in objects)
             {
                 NSLog(@"objectId  %@", object.objectId);
+                NSLog(@"created   %@", object.updatedAt);
+                
+                self.launchTime = object.updatedAt;
+
                 NSLog(@"user 1    %@", object[@"user1"]);
                 NSLog(@"user 2    %@", object[@"user2"]);
                 NSLog(@"i am      %@", [UIDevice currentDevice].identifierForVendor.UUIDString);
