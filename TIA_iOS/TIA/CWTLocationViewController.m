@@ -71,7 +71,7 @@
     self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 10,screen.size.height*2)];
     [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+250)];
     self.arrow.backgroundColor=[UIColor clearColor];
-    [self.arrow setHidden:TRUE];
+    //[self.arrow setHidden:TRUE];
     [self.scrollView addSubview:self.arrow];
 
     
@@ -130,22 +130,22 @@
 
 
 -(void)viewWillDisappear:(BOOL)animated{
-    [self.arrow setAlpha:0.0];
-    [self.arrow setHidden:TRUE];
+    //[self.arrow setAlpha:0.0];
+    //[self.arrow setHidden:TRUE];
 }
 
 
 -(void)viewDidDisappear:(BOOL)animated{
-    [self.arrow setAlpha:0.0];
-    [self.arrow setHidden:TRUE];
+  //  [self.arrow setAlpha:0.0];
+   // [self.arrow setHidden:TRUE];
 }
 
 
 -(void)viewWillAppear:(BOOL)animated{
     [self loadLocation];
-    [self.arrow setAlpha:0.0];
-    [self.arrow setHidden:FALSE];
-    [self showHideInfo:0];
+    //[self.arrow setAlpha:0.0];
+    //[self.arrow setHidden:FALSE];
+    //[self showHideInfo:0];
 
 }
 
