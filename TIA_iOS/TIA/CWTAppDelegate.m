@@ -119,7 +119,6 @@
                     object[@"lng"] = [NSNumber numberWithFloat:self.myLng];
                     object[@"speed"] = [NSNumber numberWithFloat:self.speed];
                     object[@"altitude"] = [NSNumber numberWithFloat:self.altitude];
-
                     [object saveInBackground];
                     
             }
@@ -133,17 +132,13 @@
                 [object setObject:[NSNumber numberWithFloat:self.myLng] forKey:@"lng"];
                 [object setObject:[NSNumber numberWithFloat:self.speed] forKey:@"speed"];
                 [object setObject:[NSNumber numberWithFloat:self.altitude] forKey:@"altitude"];
-
                 [object saveInBackground];
             }
         }
         else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
-            
-            
 
-            
         }
     }];
     
