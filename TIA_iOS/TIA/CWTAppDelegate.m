@@ -60,10 +60,10 @@
         [self.window addSubview:status];
     }
     
-    self.overlay = [MTStatusBarOverlay sharedInstance];
-    self.overlay.animation = MTStatusBarOverlayAnimationShrink;
-    self.overlay.detailViewMode = MTDetailViewModeHistory;
-    self.overlay.delegate = self;
+//    self.overlay = [MTStatusBarOverlay sharedInstance];
+//    self.overlay.animation = MTStatusBarOverlayAnimationShrink;
+//    self.overlay.detailViewMode = MTDetailViewModeHistory;
+//    self.overlay.delegate = self;
     self.headingAccuracy=-2;
     
     
@@ -189,13 +189,9 @@
 
     [(CWTViewController*)self.window.rootViewController updateViewControllersWithHeading:[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]];
     
-    
+    /*
     if(self.lastHeadingAccuracy!=self.headingAccuracy){
         if( (self.headingAccuracy <=22 && self.headingAccuracy>-1) || self.headingAccuracy==-2)
-            
-        //testing
-         //   if( (self.headingAccuracy <=5 && self.headingAccuracy>-1) || self.headingAccuracy==-2)
-
         {
             [self.overlay hideTemporary];
         }
@@ -213,7 +209,7 @@
         }
         self.lastHeadingAccuracy=self.headingAccuracy;
     }
-    
+    */
     
 
     
