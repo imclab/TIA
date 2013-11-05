@@ -116,7 +116,7 @@
 
 
     
-    
+    //refresh on a timer
     //NSTimer* timer = [NSTimer timerWithTimeInterval:20.0f target:self selector:@selector(getFriendPosition) userInfo:nil repeats:YES];
     //[[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
     
@@ -124,12 +124,8 @@
     //pull to refresh
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(getFriendPosition:)forControlEvents:UIControlEventValueChanged];
-    
     [self.mainView addSubview:refreshControl];
-    
-    
-    
-    
+
 }
 
 
@@ -145,18 +141,10 @@
 }
 
 
--(void)viewWillAppear:(BOOL)animated{    
-    //check if page is in bounds
-//    if( [[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]>= dele.nDestinations ) {
-//        [[NSUserDefaults standardUserDefaults] setInteger:dele.nDestinations-1 forKey:@"currentDestinationN"];
-//        self.page=[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"];
-//    }
-
-
+-(void)viewWillAppear:(BOOL)animated{
     [self loadLocation];
     [self.arrow setAlpha:0.0];
     [self.arrow setHidden:FALSE];
-    //[self updateDestinationName];
     [self showHideInfo:0];
 
 }
@@ -329,11 +317,8 @@
     
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         if (!error) {
-            // The find succeeded. entry exists
-            //NSLog(@"Successfully retrieved %d objects.", objects.count);
-            // Do something with the found objects. there should only be one!
-            //for (PFObject *object in objects)
-            {
+
+            
                 NSLog(@"objectId  %@", object.objectId);
                 NSLog(@"created   %@", object.updatedAt);
                 
@@ -375,12 +360,6 @@
                     }
                     
                 }];
-
-                
-                self.dlat= [[object objectForKey:@"lat"] floatValue];
-                self.dlng= [[object objectForKey:@"lng"] floatValue];
-                
-            }
             
         }
         else {
@@ -392,7 +371,7 @@
 
     
 
-    
+    //end refresh animation
     [(UIRefreshControl *)sender endRefreshing];
     
 }

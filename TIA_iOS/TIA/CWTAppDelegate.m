@@ -27,7 +27,6 @@
     
     [TestFlight takeOff:@"54ff1c20-dfe4-44df-9cda-bb3c4957749e"];
 
-    
     //playfulsystems on parse.com
     [Parse setApplicationId:@"yk0JyC64oKQCprmJwXiyJ13JmIS1HyfSvmfMAQ6w"
                   clientKey:@"sFvZ0SLtYB2kxQe4pX7QNtqIDwvaYYwuRqB4o1W5"];
@@ -51,6 +50,8 @@
 //    self.overlay.animation = MTStatusBarOverlayAnimationShrink;
 //    self.overlay.detailViewMode = MTDetailViewModeHistory;
 //    self.overlay.delegate = self;
+    
+    
     self.headingAccuracy=-2;
     
     
