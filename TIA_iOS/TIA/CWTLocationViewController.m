@@ -126,11 +126,58 @@
 
     
     
-    self.BTLECentral=[[BTLECentralViewController alloc] init];
-    [self.mainView addSubview:self.BTLECentral.view];
     
+    [self startBTLE];
+    
+
+    
+
 }
 
+-(void)startBTLE
+{
+    
+    
+    //check user number
+    
+    //get connection data
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(user1 = %@ OR user2 = %@)",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
+    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
+    
+    [query orderByDescending:@"updatedAt"];
+    
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        if (!error) {
+            
+                NSLog(@"user 1    %@", object[@"user1"]);
+                NSLog(@"user 2    %@", object[@"user2"]);
+                NSLog(@"i am      %@", [UIDevice currentDevice].identifierForVendor.UUIDString);
+                
+                //check if user1 is myself
+                if([object[@"user1"] isEqualToString: [UIDevice currentDevice].identifierForVendor.UUIDString]){
+                    //if user1
+                    self.BTLECentral=[[BTLECentralViewController alloc] init];
+                    [self.mainView addSubview:self.BTLECentral.view];
+                    NSLog(@"launch BTLE Central for user 1");
+                }
+                else{
+                    //if user2
+                    self.BTLPeripheral=[[BTLEPeripheralViewController alloc] init];
+                    [self.mainView addSubview:self.BTLPeripheral.view];
+                    NSLog(@"launch BTLE Peripheral for user 2");
+
+                }
+        }
+        
+        }];
+    
+
+    
+    
+    
+
+    
+}
 
 -(void)viewWillDisappear:(BOOL)animated{
     //[self.arrow setAlpha:0.0];
@@ -313,11 +360,12 @@
 -(void)getFriendPosition:(id)sender{
 
     //get connection data
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(user1 = %@ OR user2 = %@)",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((user1 = %@) OR (user2 = %@))",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
     PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
     
     [query orderByDescending:@"updatedAt"];
-    
+    //[query orderByAscending:@"updatedAt"];
+
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         if (!error) {
 
@@ -353,7 +401,7 @@
                         NSLog(@"The getFirstObject request failed.");
                     } else {
                         // The find succeeded.
-                        NSLog(@"Successfully retrieved the object.");
+                        //NSLog(@"Successfully retrieved the object.");
                         self.dlat= [[object objectForKey:@"lat"] floatValue];
                         self.dlng= [[object objectForKey:@"lng"] floatValue];
                         

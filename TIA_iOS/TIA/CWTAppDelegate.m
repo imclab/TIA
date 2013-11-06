@@ -85,7 +85,7 @@
 
 -(void)updateUserLocation{
     
-    NSLog(@"Update User Location");
+    //NSLog(@"Update User Location");
 
     
     //send location to parse
@@ -98,11 +98,11 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded. entry exists
-            NSLog(@"Successfully retrieved %d objects.", objects.count);
+            //NSLog(@"Successfully retrieved %d objects.", objects.count);
             // Do something with the found objects. there should only be one!
             for (PFObject *object in objects)
             {
-                NSLog(@"%@", object.objectId);
+                //NSLog(@"%@", object.objectId);
                 
                    //update lat lng of user
                     object[@"lat"] = [NSNumber numberWithFloat:self.myLat];

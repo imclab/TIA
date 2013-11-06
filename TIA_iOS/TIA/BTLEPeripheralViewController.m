@@ -33,6 +33,8 @@
 
     // Start up the CBPeripheralManager
     _peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil];
+
+
 }
 
 
@@ -80,6 +82,10 @@
     
     // And add it to the peripheral manager
     [self.peripheralManager addService:transferService];
+    
+    //start advertising!
+    [self.peripheralManager startAdvertising:@{ CBAdvertisementDataServiceUUIDsKey : @[[CBUUID UUIDWithString:TRANSFER_SERVICE_UUID]] }];
+
 }
 
 
@@ -88,6 +94,10 @@
 - (void)peripheralManager:(CBPeripheralManager *)peripheral central:(CBCentral *)central didSubscribeToCharacteristic:(CBCharacteristic *)characteristic
 {
     NSLog(@"Central subscribed to characteristic");
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Another is close." message:@"Look up." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
+    
     
     // Get the data
     self.dataToSend = [self.textView.text dataUsingEncoding:NSUTF8StringEncoding];

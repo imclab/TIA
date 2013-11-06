@@ -91,14 +91,14 @@
  */
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
-    // Reject any where the value is above reasonable range
+    //close
     if (RSSI.integerValue > -15) {
-        return;
+        //return;
     }
         
     // Reject if the signal strength is too low to be close enough (Close is around -22dB)
     if (RSSI.integerValue < -35) {
-        return;
+        //return;
     }
     
     NSLog(@"Discovered %@ at %@", peripheral.name, RSSI);
@@ -112,6 +112,12 @@
         // And connect
         NSLog(@"Connecting to peripheral %@", peripheral);
         [self.centralManager connectPeripheral:peripheral options:nil];
+        
+        //self.parentViewController.view.backgroundColor=[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Another is close." message:@"Look up." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        
+        
     }
 }
 

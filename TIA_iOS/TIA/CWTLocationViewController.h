@@ -14,6 +14,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 #import "BTLECentralViewController.h"
+#import "BTLEPeripheralViewController.h"
 
 @interface CWTLocationViewController : UIViewController<UIScrollViewDelegate>{
     CWTAppDelegate* dele;
@@ -81,6 +82,7 @@
 @property (nonatomic,strong) UIView *mainView;
 
 @property (nonatomic,strong) BTLECentralViewController *BTLECentral;
+@property (nonatomic,strong) BTLEPeripheralViewController *BTLPeripheral;
 
 
 @end
