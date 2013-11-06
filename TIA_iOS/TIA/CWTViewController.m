@@ -86,12 +86,8 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    if( [[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]>= [dele.locationDictionaryArray count] ) {
-        [[NSUserDefaults standardUserDefaults] setInteger:[dele.locationDictionaryArray count]-1 forKey:@"currentDestinationN"];
-    }
-    
-    self.locationViewController.page=[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"];
-    
+
+
     
     [self.pageView setViewControllers:@[self.locationViewController] direction:UIPageViewControllerNavigationDirectionForward  animated:NO completion:^(BOOL finished) {
         //code
@@ -104,16 +100,6 @@
     //NSLog(@"read show info %i",self.showInfo);
     
     [moreInfo setSelected:self.showInfo];
-    
-    if(self.showInfo==FALSE) {
-        [self.compassImage setAlpha: 0.0f];
-        [self.compassImage setHidden:YES];
-    }
-    else {
-        [self.compassImage setAlpha: 1.0f];
-        [self.compassImage setHidden:NO];
-        
-    }
     
     
     //NSLog(@"locationViewController show %i",[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]);

@@ -53,7 +53,7 @@
     points[0].y=self.frame.size.height*.5;
 
     points[1].x=self.frame.size.width*.5;
-    points[1].y=self.frame.size.height*.5+2000;
+    points[1].y=self.frame.size.height*.5-2000;
 
     CGContextAddLines(context, points, 2);
     CGContextStrokePath(context);

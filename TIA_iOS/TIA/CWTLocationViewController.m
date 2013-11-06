@@ -65,14 +65,11 @@
     [self.mainView addSubview: self.dnArrow];
  
     
-    
-    
     //main arrow
     self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 10,screen.size.height*2)];
-    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+250)];
+    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
     self.arrow.backgroundColor=[UIColor clearColor];
-    //[self.arrow setHidden:TRUE];
-    [self.scrollView addSubview:self.arrow];
+    [self.mainView addSubview:self.arrow];
 
     
     int moreYpos=50;
@@ -146,6 +143,7 @@
     //[self.arrow setAlpha:0.0];
     //[self.arrow setHidden:FALSE];
     //[self showHideInfo:0];
+    [self.arrow setNeedsDisplay];
 
 }
 
@@ -153,9 +151,9 @@
 {
     //NSLog(@"show page %i",[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]);
     
-    [[NSUserDefaults standardUserDefaults] setInteger:self.page forKey:@"currentDestinationN"];
+    //[[NSUserDefaults standardUserDefaults] setInteger:self.page forKey:@"currentDestinationN"];
 
-
+/*
     [UIView animateWithDuration:0.4f
                           delay:0.2f
                         options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
@@ -166,6 +164,8 @@
                      completion: ^(BOOL finished){
                          //[self.arrow setHidden:FALSE];
                      }];
+ 
+ */
     //[self spinArc];
     
     
@@ -218,9 +218,7 @@
     //near destination
     if( self.distance<= 20.0 && self.distance>=0 && dele.accuracy>0){
         self.satSearchImage.hidden=TRUE;
-        //self.accuracyText.text=  @"ARRIVED" ;
         [self rotateArc:duration degrees:self.locBearing-dele.heading];
-
         self.spinning=FALSE;
     }
     
@@ -280,9 +278,6 @@
         }
     }
     
-    //if(self.maxDistance<0) [self calculateMaxDist];
-    
-    //NSLog(@"%.2f",RADIANS_TO_DEGREES([self getBearing]));
 }
 
 
@@ -294,7 +289,6 @@
     //launch time pulled from parse is in GMT
     NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.launchTime];
     self.time.text=[self stringFromTimeInterval:timeInterval];
-   // [self.time setCenter:CGPointMake(self.view.frame.size.width*.5, self.view.frame.size.height-44-150)];
 
  }
 
@@ -520,24 +514,6 @@
 
     }
 
-    //self.spread=dele.headingAccuracy+bearingAccuracy;
-    self.spread=3.0;
-
-    if(self.spread!=self.lastSpread){
-        //NSLog(@"%i/%i",self.spread,self.lastSpread);
-        
-//        [UIView animateWithDuration:.3f
-//                              delay:0.0f
-//                            options:UIViewAnimationOptionCurveEaseInOut
-//                         animations:^{
-                             [self.arrow updateSpread:self.spread];
-
-//                         }
-//                         completion:nil];
-        
-        
-        self.lastSpread=self.spread;
-    }
     
     [self updateAccuracyText];
 }
@@ -627,10 +603,7 @@
 
 
 
--(void) hideArrow:(BOOL) state
-{
-    self.arrow.hidden=state;
-}
+
 
 - (void)didReceiveMemoryWarning
 {

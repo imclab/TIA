@@ -73,7 +73,6 @@
 //
 //- (IBAction)editLocationName:(id)sender;
 -(void)showHideInfo: (float)duration;
-//- (void) hideArrow: (BOOL) state;
 //-(void) hideCompass:(BOOL) state;
 
 @property (nonatomic,strong) UIScrollView *scrollView;
