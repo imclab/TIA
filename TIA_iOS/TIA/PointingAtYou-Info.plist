@@ -50,10 +50,18 @@
 	<string>1.0</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>Required Background Modes</key>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>SourceSansPro-Light.ttf</string>
 		<string>Andale Mono.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>bluetooth-peripheral</string>
+		<string>location</string>
 	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>

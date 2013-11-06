@@ -122,7 +122,13 @@
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(getFriendPosition:)forControlEvents:UIControlEventValueChanged];
     [self.mainView addSubview:refreshControl];
+    
 
+    
+    
+    self.BTLECentral=[[BTLECentralViewController alloc] init];
+    [self.mainView addSubview:self.BTLECentral.view];
+    
 }
 
 
@@ -297,9 +303,10 @@
     NSInteger seconds = ti % 60;
     NSInteger minutes = (ti / 60) % 60;
     NSInteger hours = (ti / 3600) % 24;
-    NSInteger years = (ti / 86400) % 365;
+    NSInteger days = (ti / 86400) % 999;
+    //NSInteger years = (ti / 31556952) % 9999;//86400 * 365.2425
 
-    return [NSString stringWithFormat:@"%04i:%02i:%02i:%02i",years, hours, minutes, seconds];
+    return [NSString stringWithFormat:@"%03i:%02i:%02i:%02i", days, hours, minutes, seconds];
 }
 
 

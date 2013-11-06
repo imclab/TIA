@@ -207,6 +207,7 @@
 }
 
 
+
 -(void) shrink{
         [self.overlay setShrinked:YES animated:YES];
 }
