@@ -19,10 +19,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.spread=60.0;
-        //self.showExtras=TRUE;
-        //self.showExtras=[[NSUserDefaults standardUserDefaults] boolForKey:@"showInfo"];
-         
     }
     return self;
 }

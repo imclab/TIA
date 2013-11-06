@@ -54,7 +54,8 @@
     self.pageView.view.layer.masksToBounds=FALSE;
     [self.view addSubview:self.pageView.view];
     self.pageView.view.frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds)+40);
-
+    self.locationViewController.page=0;
+    
     
     self.locationViewController=[[CWTLocationViewController alloc] init];
 
@@ -152,9 +153,7 @@
 }
 
 -(void)viewDidLayoutSubviews{
-    //CGRect screen = [[UIScreen mainScreen] applicationFrame];
-    //self.compassImage.center=CGPointMake(screen.size.width*.5, screen.size.height*.5+22);
-    
+
 }
 
 
@@ -227,16 +226,7 @@
     
     [moreInfo setSelected:self.showInfo];
     
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         if(!self.showInfo)[self.compassImage setAlpha: 0.0f];
-                         else [self.compassImage setAlpha:1.0f];
-                     }
-                     completion:^(BOOL finished){
-                         [self.compassImage setHidden:!self.showInfo];
-                     }];
+
     
     NSArray* viewC = [self.pageView viewControllers];
     [[viewC objectAtIndex:0] showHideInfo:.3f];

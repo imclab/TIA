@@ -70,7 +70,8 @@
     [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
     self.arrow.backgroundColor=[UIColor clearColor];
     [self.mainView addSubview:self.arrow];
-
+    [self.arrow setAlpha:1];
+    
     
     int moreYpos=50;
     
@@ -180,23 +181,18 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated{
-    //[self.arrow setAlpha:0.0];
-    //[self.arrow setHidden:TRUE];
+
 }
 
 
 -(void)viewDidDisappear:(BOOL)animated{
-  //  [self.arrow setAlpha:0.0];
-   // [self.arrow setHidden:TRUE];
+
 }
 
 
 -(void)viewWillAppear:(BOOL)animated{
     [self loadLocation];
-    //[self.arrow setAlpha:0.0];
-    //[self.arrow setHidden:FALSE];
-    //[self showHideInfo:0];
-    [self.arrow setNeedsDisplay];
+
 
 }
 
@@ -206,7 +202,7 @@
     
     //[[NSUserDefaults standardUserDefaults] setInteger:self.page forKey:@"currentDestinationN"];
 
-/*
+
     [UIView animateWithDuration:0.4f
                           delay:0.2f
                         options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
@@ -215,32 +211,32 @@
 
                      }
                      completion: ^(BOOL finished){
-                         //[self.arrow setHidden:FALSE];
+                         [self.arrow setHidden:FALSE];
                      }];
  
- */
+ 
     //[self spinArc];
     
-    
+    CGRect screen = [[UIScreen mainScreen] applicationFrame];
+    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
+
+    [self.arrow setNeedsDisplay];
+
     
 }
 
 -(void)viewDidLayoutSubviews{
-    //self.arrow.center=CGPointMake(self.distanceText.center.x, self.distanceText.center.y);
 }
 
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     //NSLog(@"scrolling");
-
-    
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     
 //    if(scrollView.contentOffset.y>-30){
-//        NSLog(@"refresh");
-//        
+    
 //    }
 }
 
