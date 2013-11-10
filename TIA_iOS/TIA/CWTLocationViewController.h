@@ -28,6 +28,7 @@
 
 @property (nonatomic,strong) IBOutlet UIImageView *satSearchImage;
 @property (nonatomic,strong) IBOutlet UIImageView *dnArrow;
+@property (nonatomic,strong) IBOutlet UIImageView *north;
 
 
 @property (nonatomic,strong) IBOutlet UIButton *destinationButton;
@@ -72,11 +73,9 @@
 - (void)rotateArc:(NSTimeInterval)duration  degrees:(CGFloat)degrees;
 
 - (void)updateHeading;
-//- (void)rotateCompass:(NSTimeInterval)duration  degrees:(CGFloat)degrees;
-//
-//- (IBAction)editLocationName:(id)sender;
+- (void)rotateCompass:(NSTimeInterval)duration  degrees:(CGFloat)degrees;
+
 -(void)showHideInfo: (float)duration;
-//-(void) hideCompass:(BOOL) state;
 
 @property (nonatomic,strong) UIScrollView *scrollView;
 @property (nonatomic,strong) UIView *mainView;

@@ -91,11 +91,13 @@
  */
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
-    //close
+    //super close
     if (RSSI.integerValue > -15) {
         //return;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Touching" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
     }
-        
+    
     // Reject if the signal strength is too low to be close enough (Close is around -22dB)
     if (RSSI.integerValue < -35) {
         //return;
@@ -113,13 +115,34 @@
         NSLog(@"Connecting to peripheral %@", peripheral);
         [self.centralManager connectPeripheral:peripheral options:nil];
         
-        //self.parentViewController.view.backgroundColor=[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Another is close." message:@"Look up." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Another is close." message:@"Look up." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//        [alert show];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:nil name:@"Look up. Another is close." object:nil];
+
+        
         
         
     }
 }
+
+
+#pragma mark background notifications
+- (void)registerForBackgroundNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resignActive)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(enterForeground)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+
+
+
 
 
 /** If the connection fails for whatever reason, we need to deal with it.

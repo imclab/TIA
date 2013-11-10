@@ -12,6 +12,8 @@
 		44354FAE1808C92E000BC9E5 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 44354FAD1808C92E000BC9E5 /* libz.1.1.3.dylib */; };
 		44354FB01808C935000BC9E5 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44354FAF1808C935000BC9E5 /* MobileCoreServices.framework */; };
 		44354FB21808C93D000BC9E5 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44354FB11808C93D000BC9E5 /* Security.framework */; };
+		4446B4811830402F008409DE /* north.png in Resources */ = {isa = PBXBuildFile; fileRef = 4446B47F1830402F008409DE /* north.png */; };
+		4446B4821830402F008409DE /* north@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4446B4801830402F008409DE /* north@2x.png */; };
 		444BD8B917A4393B00C7A65A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 44C97DE817A433F300974240 /* libz.dylib */; };
 		446C72A5182999880058664C /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 446C72A4182999880058664C /* libTestFlight.a */; };
 		446D513A1819C79800E6DBE7 /* Andale Mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 446D50F81819C79700E6DBE7 /* Andale Mono.ttf */; };
@@ -71,6 +73,8 @@
 		44354FAD1808C92E000BC9E5 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
 		44354FAF1808C935000BC9E5 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		44354FB11808C93D000BC9E5 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		4446B47F1830402F008409DE /* north.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = north.png; sourceTree = "<group>"; };
+		4446B4801830402F008409DE /* north@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "north@2x.png"; sourceTree = "<group>"; };
 		446C72A4182999880058664C /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		446D50F81819C79700E6DBE7 /* Andale Mono.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Andale Mono.ttf"; sourceTree = "<group>"; };
 		446D50FA1819C79700E6DBE7 /* Crowsflight_Create_001.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Crowsflight_Create_001.wav; sourceTree = "<group>"; };
@@ -204,6 +208,8 @@
 		446D51161819C79700E6DBE7 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4446B47F1830402F008409DE /* north.png */,
+				4446B4801830402F008409DE /* north@2x.png */,
 				44C147CB1829520300704D85 /* arrow-dn.png */,
 				44C147CC1829520300704D85 /* arrow-dn@2X.png */,
 				446D51171819C79700E6DBE7 /* arrow-line.png */,
@@ -386,6 +392,7 @@
 			files = (
 				446D51481819C79800E6DBE7 /* Default@2x.png in Resources */,
 				446D51591819C79800E6DBE7 /* satellite_0001@2x.png in Resources */,
+				4446B4821830402F008409DE /* north@2x.png in Resources */,
 				446D515C1819C79800E6DBE7 /* satellite_0003.png in Resources */,
 				446D51501819C79800E6DBE7 /* compass-n.png in Resources */,
 				446D515A1819C79800E6DBE7 /* satellite_0002.png in Resources */,
@@ -395,6 +402,7 @@
 				446D515D1819C79800E6DBE7 /* satellite_0003@2x.png in Resources */,
 				446D51571819C79800E6DBE7 /* satellite_0000@2x.png in Resources */,
 				446D513A1819C79800E6DBE7 /* Andale Mono.ttf in Resources */,
+				4446B4811830402F008409DE /* north.png in Resources */,
 				446D51531819C79800E6DBE7 /* less-info@2x.png in Resources */,
 				446D51521819C79800E6DBE7 /* less-info.png in Resources */,
 				446D51621819C79800E6DBE7 /* SourceSansPro-Light.ttf in Resources */,

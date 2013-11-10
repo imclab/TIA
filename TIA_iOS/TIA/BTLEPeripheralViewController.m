@@ -95,8 +95,13 @@
 {
     NSLog(@"Central subscribed to characteristic");
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Another is close." message:@"Look up." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
+    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Another is close." message:@"Look up." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    //[alert show];
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:nil name:@"Look up. Another is close." object:nil];
+    
+    
     
     
     // Get the data
@@ -108,6 +113,22 @@
     // Start sending
     [self sendData];
 }
+
+
+#pragma mark background notifications
+- (void)registerForBackgroundNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resignActive)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(enterForeground)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+
 
 
 /** Recognise when the central unsubscribes
@@ -217,40 +238,6 @@
     [self sendData];
 }
 
-
-
-#pragma mark - TextView Methods
-
-
-
-/** This is called when a change happens, so we know to stop advertising
- */
-- (void)textViewDidChange:(UITextView *)textView
-{
-    // If we're already advertising, stop
-    if (self.advertisingSwitch.on) {
-        [self.advertisingSwitch setOn:NO];
-        [self.peripheralManager stopAdvertising];
-    }
-}
-
-
-/** Adds the 'Done' button to the title bar
- */
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
-    // We need to add this manually so we have a way to dismiss the keyboard
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonSystemItemDone target:self action:@selector(dismissKeyboard)];
-    self.navigationItem.rightBarButtonItem = rightButton;
-}
-
-
-/** Finishes the editing */
-- (void)dismissKeyboard
-{
-    [self.textView resignFirstResponder];
-    self.navigationItem.rightBarButtonItem = nil;
-}
 
 
 

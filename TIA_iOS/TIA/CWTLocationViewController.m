@@ -53,7 +53,6 @@
     //self.mainView.backgroundColor=[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
     
     [self.scrollView addSubview:self.mainView];
-    
     self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width , self.view.frame.size.height+55);
 
     
@@ -61,16 +60,10 @@
     self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
     self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
-    //[self.dnArrow  setAlpha:.5];
     [self.mainView addSubview: self.dnArrow];
  
     
-    //main arrow
-    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 10,screen.size.height*2)];
-    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
-    self.arrow.backgroundColor=[UIColor clearColor];
-    [self.mainView addSubview:self.arrow];
-    [self.arrow setAlpha:1];
+
     
     
     int moreYpos=50;
@@ -81,7 +74,7 @@
     self.displayText.backgroundColor=[UIColor clearColor];
     self.displayText.textColor=[UIColor colorWithWhite:.3 alpha:1];
     [self.displayText setFont:[UIFont fontWithName:@"Andale Mono" size:7.0]];
-    [self.mainView addSubview:self.displayText];
+    [self.view addSubview:self.displayText];
     
 
     
@@ -111,8 +104,6 @@
 
     [self.mainView addSubview:self.time];
     [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
-
-
     
     //refresh on a timer
     //NSTimer* timer = [NSTimer timerWithTimeInterval:20.0f target:self selector:@selector(getFriendPosition) userInfo:nil repeats:YES];
@@ -124,14 +115,7 @@
     [refreshControl addTarget:self action:@selector(getFriendPosition:)forControlEvents:UIControlEventValueChanged];
     [self.mainView addSubview:refreshControl];
     
-
-    
-    
-    
     [self startBTLE];
-    
-
-    
 
 }
 
@@ -198,9 +182,6 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    //NSLog(@"show page %i",[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]);
-    
-    //[[NSUserDefaults standardUserDefaults] setInteger:self.page forKey:@"currentDestinationN"];
 
 
     [UIView animateWithDuration:0.4f
@@ -217,11 +198,28 @@
  
     //[self spinArc];
     
-    CGRect screen = [[UIScreen mainScreen] applicationFrame];
-    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
+    CGRect screen = [[UIScreen mainScreen] bounds];
 
+    
+    //main arrow
+    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 10,screen.size.height*2)];
+    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
+    self.arrow.backgroundColor=[UIColor clearColor];
+    [self.mainView addSubview:self.arrow];
+    [self.arrow setAlpha:1];
     [self.arrow setNeedsDisplay];
 
+    
+    //add north arrow
+    self.north = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16*.25, 263*.25)];
+    self.north.center=CGPointMake(screen.size.width*.5,80);
+    [self.north setImage:[UIImage imageNamed:@"north.png"]];
+    [self.mainView addSubview: self.north];
+    
+  
+    self.north.center=self.arrow.center;
+
+    
     
 }
 
@@ -242,6 +240,7 @@
 
 
 
+
 -(void)loadLocation{
     //[self calculateMaxDist];
     [self getFriendPosition:nil];
@@ -259,10 +258,7 @@
     self.distance = [locA distanceFromLocation:locB];
     self.locBearing=[self getBearing];
     [self getBearingAccuracy];
-    
-    
 
-    
     
     //near destination
     if( self.distance<= 20.0 && self.distance>=0 && dele.accuracy>0){
@@ -568,6 +564,27 @@
     
     [self updateAccuracyText];
 }
+
+
+- (void)rotateCompass:(NSTimeInterval)duration  degrees:(CGFloat)degrees
+{
+    
+    CGAffineTransform transformCompass = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
+    
+    [UIView animateWithDuration:0.3f
+                          delay:0.0f
+                        options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
+                     animations: ^(void){
+                         // The transform matrix
+                         self.north.transform = transformCompass;
+                     }
+                     completion: ^(BOOL finished){
+                     }
+     ];
+    
+}
+
+
 
 
 -(void)showHideInfo: (float)duration{

@@ -71,10 +71,11 @@
     [moreInfo addTarget:self action:@selector(setShowInfo) forControlEvents:UIControlEventTouchUpInside];
     [moreInfo setImage:[UIImage imageNamed:@"more-info2.png"] forState:UIControlStateNormal];
     [moreInfo setImage:[UIImage imageNamed:@"less-info.png"] forState:UIControlStateSelected];
-    
     [self.view addSubview:moreInfo];
+    
+    
+    
 
-  
     
 }
 
@@ -86,9 +87,6 @@
 
 
 -(void)viewWillAppear:(BOOL)animated{
-    
-
-
     
     [self.pageView setViewControllers:@[self.locationViewController] direction:UIPageViewControllerNavigationDirectionForward  animated:NO completion:^(BOOL finished) {
         //code
@@ -102,10 +100,6 @@
     
     [moreInfo setSelected:self.showInfo];
     
-    
-    //NSLog(@"locationViewController show %i",[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]);
-    
-
     
 }
 
@@ -177,29 +171,11 @@
 -(void)updateViewControllersWithHeading: (int)_page{
     NSArray* viewC = [self.pageView viewControllers];
     [[viewC objectAtIndex:0] updateHeading];
-    [self rotateCompass:.1 degrees:-dele.heading];
+    [self.locationViewController rotateCompass:.1 degrees:-dele.heading];
     
 }
 
 
-- (void)rotateCompass:(NSTimeInterval)duration  degrees:(CGFloat)degrees
-{
-    
-    CGAffineTransform transformCompass = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
-    
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
-                     animations: ^(void){
-                         // The transform matrix
-                         self.compassImage.transform = transformCompass;
-                         self.compassN.transform = transformCompass;
-                     }
-                     completion: ^(BOOL finished){
-                     }
-     ];
-    
-}
 
 
 
@@ -215,8 +191,7 @@
     
     if(self.showInfo){
         //[self.audioMore play];
-        [self.compassImage setHidden:FALSE];
-        [self.compassImage setAlpha: 0.0f];
+
         
     }else{
         

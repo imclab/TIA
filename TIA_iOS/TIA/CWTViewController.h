@@ -34,8 +34,7 @@
 
 //@property(nonatomic, strong, readonly) UISearchBar *searchBar;
 
-@property (nonatomic,strong) IBOutlet UIImageView *compassImage;
-@property (nonatomic,strong) IBOutlet UIImageView *compassN;
+
 @property (nonatomic,assign) BOOL showInfo;
 @property (nonatomic,assign) BOOL showMapBool;
 @property (nonatomic,assign) BOOL showListBool;
