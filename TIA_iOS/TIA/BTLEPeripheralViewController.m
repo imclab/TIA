@@ -2,7 +2,7 @@
 #import "BTLEPeripheralViewController.h"
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "TransferService.h"
-
+#import "CWTAppDelegate.h"
 
 @interface BTLEPeripheralViewController () <CBPeripheralManagerDelegate, UITextViewDelegate>
 @property (strong, nonatomic) IBOutlet UITextView       *textView;
@@ -34,8 +34,9 @@
     // Start up the CBPeripheralManager
     _peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil];
 
-
+ 
 }
+
 
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -95,14 +96,11 @@
 {
     NSLog(@"Central subscribed to characteristic");
     
-    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Another is close." message:@"Look up." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    //[alert show];
     
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:nil name:@"Look up. Another is close." object:nil];
-    
-    
-    
+    CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
+    [dele lookUP:@"Look Up."];
+
     
     // Get the data
     self.dataToSend = [self.textView.text dataUsingEncoding:NSUTF8StringEncoding];
@@ -115,19 +113,6 @@
 }
 
 
-#pragma mark background notifications
-- (void)registerForBackgroundNotifications
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(resignActive)
-                                                 name:UIApplicationWillResignActiveNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(enterForeground)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
-}
 
 
 
@@ -136,6 +121,9 @@
 - (void)peripheralManager:(CBPeripheralManager *)peripheral central:(CBCentral *)central didUnsubscribeFromCharacteristic:(CBCharacteristic *)characteristic
 {
     NSLog(@"Central unsubscribed from characteristic");
+    
+    CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
+    [dele lookUP:@"Lost BT Connection"];
 }
 
 

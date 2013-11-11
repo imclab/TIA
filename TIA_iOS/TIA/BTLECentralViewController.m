@@ -4,6 +4,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 
 #import "TransferService.h"
+#import "CWTAppDelegate.h"
 
 @interface BTLECentralViewController () <CBCentralManagerDelegate, CBPeripheralDelegate>
 
@@ -91,16 +92,12 @@
  */
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
 {
-    //super close
-    if (RSSI.integerValue > -15) {
-        //return;
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Touching" message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-    }
-    
-    // Reject if the signal strength is too low to be close enough (Close is around -22dB)
-    if (RSSI.integerValue < -35) {
-        //return;
+    //-1 takes too long to discover
+    //-5
+    //-22 close
+    //-35 close enough for steady data
+    if (RSSI.integerValue < -15) {
+        return;
     }
     
     NSLog(@"Discovered %@ at %@", peripheral.name, RSSI);
@@ -115,34 +112,10 @@
         NSLog(@"Connecting to peripheral %@", peripheral);
         [self.centralManager connectPeripheral:peripheral options:nil];
         
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Another is close." message:@"Look up." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//        [alert show];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:nil name:@"Look up. Another is close." object:nil];
 
-        
-        
         
     }
 }
-
-
-#pragma mark background notifications
-- (void)registerForBackgroundNotifications
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(resignActive)
-                                                 name:UIApplicationWillResignActiveNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(enterForeground)
-                                                 name:UIApplicationWillEnterForegroundNotification
-                                               object:nil];
-}
-
-
-
 
 
 /** If the connection fails for whatever reason, we need to deal with it.
@@ -172,6 +145,9 @@
     
     // Search only for services that match our UUID
     [peripheral discoverServices:@[[CBUUID UUIDWithString:TRANSFER_SERVICE_UUID]]];
+    
+
+    
 }
 
 
@@ -214,6 +190,12 @@
      
             // If it is, subscribe to it
             [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+            
+            
+            //matched peripheral, show alert
+            CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
+            [dele lookUP:@"Look Up."];
+            
         }
     }
     
@@ -286,6 +268,10 @@
 {
     NSLog(@"Peripheral Disconnected");
     self.discoveredPeripheral = nil;
+    
+    CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
+    [dele lookUP:@"Lost BT Connection"];
+    
     
     // We're disconnected, so start scanning again
     [self scan];

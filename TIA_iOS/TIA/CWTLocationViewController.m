@@ -374,10 +374,14 @@
                 //check if user1 is myself
                 if([object[@"user1"] isEqualToString: [UIDevice currentDevice].identifierForVendor.UUIDString]){
                     self.otherUserVendorIDString=object[@"user2"];
+                    self.myUserNumber=1;
+
                 }else{
                     self.otherUserVendorIDString=object[@"user1"];
+                    self.myUserNumber=2;
+
                 }
-                
+            
                 
                 NSLog(@"retrieving %@", self.otherUserVendorIDString);
 
@@ -641,8 +645,9 @@
                    "altitude: %@\n"
                    "current : %@\n"
                    "target  : %f,%f \n"
-                   "atUUID  : %@\n"
                    "myUUID  : %@\n"
+                   "atUUID  : %@\n"
+                   "user#   : %i\n"
 
                    ,
                    speedString,
@@ -651,8 +656,9 @@
                    altitudeString,
                    currentString,
                    self.dlat , self.dlng,
+                   [UIDevice currentDevice].identifierForVendor.UUIDString,
                    self.otherUserVendorIDString,
-                   [UIDevice currentDevice].identifierForVendor.UUIDString
+                   self.myUserNumber
                    ];
     
     self.displayText.text=statusString;
@@ -668,6 +674,7 @@
     
 
 }
+
 
 
 

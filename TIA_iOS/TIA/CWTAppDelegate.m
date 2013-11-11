@@ -14,7 +14,7 @@
 #import <Parse/Parse.h>
 
 
-@interface CWTAppDelegate ()<UIAlertViewDelegate,CLLocationManagerDelegate,UIAppearanceContainer,MTStatusBarOverlayDelegate>
+@interface CWTAppDelegate ()<UIAlertViewDelegate,CLLocationManagerDelegate,UIAppearanceContainer>
 
 @end
 
@@ -77,6 +77,14 @@
     [reach startNotifier];
 
     //[self updateUserLocation];
+    
+    // Register the app for the Push- and Local-Notifications on iOS5 - else the users will not get the Local-Notifications
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeBadge];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeAlert];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeSound];
+    
+    
+    
     
     return YES;
 }
@@ -208,9 +216,7 @@
 
 
 
--(void) shrink{
-        [self.overlay setShrinked:YES animated:YES];
-}
+
 
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -286,6 +292,53 @@
     
 
 }
+
+#pragma mark background notifications
+- (void)registerForBackgroundNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resignActive)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(enterForeground)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+
+
+
+
+- (void)lookUP: (NSString *)title{
+    
+    
+    //if app is in foreground.
+    if([[UIApplication sharedApplication] applicationState]==UIApplicationStateActive){
+        UIAlertView *alarm=[[UIAlertView alloc] initWithTitle:title message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alarm show];
+    }
+    else{
+        
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+        
+        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+        
+        NSDate *now = [NSDate date];
+        
+        localNotification.fireDate = now;
+        localNotification.alertBody = title;
+        localNotification.soundName = UILocalNotificationDefaultSoundName;
+        localNotification.applicationIconBadgeNumber = 1; // increment
+        
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        
+        
+        
+    }
+}
+
+
 
 
 

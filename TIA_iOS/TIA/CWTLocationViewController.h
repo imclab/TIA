@@ -54,6 +54,7 @@
 @property (nonatomic) float lastAngle;
 @property (nonatomic) int spread;
 @property (nonatomic) int lastSpread;
+@property (nonatomic) int myUserNumber;
 
 @property (nonatomic) BOOL spinning;
 
