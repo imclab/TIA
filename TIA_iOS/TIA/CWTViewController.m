@@ -71,7 +71,7 @@
     [moreInfo addTarget:self action:@selector(setShowInfo) forControlEvents:UIControlEventTouchUpInside];
     [moreInfo setImage:[UIImage imageNamed:@"more-info2.png"] forState:UIControlStateNormal];
     [moreInfo setImage:[UIImage imageNamed:@"less-info.png"] forState:UIControlStateSelected];
-    [self.view addSubview:moreInfo];
+    //[self.view addSubview:moreInfo];
     
     
     
@@ -94,13 +94,14 @@
         //code
     }
      ];
-    
+    self.locationViewController.page=0;
+
     
     //hide or unhide info
-    self.showInfo=[[NSUserDefaults standardUserDefaults] boolForKey:@"showInfo"];
+    //self.showInfo=[[NSUserDefaults standardUserDefaults] boolForKey:@"showInfo"];
     //NSLog(@"read show info %i",self.showInfo);
     
-    [moreInfo setSelected:self.showInfo];
+    //[moreInfo setSelected:self.showInfo];
     
     
 }
@@ -186,9 +187,9 @@
 
 -(void)setShowInfo{
     
-    self.showInfo=!self.showInfo;
-    [[NSUserDefaults standardUserDefaults] setBool:self.showInfo forKey:@"showInfo"];
-    NSLog(@"set show info %i",self.showInfo);
+    //self.showInfo=!self.showInfo;
+    //[[NSUserDefaults standardUserDefaults] setBool:self.showInfo forKey:@"showInfo"];
+    //NSLog(@"set show info %i",self.showInfo);
     
     
     if(self.showInfo){
@@ -201,12 +202,12 @@
 
     }
     
-    [moreInfo setSelected:self.showInfo];
+    //[moreInfo setSelected:self.showInfo];
     
 
     
-    NSArray* viewC = [self.pageView viewControllers];
-    [[viewC objectAtIndex:0] showHideInfo:.3f];
+    //NSArray* viewC = [self.pageView viewControllers];
+    //[[viewC objectAtIndex:0] showHideInfo:.3f];
     
 
     //NSLog(@"switch showinfo");
@@ -224,7 +225,7 @@
 {
     
     //disable pages
-    return nil;
+    //return nil;
     
     
     NSInteger indx = [(CWTLocationViewController*)viewController page];
@@ -243,7 +244,7 @@
 {
     
     //disable pages
-    return nil;
+    //return nil;
     
     
     NSInteger indx = [(CWTLocationViewController*)viewController page];

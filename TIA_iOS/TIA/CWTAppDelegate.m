@@ -246,9 +246,9 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     
-    self.heading=999;
-    self.headingAccuracy=-2;
-    self.lastHeadingAccuracy=-3;
+    //self.heading=999;
+    //self.headingAccuracy=-2;
+    //self.lastHeadingAccuracy=-3;
 
 
     // Create the manager object
@@ -278,7 +278,6 @@
     // check if the hardware has a compass
     if ([CLLocationManager headingAvailable] == NO) {
         // No compass is available. This application cannot function without a compass,
-        // so a dialog will be displayed and no magnetic data will be measured.
         self.locationManager = nil;
         UIAlertView *noCompassAlert = [[UIAlertView alloc] initWithTitle:@"No Compass" message:@"This device does not have a compass." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [noCompassAlert show];

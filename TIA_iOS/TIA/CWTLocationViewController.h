@@ -23,12 +23,14 @@
 
 }
 
-@property (nonatomic,strong) IBOutlet UIImageView *arrowImage;
-@property (nonatomic,strong)  CWTArrow* arrow;
+@property (nonatomic,strong)  UIImageView *arrowImage;
 
-@property (nonatomic,strong) IBOutlet UIImageView *satSearchImage;
-@property (nonatomic,strong) IBOutlet UIImageView *dnArrow;
-@property (nonatomic,strong) IBOutlet UIImageView *north;
+@property (nonatomic,strong)  CWTArrow* arrow;
+//@property (nonatomic,strong)  UIImageView* arrow;
+
+@property (nonatomic,strong)  UIImageView *satSearchImage;
+@property (nonatomic,strong)  UIImageView *dnArrow;
+@property (nonatomic,strong)  UIImageView *north;
 
 
 @property (nonatomic,strong) IBOutlet UIButton *destinationButton;

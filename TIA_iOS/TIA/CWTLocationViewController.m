@@ -61,20 +61,14 @@
     self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
     [self.mainView addSubview: self.dnArrow];
- 
-    
-
-    
-    
-    int moreYpos=50;
     
     //stats
-    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height-moreYpos-44+20, 200, 90)];
-    self.displayText.numberOfLines=10;
+    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+15, 320, 100)];
+    self.displayText.numberOfLines=15;
     self.displayText.backgroundColor=[UIColor clearColor];
-    self.displayText.textColor=[UIColor colorWithWhite:.3 alpha:1];
-    [self.displayText setFont:[UIFont fontWithName:@"Andale Mono" size:7.0]];
-    [self.view addSubview:self.displayText];
+    self.displayText.textColor=[UIColor colorWithWhite:0 alpha:1];
+    [self.displayText setFont:[UIFont fontWithName:@"Andale Mono" size:8.0]];
+    [self.mainView addSubview:self.displayText];
     
 
     
@@ -91,6 +85,33 @@
     [self.satSearchImage startAnimating];
     [self.scrollView addSubview: self.satSearchImage];
     self.satSearchImage.hidden=TRUE;
+    
+    
+    
+    //main arrow
+    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0, 0, 10,screen.size.height*2.0)];
+    self.arrow.backgroundColor=[UIColor clearColor];
+    [self.mainView addSubview:self.arrow];
+    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
+
+    
+    //main arrow hack
+    self.arrowImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 9,1200)];
+    [self.arrowImage setImage:[UIImage imageNamed:@"dotarrow.png"]];
+    [self.mainView addSubview:self.arrowImage];
+    self.arrowImage.center=self.arrow.center;
+
+    
+    
+    //add north arrow
+    self.north = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16*.25, 263*.25)];
+    [self.north setImage:[UIImage imageNamed:@"north.png"]];
+    [self.mainView addSubview: self.north];
+
+    self.north.center=self.arrow.center;
+    
+    
+    
     
     [self updateHeading];
     
@@ -115,14 +136,12 @@
     [refreshControl addTarget:self action:@selector(getFriendPosition:)forControlEvents:UIControlEventValueChanged];
     [self.mainView addSubview:refreshControl];
     
+    
     [self startBTLE];
-
 }
 
 -(void)startBTLE
 {
-    
-    
     //check user number
     
     //get connection data
@@ -155,75 +174,33 @@
         }
         
         }];
-    
-
-    
-    
-    
-
-    
+ 
 }
 
--(void)viewWillDisappear:(BOOL)animated{
-
-}
-
-
--(void)viewDidDisappear:(BOOL)animated{
-
-}
 
 
 -(void)viewWillAppear:(BOOL)animated{
     [self loadLocation];
-
 
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
 
-
-    [UIView animateWithDuration:0.4f
-                          delay:0.2f
-                        options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
-                     animations: ^(void){
-                         [self.arrow setAlpha:1.0f];
-
-                     }
-                     completion: ^(BOOL finished){
-                         [self.arrow setHidden:FALSE];
-                     }];
- 
- 
     //[self spinArc];
     
     CGRect screen = [[UIScreen mainScreen] bounds];
 
     
-    //main arrow
-    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 10,screen.size.height*2)];
-    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
-    self.arrow.backgroundColor=[UIColor clearColor];
-    [self.mainView addSubview:self.arrow];
-    [self.arrow setAlpha:1];
-    [self.arrow setNeedsDisplay];
+    //[self.arrow setHidden:FALSE];
+    //[self.arrow setNeedsDisplay];
+    //[self.arrow setAlpha:1.0f];
 
-    
-    //add north arrow
-    self.north = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16*.25, 263*.25)];
-    self.north.center=CGPointMake(screen.size.width*.5,80);
-    [self.north setImage:[UIImage imageNamed:@"north.png"]];
-    [self.mainView addSubview: self.north];
-    
-  
-    self.north.center=self.arrow.center;
-
-    
     
 }
 
 -(void)viewDidLayoutSubviews{
+
 }
 
 
@@ -522,6 +499,8 @@
                      animations: ^(void){
                          //[self rotateArc:0 degrees:self.spin];
                          self.arrow.transform = transform;
+                         self.arrowImage.transform = transform;
+
 
                      }
                      completion: ^(BOOL finished){
@@ -547,6 +526,8 @@
                      animations: ^(void){
                          // The transform matrix
                          self.arrow.transform = transformRing;
+                         self.arrowImage.transform = transformRing;
+
                      }
                      completion: ^(BOOL finished){
                      }
@@ -615,6 +596,7 @@
 }
 
 -(void)updateAccuracyText{
+    
     NSString *statusString;
     float speed=dele.speed*3.6;
     if(speed<0)speed=0;
