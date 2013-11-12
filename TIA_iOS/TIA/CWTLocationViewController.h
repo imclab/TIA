@@ -13,6 +13,9 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 
+#import "BTLECentralViewController.h"
+#import "BTLEPeripheralViewController.h"
+
 @interface CWTLocationViewController : UIViewController<UIScrollViewDelegate>{
     CWTAppDelegate* dele;
     
@@ -20,11 +23,14 @@
 
 }
 
-@property (nonatomic,strong) IBOutlet UIImageView *arrowImage;
-@property (nonatomic,strong)  CWTArrow* arrow;
+@property (nonatomic,strong)  UIImageView *arrowImage;
 
-@property (nonatomic,strong) IBOutlet UIImageView *satSearchImage;
-@property (nonatomic,strong) IBOutlet UIImageView *dnArrow;
+@property (nonatomic,strong)  CWTArrow* arrow;
+//@property (nonatomic,strong)  UIImageView* arrow;
+
+@property (nonatomic,strong)  UIImageView *satSearchImage;
+@property (nonatomic,strong)  UIImageView *dnArrow;
+@property (nonatomic,strong)  UIImageView *north;
 
 
 @property (nonatomic,strong) IBOutlet UIButton *destinationButton;
@@ -50,6 +56,7 @@
 @property (nonatomic) float lastAngle;
 @property (nonatomic) int spread;
 @property (nonatomic) int lastSpread;
+@property (nonatomic) int myUserNumber;
 
 @property (nonatomic) BOOL spinning;
 
@@ -69,15 +76,15 @@
 - (void)rotateArc:(NSTimeInterval)duration  degrees:(CGFloat)degrees;
 
 - (void)updateHeading;
-//- (void)rotateCompass:(NSTimeInterval)duration  degrees:(CGFloat)degrees;
-//
-//- (IBAction)editLocationName:(id)sender;
+- (void)rotateCompass:(NSTimeInterval)duration  degrees:(CGFloat)degrees;
+
 -(void)showHideInfo: (float)duration;
-//- (void) hideArrow: (BOOL) state;
-//-(void) hideCompass:(BOOL) state;
 
 @property (nonatomic,strong) UIScrollView *scrollView;
 @property (nonatomic,strong) UIView *mainView;
+
+@property (nonatomic,strong) BTLECentralViewController *BTLECentral;
+@property (nonatomic,strong) BTLEPeripheralViewController *BTLPeripheral;
 
 
 @end

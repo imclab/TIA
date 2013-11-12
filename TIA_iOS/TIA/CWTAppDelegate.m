@@ -14,7 +14,7 @@
 #import <Parse/Parse.h>
 
 
-@interface CWTAppDelegate ()<UIAlertViewDelegate,CLLocationManagerDelegate,UIAppearanceContainer,MTStatusBarOverlayDelegate>
+@interface CWTAppDelegate ()<UIAlertViewDelegate,CLLocationManagerDelegate,UIAppearanceContainer>
 
 @end
 
@@ -78,6 +78,14 @@
 
     //[self updateUserLocation];
     
+    // Register the app for the Push- and Local-Notifications on iOS5 - else the users will not get the Local-Notifications
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeBadge];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeAlert];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeSound];
+    
+    
+    
+    
     return YES;
 }
 
@@ -85,7 +93,7 @@
 
 -(void)updateUserLocation{
     
-    NSLog(@"Update User Location");
+    //NSLog(@"Update User Location");
 
     
     //send location to parse
@@ -98,11 +106,11 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded. entry exists
-            NSLog(@"Successfully retrieved %d objects.", objects.count);
+            //NSLog(@"Successfully retrieved %d objects.", objects.count);
             // Do something with the found objects. there should only be one!
             for (PFObject *object in objects)
             {
-                NSLog(@"%@", object.objectId);
+                //NSLog(@"%@", object.objectId);
                 
                    //update lat lng of user
                     object[@"lat"] = [NSNumber numberWithFloat:self.myLat];
@@ -207,9 +215,8 @@
 }
 
 
--(void) shrink{
-        [self.overlay setShrinked:YES animated:YES];
-}
+
+
 
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -239,9 +246,9 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     
-    self.heading=999;
-    self.headingAccuracy=-2;
-    self.lastHeadingAccuracy=-3;
+    //self.heading=999;
+    //self.headingAccuracy=-2;
+    //self.lastHeadingAccuracy=-3;
 
 
     // Create the manager object
@@ -271,7 +278,6 @@
     // check if the hardware has a compass
     if ([CLLocationManager headingAvailable] == NO) {
         // No compass is available. This application cannot function without a compass,
-        // so a dialog will be displayed and no magnetic data will be measured.
         self.locationManager = nil;
         UIAlertView *noCompassAlert = [[UIAlertView alloc] initWithTitle:@"No Compass" message:@"This device does not have a compass." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [noCompassAlert show];
@@ -285,6 +291,53 @@
     
 
 }
+
+#pragma mark background notifications
+- (void)registerForBackgroundNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(resignActive)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(enterForeground)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+
+
+
+
+- (void)lookUP: (NSString *)title{
+    
+    
+    //if app is in foreground.
+    if([[UIApplication sharedApplication] applicationState]==UIApplicationStateActive){
+        UIAlertView *alarm=[[UIAlertView alloc] initWithTitle:title message:@"" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [alarm show];
+    }
+    else{
+        
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+        
+        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+        
+        NSDate *now = [NSDate date];
+        
+        localNotification.fireDate = now;
+        localNotification.alertBody = title;
+        localNotification.soundName = UILocalNotificationDefaultSoundName;
+        localNotification.applicationIconBadgeNumber = 1; // increment
+        
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        
+        
+        
+    }
+}
+
+
 
 
 

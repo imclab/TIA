@@ -54,7 +54,8 @@
     self.pageView.view.layer.masksToBounds=FALSE;
     [self.view addSubview:self.pageView.view];
     self.pageView.view.frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds)+40);
-
+    self.locationViewController.page=0;
+    
     
     self.locationViewController=[[CWTLocationViewController alloc] init];
 
@@ -70,12 +71,15 @@
     [moreInfo addTarget:self action:@selector(setShowInfo) forControlEvents:UIControlEventTouchUpInside];
     [moreInfo setImage:[UIImage imageNamed:@"more-info2.png"] forState:UIControlStateNormal];
     [moreInfo setImage:[UIImage imageNamed:@"less-info.png"] forState:UIControlStateSelected];
+    //[self.view addSubview:moreInfo];
     
-    [self.view addSubview:moreInfo];
+    
+    
 
-  
     
 }
+
+
 
 
 
@@ -86,39 +90,19 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    if( [[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]>= [dele.locationDictionaryArray count] ) {
-        [[NSUserDefaults standardUserDefaults] setInteger:[dele.locationDictionaryArray count]-1 forKey:@"currentDestinationN"];
-    }
-    
-    self.locationViewController.page=[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"];
-    
-    
     [self.pageView setViewControllers:@[self.locationViewController] direction:UIPageViewControllerNavigationDirectionForward  animated:NO completion:^(BOOL finished) {
         //code
     }
      ];
-    
+    self.locationViewController.page=0;
+
     
     //hide or unhide info
-    self.showInfo=[[NSUserDefaults standardUserDefaults] boolForKey:@"showInfo"];
+    //self.showInfo=[[NSUserDefaults standardUserDefaults] boolForKey:@"showInfo"];
     //NSLog(@"read show info %i",self.showInfo);
     
-    [moreInfo setSelected:self.showInfo];
+    //[moreInfo setSelected:self.showInfo];
     
-    if(self.showInfo==FALSE) {
-        [self.compassImage setAlpha: 0.0f];
-        [self.compassImage setHidden:YES];
-    }
-    else {
-        [self.compassImage setAlpha: 1.0f];
-        [self.compassImage setHidden:NO];
-        
-    }
-    
-    
-    //NSLog(@"locationViewController show %i",[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]);
-    
-
     
 }
 
@@ -166,9 +150,7 @@
 }
 
 -(void)viewDidLayoutSubviews{
-    //CGRect screen = [[UIScreen mainScreen] applicationFrame];
-    //self.compassImage.center=CGPointMake(screen.size.width*.5, screen.size.height*.5+22);
-    
+
 }
 
 
@@ -192,29 +174,11 @@
 -(void)updateViewControllersWithHeading: (int)_page{
     NSArray* viewC = [self.pageView viewControllers];
     [[viewC objectAtIndex:0] updateHeading];
-    [self rotateCompass:.1 degrees:-dele.heading];
+    [self.locationViewController rotateCompass:.1 degrees:-dele.heading];
     
 }
 
 
-- (void)rotateCompass:(NSTimeInterval)duration  degrees:(CGFloat)degrees
-{
-    
-    CGAffineTransform transformCompass = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
-    
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
-                     animations: ^(void){
-                         // The transform matrix
-                         self.compassImage.transform = transformCompass;
-                         self.compassN.transform = transformCompass;
-                     }
-                     completion: ^(BOOL finished){
-                     }
-     ];
-    
-}
 
 
 
@@ -223,15 +187,14 @@
 
 -(void)setShowInfo{
     
-    self.showInfo=!self.showInfo;
-    [[NSUserDefaults standardUserDefaults] setBool:self.showInfo forKey:@"showInfo"];
-    NSLog(@"set show info %i",self.showInfo);
+    //self.showInfo=!self.showInfo;
+    //[[NSUserDefaults standardUserDefaults] setBool:self.showInfo forKey:@"showInfo"];
+    //NSLog(@"set show info %i",self.showInfo);
     
     
     if(self.showInfo){
         //[self.audioMore play];
-        [self.compassImage setHidden:FALSE];
-        [self.compassImage setAlpha: 0.0f];
+
         
     }else{
         
@@ -239,21 +202,12 @@
 
     }
     
-    [moreInfo setSelected:self.showInfo];
+    //[moreInfo setSelected:self.showInfo];
     
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         if(!self.showInfo)[self.compassImage setAlpha: 0.0f];
-                         else [self.compassImage setAlpha:1.0f];
-                     }
-                     completion:^(BOOL finished){
-                         [self.compassImage setHidden:!self.showInfo];
-                     }];
+
     
-    NSArray* viewC = [self.pageView viewControllers];
-    [[viewC objectAtIndex:0] showHideInfo:.3f];
+    //NSArray* viewC = [self.pageView viewControllers];
+    //[[viewC objectAtIndex:0] showHideInfo:.3f];
     
 
     //NSLog(@"switch showinfo");
@@ -271,7 +225,7 @@
 {
     
     //disable pages
-    return nil;
+    //return nil;
     
     
     NSInteger indx = [(CWTLocationViewController*)viewController page];
@@ -290,7 +244,7 @@
 {
     
     //disable pages
-    return nil;
+    //return nil;
     
     
     NSInteger indx = [(CWTLocationViewController*)viewController page];

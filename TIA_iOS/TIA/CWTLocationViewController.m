@@ -53,7 +53,6 @@
     //self.mainView.backgroundColor=[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
     
     [self.scrollView addSubview:self.mainView];
-    
     self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width , self.view.frame.size.height+55);
 
     
@@ -61,28 +60,14 @@
     self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
     self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
-    //[self.dnArrow  setAlpha:.5];
     [self.mainView addSubview: self.dnArrow];
- 
-    
-    
-    
-    //main arrow
-    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0,0, 10,screen.size.height*2)];
-    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+250)];
-    self.arrow.backgroundColor=[UIColor clearColor];
-    [self.arrow setHidden:TRUE];
-    [self.scrollView addSubview:self.arrow];
-
-    
-    int moreYpos=50;
     
     //stats
-    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height-moreYpos-44+20, 200, 90)];
-    self.displayText.numberOfLines=10;
+    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+15, 320, 100)];
+    self.displayText.numberOfLines=15;
     self.displayText.backgroundColor=[UIColor clearColor];
-    self.displayText.textColor=[UIColor colorWithWhite:.3 alpha:1];
-    [self.displayText setFont:[UIFont fontWithName:@"Andale Mono" size:7.0]];
+    self.displayText.textColor=[UIColor colorWithWhite:0 alpha:1];
+    [self.displayText setFont:[UIFont fontWithName:@"Andale Mono" size:8.0]];
     [self.mainView addSubview:self.displayText];
     
 
@@ -101,6 +86,33 @@
     [self.scrollView addSubview: self.satSearchImage];
     self.satSearchImage.hidden=TRUE;
     
+    
+    
+    //main arrow
+    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0, 0, 10,screen.size.height*2.0)];
+    self.arrow.backgroundColor=[UIColor clearColor];
+    [self.mainView addSubview:self.arrow];
+    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
+
+    
+    //main arrow hack
+    self.arrowImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 9,1200)];
+    [self.arrowImage setImage:[UIImage imageNamed:@"dotarrow.png"]];
+    [self.mainView addSubview:self.arrowImage];
+    self.arrowImage.center=self.arrow.center;
+
+    
+    
+    //add north arrow
+    self.north = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16*.25, 263*.25)];
+    [self.north setImage:[UIImage imageNamed:@"north.png"]];
+    [self.mainView addSubview: self.north];
+
+    self.north.center=self.arrow.center;
+    
+    
+    
+    
     [self updateHeading];
     
 
@@ -113,8 +125,6 @@
 
     [self.mainView addSubview:self.time];
     [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
-
-
     
     //refresh on a timer
     //NSTimer* timer = [NSTimer timerWithTimeInterval:20.0f target:self selector:@selector(getFriendPosition) userInfo:nil repeats:YES];
@@ -125,71 +135,86 @@
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(getFriendPosition:)forControlEvents:UIControlEventValueChanged];
     [self.mainView addSubview:refreshControl];
-
+    
+    
+    [self startBTLE];
 }
 
+-(void)startBTLE
+{
+    //check user number
+    
+    //get connection data
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(user1 = %@ OR user2 = %@)",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
+    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
+    
+    [query orderByDescending:@"updatedAt"];
+    
+    [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+        if (!error) {
+            
+                NSLog(@"user 1    %@", object[@"user1"]);
+                NSLog(@"user 2    %@", object[@"user2"]);
+                NSLog(@"i am      %@", [UIDevice currentDevice].identifierForVendor.UUIDString);
+                
+                //check if user1 is myself
+                if([object[@"user1"] isEqualToString: [UIDevice currentDevice].identifierForVendor.UUIDString]){
+                    //if user1
+                    self.BTLECentral=[[BTLECentralViewController alloc] init];
+                    [self.mainView addSubview:self.BTLECentral.view];
+                    NSLog(@"launch BTLE Central for user 1");
+                }
+                else{
+                    //if user2
+                    self.BTLPeripheral=[[BTLEPeripheralViewController alloc] init];
+                    [self.mainView addSubview:self.BTLPeripheral.view];
+                    NSLog(@"launch BTLE Peripheral for user 2");
 
--(void)viewWillDisappear:(BOOL)animated{
-    [self.arrow setAlpha:0.0];
-    [self.arrow setHidden:TRUE];
+                }
+        }
+        
+        }];
+ 
 }
 
-
--(void)viewDidDisappear:(BOOL)animated{
-    [self.arrow setAlpha:0.0];
-    [self.arrow setHidden:TRUE];
-}
 
 
 -(void)viewWillAppear:(BOOL)animated{
     [self loadLocation];
-    [self.arrow setAlpha:0.0];
-    [self.arrow setHidden:FALSE];
-    [self showHideInfo:0];
 
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    //NSLog(@"show page %i",[[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]);
-    
-    [[NSUserDefaults standardUserDefaults] setInteger:self.page forKey:@"currentDestinationN"];
 
-
-    [UIView animateWithDuration:0.4f
-                          delay:0.2f
-                        options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
-                     animations: ^(void){
-                         [self.arrow setAlpha:1.0f];
-
-                     }
-                     completion: ^(BOOL finished){
-                         //[self.arrow setHidden:FALSE];
-                     }];
     //[self spinArc];
     
+    CGRect screen = [[UIScreen mainScreen] bounds];
+
     
+    //[self.arrow setHidden:FALSE];
+    //[self.arrow setNeedsDisplay];
+    //[self.arrow setAlpha:1.0f];
+
     
 }
 
 -(void)viewDidLayoutSubviews{
-    //self.arrow.center=CGPointMake(self.distanceText.center.x, self.distanceText.center.y);
+
 }
 
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     //NSLog(@"scrolling");
-
-    
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     
 //    if(scrollView.contentOffset.y>-30){
-//        NSLog(@"refresh");
-//        
+    
 //    }
 }
+
 
 
 
@@ -210,17 +235,12 @@
     self.distance = [locA distanceFromLocation:locB];
     self.locBearing=[self getBearing];
     [self getBearingAccuracy];
-    
-    
 
-    
     
     //near destination
     if( self.distance<= 20.0 && self.distance>=0 && dele.accuracy>0){
         self.satSearchImage.hidden=TRUE;
-        //self.accuracyText.text=  @"ARRIVED" ;
         [self rotateArc:duration degrees:self.locBearing-dele.heading];
-
         self.spinning=FALSE;
     }
     
@@ -280,9 +300,6 @@
         }
     }
     
-    //if(self.maxDistance<0) [self calculateMaxDist];
-    
-    //NSLog(@"%.2f",RADIANS_TO_DEGREES([self getBearing]));
 }
 
 
@@ -294,7 +311,6 @@
     //launch time pulled from parse is in GMT
     NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.launchTime];
     self.time.text=[self stringFromTimeInterval:timeInterval];
-   // [self.time setCenter:CGPointMake(self.view.frame.size.width*.5, self.view.frame.size.height-44-150)];
 
  }
 
@@ -303,20 +319,22 @@
     NSInteger seconds = ti % 60;
     NSInteger minutes = (ti / 60) % 60;
     NSInteger hours = (ti / 3600) % 24;
-    NSInteger years = (ti / 86400) % 365;
+    NSInteger days = (ti / 86400) % 999;
+    //NSInteger years = (ti / 31556952) % 9999;//86400 * 365.2425
 
-    return [NSString stringWithFormat:@"%04i:%02i:%02i:%02i",years, hours, minutes, seconds];
+    return [NSString stringWithFormat:@"%03i:%02i:%02i:%02i", days, hours, minutes, seconds];
 }
 
 
 -(void)getFriendPosition:(id)sender{
 
     //get connection data
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(user1 = %@ OR user2 = %@)",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((user1 = %@) OR (user2 = %@))",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
     PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
     
     [query orderByDescending:@"updatedAt"];
-    
+    //[query orderByAscending:@"updatedAt"];
+
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         if (!error) {
 
@@ -333,10 +351,14 @@
                 //check if user1 is myself
                 if([object[@"user1"] isEqualToString: [UIDevice currentDevice].identifierForVendor.UUIDString]){
                     self.otherUserVendorIDString=object[@"user2"];
+                    self.myUserNumber=1;
+
                 }else{
                     self.otherUserVendorIDString=object[@"user1"];
+                    self.myUserNumber=2;
+
                 }
-                
+            
                 
                 NSLog(@"retrieving %@", self.otherUserVendorIDString);
 
@@ -352,7 +374,7 @@
                         NSLog(@"The getFirstObject request failed.");
                     } else {
                         // The find succeeded.
-                        NSLog(@"Successfully retrieved the object.");
+                        //NSLog(@"Successfully retrieved the object.");
                         self.dlat= [[object objectForKey:@"lat"] floatValue];
                         self.dlng= [[object objectForKey:@"lng"] floatValue];
                         
@@ -477,6 +499,8 @@
                      animations: ^(void){
                          //[self rotateArc:0 degrees:self.spin];
                          self.arrow.transform = transform;
+                         self.arrowImage.transform = transform;
+
 
                      }
                      completion: ^(BOOL finished){
@@ -502,6 +526,8 @@
                      animations: ^(void){
                          // The transform matrix
                          self.arrow.transform = transformRing;
+                         self.arrowImage.transform = transformRing;
+
                      }
                      completion: ^(BOOL finished){
                      }
@@ -520,27 +546,30 @@
 
     }
 
-    //self.spread=dele.headingAccuracy+bearingAccuracy;
-    self.spread=3.0;
-
-    if(self.spread!=self.lastSpread){
-        //NSLog(@"%i/%i",self.spread,self.lastSpread);
-        
-//        [UIView animateWithDuration:.3f
-//                              delay:0.0f
-//                            options:UIViewAnimationOptionCurveEaseInOut
-//                         animations:^{
-                             [self.arrow updateSpread:self.spread];
-
-//                         }
-//                         completion:nil];
-        
-        
-        self.lastSpread=self.spread;
-    }
     
     [self updateAccuracyText];
 }
+
+
+- (void)rotateCompass:(NSTimeInterval)duration  degrees:(CGFloat)degrees
+{
+    
+    CGAffineTransform transformCompass = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
+    
+    [UIView animateWithDuration:0.3f
+                          delay:0.0f
+                        options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
+                     animations: ^(void){
+                         // The transform matrix
+                         self.north.transform = transformCompass;
+                     }
+                     completion: ^(BOOL finished){
+                     }
+     ];
+    
+}
+
+
 
 
 -(void)showHideInfo: (float)duration{
@@ -567,6 +596,7 @@
 }
 
 -(void)updateAccuracyText{
+    
     NSString *statusString;
     float speed=dele.speed*3.6;
     if(speed<0)speed=0;
@@ -597,8 +627,9 @@
                    "altitude: %@\n"
                    "current : %@\n"
                    "target  : %f,%f \n"
-                   "atUUID  : %@\n"
                    "myUUID  : %@\n"
+                   "atUUID  : %@\n"
+                   "user#   : %i\n"
 
                    ,
                    speedString,
@@ -607,8 +638,9 @@
                    altitudeString,
                    currentString,
                    self.dlat , self.dlng,
+                   [UIDevice currentDevice].identifierForVendor.UUIDString,
                    self.otherUserVendorIDString,
-                   [UIDevice currentDevice].identifierForVendor.UUIDString
+                   self.myUserNumber
                    ];
     
     self.displayText.text=statusString;
@@ -627,10 +659,8 @@
 
 
 
--(void) hideArrow:(BOOL) state
-{
-    self.arrow.hidden=state;
-}
+
+
 
 - (void)didReceiveMemoryWarning
 {

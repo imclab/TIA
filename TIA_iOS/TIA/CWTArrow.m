@@ -8,9 +8,6 @@
 
 #import "CWTArrow.h"
 
-#import "CWTAppDelegate.h"
-
-#define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
 
 @implementation CWTArrow
 
@@ -19,10 +16,6 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.spread=60.0;
-        //self.showExtras=TRUE;
-        //self.showExtras=[[NSUserDefaults standardUserDefaults] boolForKey:@"showInfo"];
-         
     }
     return self;
 }
@@ -30,39 +23,35 @@
 
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+
+ - (void)drawRect:(CGRect)rect
 {
-    //int thickness=210;
-    //int r=100+10+thickness*.5;
+    NSLog(@"Draw Arrow");
+
 
     int thickness=1;
-
-
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
 
 	//arrow
 	CGContextSetLineWidth(context,thickness);
-    //CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:1 green:1 blue:0 alpha:.7].CGColor);
-    //CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:0 green:.73f blue:1 alpha:1].CGColor);
-    CGContextSetStrokeColorWithColor(context, [UIColor colorWithWhite:0 alpha:1].CGColor);
-    //CGContextAddArc(context, x, y, r,_start,_end,0);
+    CGContextSetStrokeColorWithColor(context, [UIColor colorWithWhite:0.4 alpha:1].CGColor);
     
     CGPoint points[2];
     points[0].x=self.frame.size.width*.5;
     points[0].y=self.frame.size.height*.5;
 
     points[1].x=self.frame.size.width*.5;
-    points[1].y=self.frame.size.height*.5+2000;
+    points[1].y=self.frame.size.height*.5-2500;
 
     CGContextAddLines(context, points, 2);
     CGContextStrokePath(context);
     
+    
+    
+    //draw dot
     CGRect ellipse;
-    
-    
-    int w=10;
-    int h=10;
+    int w=8;
+    int h=8;
     ellipse.origin.x=points[0].x-w*.5;
     ellipse.origin.y=points[0].y-h*.5;
 
@@ -71,22 +60,11 @@
     
     
     CGContextAddEllipseInRect(context, ellipse);
-
-    CGContextSetFillColorWithColor(context, [UIColor colorWithWhite:0 alpha:1].CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor colorWithWhite:0.4 alpha:1].CGColor);
     CGContextFillPath(context);
 
-    
 
 }
-
-
--(void) updateSpread:(CGFloat)newSpread
-{
-    self.spread = newSpread;
-    [self setNeedsDisplay];
-}
-
-
 
 
 
