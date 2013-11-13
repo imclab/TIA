@@ -4,8 +4,6 @@ require 'yaml'
 require 'pathname'
 
 class Status
-
-
 	attr_accessor :forecast
 
 	def initialize(params)
@@ -16,7 +14,11 @@ class Status
 	end
 
 	def message
-		[hour_phrase, sunrise_phrase, temperature_phrase, precipitation_phrase, sunset_phrase].select{|p| !p.empty?}.join(" ")
+		[hour_phrase, sunrise_phrase, temperature_phrase, cloud_phrase, precipitation_phrase, sunset_phrase].select{|p| !p.empty?}.join(" ")
+	end
+
+	def cloud_phrase
+		Status.phrases_for_closest_value("clouds", forecast.currently.cloudCover)
 	end
 
 	def precipitation_phrase

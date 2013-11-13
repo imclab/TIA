@@ -46,6 +46,15 @@ temperature: # this is in degrees F. It will snap to the closest value
   - The sun is beating down.
   90:
   - It's hot. Almost unbearable.
+clouds: # amount of cloud cover on a range from 0-1. Snaps to closest value.
+  0:
+  - There's not a cloud in the sky.
+  0.4:
+  - There's streaks of clouds across the sky.
+  0.75:
+  - It's cloudy out.
+  1:
+  - The sky is the color of television tuned to a dead channel.
 sunrise: # this is minutes after sunrise (negative being before). When outside this range no message will be shown.
   -60:
   - The sky's just beginning to lighten.
