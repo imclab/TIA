@@ -1,5 +1,30 @@
 ---
-temperature:
+time: # this is in 24 hr time. It will snap to the closest hour present
+  2:
+  - It's really late.
+  - It's the middle of the night.
+  - It's late.
+  - It's the darkest night.
+  6:
+  - It's early in the morning.
+  - It's early.
+  - It's bright and early.
+  10:
+  - It's morning.
+  - It's mid-monring.
+  12:
+  - It's the middle of the day.
+  - It's around noon.
+  16:
+  - It's the afternoon.
+  - The day's almost over.
+  20:
+  - It's evening.
+  - It's night.
+  22:
+  - It's night time.
+  - It's starting to get late.
+temperature: # this is in degrees F. It will snap to the closest value
   20:
   - It is seriously cold out.
   30:
@@ -21,14 +46,14 @@ temperature:
   - The sun is beating down.
   90:
   - It's hot. Almost unbearable.
-sunrise:
+sunrise: # this is minutes after sunrise (negative being before). When outside this range no message will be shown.
   -60:
   - The sky's just beginning to lighten.
   0:
   - The sun just came up.
   60:
   - The sun's been up for an hour.
-sunset:
+sunset: # this is minutes after sunset (negative being before). When outside this range no message will be shown.
   -60:
   - It's sunset.
   - The sky is starting to darken.

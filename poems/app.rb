@@ -13,12 +13,5 @@ get "/:lat,:lng" do
 						 :lng => params[:lng], 
 						 :forecast_key => FORECAST_KEY})
 
-	status.temperature_phrase
-end
-
-get "/json/:lat,:lng" do
-	status = Status.new({:lat => params[:lat], 
-						 :lng => params[:lng], 
-						 :forecast_key => FORECAST_KEY})
-	{"message" => status.message}.to_json
+	status.message
 end

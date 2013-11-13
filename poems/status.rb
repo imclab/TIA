@@ -15,6 +15,10 @@ class Status
 		self.forecast = ForecastIO.forecast(params[:lat].to_f,params[:lng].to_f)	
 	end
 
+	def message
+		[hour_phrase, sunrise_phrase, temperature_phrase, precipitation_phrase, sunset_phrase].select{|p| !p.empty?}.join(" ")
+	end
+
 	def precipitation_phrase
 		if(forecast.daily.data[0].keys.include?("precipType"))
 			precipitation_type = forecast.daily.data[0]["precipType"]
@@ -24,8 +28,12 @@ class Status
 				Status.phrase_hash[precipitation_type]["heavy"].sample
 			end
 		else
-			return false
+			return ""
 		end
+	end
+
+	def hour_phrase
+		Status.phrases_for_closest_value("time", Time.at(forecast.currently.time).hour).sample
 	end
 
 	def temperature_phrase
@@ -39,7 +47,7 @@ class Status
 		if(phrases)
 			return phrases.sample
 		else
-			return false
+			return ""
 		end
 	end
 
@@ -49,7 +57,7 @@ class Status
 		if(phrases)
 			return phrases.sample
 		else
-			return false
+			return ""
 		end
 	end
 
