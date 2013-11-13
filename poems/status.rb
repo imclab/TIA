@@ -20,9 +20,14 @@ class Status
 										 forecast.currently.apparentTemperature).sample
 	end
 
-
-
 	def sunrise_phrase
+		mins_to_sunrise = ( Time.now.to_i - forecast.daily.data[0].sunriseTime)/60.0
+		phrases = Status.phrases_within_range("sunrise", mins_to_sunrise)
+		if(phrases)
+			return phrases.sample
+		else
+			return false
+		end
 	end
 
 	def sunset_phrase
