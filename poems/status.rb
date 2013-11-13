@@ -15,6 +15,19 @@ class Status
 		self.forecast = ForecastIO.forecast(params[:lat].to_f,params[:lng].to_f)	
 	end
 
+	def precipitation_phrase
+		if(forecast.daily.data[0].keys.include?("precipType"))
+			precipitation_type = forecast.daily.data[0]["precipType"]
+			if(forecast.daily.data[0]["precipIntensity"] < 0.1)
+				Status.phrase_hash[precipitation_type]["light"].sample
+			else
+				Status.phrase_hash[precipitation_type]["heavy"].sample
+			end
+		else
+			return false
+		end
+	end
+
 	def temperature_phrase
 		Status.phrases_for_closest_value("temperature", 
 										 forecast.currently.apparentTemperature).sample
@@ -39,11 +52,6 @@ class Status
 			return false
 		end
 	end
-
-
-	def to_json
-    	
-    end
 
     def self.phrases_within_range(string, value)
     	hash = Status.phrase_hash[string]

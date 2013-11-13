@@ -36,3 +36,28 @@ sunset:
   - The sun is just disappearing over the horizon.
   60:
   - It just got dark.
+rain:
+  light:
+  - It's drizzling.
+  - It's pissing down rain.
+  heavy:
+  - It's poouring.
+  - It's raiing cats and dogs
+snow:
+  light:
+  - It's misting snow.
+  - The ground is flaked with melting snow.
+  heavy:
+  - It's snowing.
+  - It's snowing hard.
+  - The air is filled with snow.
+sleet:
+  light:
+  - It's slushy.
+  heavy:
+  - It's sleeting down brutal sheets of ice.
+hail:
+  light:
+  - Tiny balls of hail are pinging down off of everything.
+  heavy:
+  - Golf ball-sized hailstones are falling out of the sky.
