@@ -7,8 +7,8 @@ current:
     - It's freezing.
     - It feels like winter.
     40:
-    - It's 
-    - It's seriously cold out.
+    - It's nippy.
+    - It's cold.
     50:
     - It's pretty chilly outside.
     - It's crisp.
@@ -20,3 +20,20 @@ current:
     - The weather is beautiful.
     80:
     - The sun is beating down.
+    90:
+    - It's hot. Almost unbearable.
+  sunrise:
+    -60:
+    - The sky's just beginning to lighten.
+    0:
+    - The sun just came up.
+    60:
+    - The sun's been up for an hour.
+  sunset:
+    -60:
+    - It's sunset.
+    - The sky is starting to darken.
+    0:
+    - The sun is just disappearing over the horizon.
+    60:
+    - It just got dark.

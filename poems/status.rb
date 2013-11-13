@@ -20,8 +20,33 @@ class Status
 										 forecast.currently.apparentTemperature).sample
 	end
 
+
+
+	def sunrise_phrase
+	end
+
+	def sunset_phrase
+		mins_to_sunset = ( Time.now.to_i - forecast.daily.data[0].sunsetTime)/60.0
+		phrases = Status.phrases_within_range(Status.phrase_hash["current"]["sunset"], mins_to_sunset)
+		if(phrases)
+			return phrases.sample
+		else
+			return false
+		end
+	end
+
+
 	def to_json
     	
+    end
+
+    def self.phrases_within_range(hash, value)
+		sorted_keys = hash.keys.sort
+		if(value < sorted_keys.first || value > sorted_keys.last)
+			return false
+		else
+			return self.phrases_for_closest_value(hash,value)
+		end
     end
 
     def self.phrases_for_closest_value(hash, value)
