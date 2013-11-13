@@ -1,0 +1,22 @@
+---
+current:
+  temperature:
+    20:
+    - It is seriously cold out.
+    30:
+    - It's freezing.
+    - It feels like winter.
+    40:
+    - It's 
+    - It's seriously cold out.
+    50:
+    - It's pretty chilly outside.
+    - It's crisp.
+    60:
+    - It's almost nice out.
+    - The weather is absolutely unremarkable.
+    70:
+    - It's nice out.
+    - The weather is beautiful.
+    80:
+    - The sun is beating down.
