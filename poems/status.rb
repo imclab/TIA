@@ -16,7 +16,7 @@ class Status
 	end
 
 	def temperature_phrase
-		Status.phrases_for_closest_value(Status.phrase_hash["current"]["temperature"], 
+		Status.phrases_for_closest_value("temperature", 
 										 forecast.currently.apparentTemperature).sample
 	end
 
@@ -27,7 +27,7 @@ class Status
 
 	def sunset_phrase
 		mins_to_sunset = ( Time.now.to_i - forecast.daily.data[0].sunsetTime)/60.0
-		phrases = Status.phrases_within_range(Status.phrase_hash["current"]["sunset"], mins_to_sunset)
+		phrases = Status.phrases_within_range("sunset", mins_to_sunset)
 		if(phrases)
 			return phrases.sample
 		else
@@ -40,16 +40,18 @@ class Status
     	
     end
 
-    def self.phrases_within_range(hash, value)
+    def self.phrases_within_range(string, value)
+    	hash = Status.phrase_hash[string]
 		sorted_keys = hash.keys.sort
 		if(value < sorted_keys.first || value > sorted_keys.last)
 			return false
 		else
-			return self.phrases_for_closest_value(hash,value)
+			return self.phrases_for_closest_value(string,value)
 		end
     end
 
-    def self.phrases_for_closest_value(hash, value)
+    def self.phrases_for_closest_value(string, value)
+    	hash = Status.phrase_hash[string]
     	key = hash.keys.min_by{|x| (x - value).abs}
     	hash[key]
 	end
