@@ -96,7 +96,7 @@
     //main arrow hack
     self.arrowImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 9,1200)];
     [self.arrowImage setImage:[UIImage imageNamed:@"dotarrow.png"]];
-    [self.mainView addSubview:self.arrowImage];
+    [self.view addSubview:self.arrowImage];
     self.arrowImage.center=self.arrow.center;
     
     //distance
