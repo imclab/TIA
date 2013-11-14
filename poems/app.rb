@@ -19,7 +19,7 @@ get "/:lat,:lng" do
 		{"message" => status.message, 
 		 "location" => {"lat" => params[:lat], "lng" => params[:lng]},
 		 "forecast" => {"temperature" => status.forecast.currently.apparentTemperature, 
-		 				"time" => Time.at(status.forecast.currently.time),
+		 				"time" => status.time_with_timezone(status.forecast.currently.time),
 		 				"clouds" => status.forecast.currently.cloudCover,
 		 				"precipType" => status.forecast.daily.data[0]["precipType"],
 		 				"precipIntensity" =>  status.forecast.daily.data[0]["precipIntensity"]}}.to_json

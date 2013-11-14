@@ -2,6 +2,7 @@ require 'forecast_io'
 require 'json'
 require 'yaml'
 require 'pathname'
+require 'active_support/time'
 
 class Status
 	attr_accessor :forecast
@@ -34,8 +35,13 @@ class Status
 		end
 	end
 
+	def time_with_timezone( timestamp ) # expects time since epoch as in forecast.currently.time
+		Time.zone = forecast.timezone
+		Time.zone.at timestamp
+	end
+
 	def hour_phrase
-		Status.phrases_for_closest_value("time", Time.at(forecast.currently.time).hour).sample
+		Status.phrases_for_closest_value("time", time_with_timezone(forecast.currently.time).hour).sample
 	end
 
 	def temperature_phrase

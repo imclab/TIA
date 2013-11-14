@@ -1,3 +1,5 @@
 source "http://rubygems.org"
 gem "sinatra"
 gem "forecast_io"
+gem "active_support"
+gem "tzinfo"
