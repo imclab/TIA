@@ -26,24 +26,20 @@
 @property (nonatomic,strong)  UIImageView *arrowImage;
 
 @property (nonatomic,strong)  CWTArrow* arrow;
-//@property (nonatomic,strong)  UIImageView* arrow;
 
 @property (nonatomic,strong)  UIImageView *satSearchImage;
 @property (nonatomic,strong)  UIImageView *dnArrow;
 @property (nonatomic,strong)  UIImageView *north;
 
 
-@property (nonatomic,strong) IBOutlet UIButton *destinationButton;
 @property (nonatomic,strong)  UILabel *mainMessage;
 @property (nonatomic,strong)  UILabel *distanceText;
 
-@property (nonatomic,strong) IBOutlet UILabel *pageNText;
 @property (nonatomic,strong) IBOutlet UILabel *accuracyText;
 @property (nonatomic,strong) IBOutlet UILabel *unitText;
 @property (nonatomic,strong) IBOutlet  UILabel *displayText;
 
 //@property (nonatomic)   UITextField *nameField;
-
 
 
 @property (nonatomic) NSInteger page;
@@ -70,9 +66,6 @@
 
 
 -(void)loadLocation;
-
-
--(void)updateDestinationName;
 
 -(void)updateDistanceWithLatLng: (float)duration;
 - (void)rotateArc:(NSTimeInterval)duration  degrees:(CGFloat)degrees;

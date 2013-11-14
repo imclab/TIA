@@ -62,6 +62,7 @@
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
     [self.mainView addSubview: self.dnArrow];
     
+    
     //stats
     self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+15, 320, 100)];
     self.displayText.numberOfLines=15;
@@ -83,73 +84,75 @@
     self.satSearchImage.animationDuration = 2.0f;
     self.satSearchImage.animationRepeatCount = 0;
     [self.satSearchImage startAnimating];
-    [self.scrollView addSubview: self.satSearchImage];
+    [self.view addSubview: self.satSearchImage];
     self.satSearchImage.hidden=TRUE;
-    
-    
     
     //main arrow
     self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0, 0, 10,screen.size.height*2.0)];
     self.arrow.backgroundColor=[UIColor clearColor];
-    [self.mainView addSubview:self.arrow];
+    [self.view addSubview:self.arrow];
     [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
-
     
     //main arrow hack
     self.arrowImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 9,1200)];
     [self.arrowImage setImage:[UIImage imageNamed:@"dotarrow.png"]];
     [self.mainView addSubview:self.arrowImage];
     self.arrowImage.center=self.arrow.center;
-
+    
+    //distance
+    self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width*.25, 20)];
+    self.distanceText.numberOfLines=1;
+    self.distanceText.textColor=[UIColor colorWithWhite:.3 alpha:1];
+    [self.distanceText setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.0]];
+    [self.distanceText setTextAlignment:NSTextAlignmentCenter];
+    [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.5, self.arrow.center.y-screen.size.width*.35)];
+    self.distanceText.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90));
+    self.distanceText.backgroundColor=[UIColor colorWithWhite:.95 alpha:1];
+    [self.arrow addSubview:self.distanceText];
     
     
     //add north arrow
     self.north = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16*.25, 263*.25)];
     [self.north setImage:[UIImage imageNamed:@"north.png"]];
-    [self.mainView addSubview: self.north];
+    [self.view addSubview: self.north];
 
     self.north.center=self.arrow.center;
     
-    
     //main message
-    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 240, 90)];
-    [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.25)];
-    self.mainMessage.numberOfLines=5;
+    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 240, 150)];
+    [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.35)];
+    self.mainMessage.numberOfLines=8;
     self.mainMessage.textAlignment=NSTextAlignmentCenter;
     [self.mainMessage setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:22.0]];
     //self.mainMessage.adjustsFontSizeToFitWidth = YES;
     self.mainMessage.backgroundColor=[UIColor clearColor];
-    [self.view addSubview:self.mainMessage];
+    [self.mainView addSubview:self.mainMessage];
+    self.mainMessage.text=@"...";
     
-    self.mainMessage.text=@"Hello";
-    
-    
-    
-    
-    [self updateHeading];
     
 
-    //time from launch
-    self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height*.5, screen.size.width, 20)];
-    self.time.numberOfLines=10;
-    self.time.textColor=[UIColor colorWithWhite:.3 alpha:1];
-    [self.time setFont:[UIFont fontWithName:@"Andale Mono" size:20.0]];
-    [self.time setTextAlignment:NSTextAlignmentCenter];
-
-    [self.mainView addSubview:self.time];
-    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
+    
     
     //refresh on a timer
     //NSTimer* timer = [NSTimer timerWithTimeInterval:20.0f target:self selector:@selector(getFriendPosition) userInfo:nil repeats:YES];
     //[[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
-    
     
     //pull to refresh
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(getFriendPosition:)forControlEvents:UIControlEventValueChanged];
     [self.mainView addSubview:refreshControl];
     
+    //time from launch
+    self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height+140, screen.size.width, 20)];
+    self.time.numberOfLines=10;
+    self.time.textColor=[UIColor colorWithWhite:.3 alpha:1];
+    [self.time setFont:[UIFont fontWithName:@"Andale Mono" size:18.0]];
+    [self.time setTextAlignment:NSTextAlignmentCenter];
+    [self.mainView addSubview:self.time];
+    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
     
+
+    [self updateHeading];
     [self startBTLE];
 }
 
@@ -159,7 +162,6 @@
 -(void)startBTLE
 {
     //check user number
-    
     //get connection data
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(user1 = %@ OR user2 = %@)",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
     PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
@@ -202,17 +204,11 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-
     //[self spinArc];
-    
-    CGRect screen = [[UIScreen mainScreen] bounds];
-
-    
+    //CGRect screen = [[UIScreen mainScreen] bounds];
     //[self.arrow setHidden:FALSE];
     //[self.arrow setNeedsDisplay];
     //[self.arrow setAlpha:1.0f];
-
-    
 }
 
 -(void)viewDidLayoutSubviews{
@@ -238,7 +234,6 @@
     //[self calculateMaxDist];
     [self getFriendPosition:nil];
     
-    [self updateDistanceWithLatLng:0];
     //[self getBearing];
 }
 
@@ -285,8 +280,6 @@
         else {
             self.accuracyText.text=[NSString stringWithFormat:@"± %im",(int)dele.accuracy ];
         }
-        
-        
     }
     
     
@@ -294,23 +287,23 @@
     if([dele.units isEqual:@"m"]){
         
         if(self.distance<402.336){ //.25 miles in meters
-            self.distanceText.text= [NSString stringWithFormat:@"%i",(int)(self.distance*3.28084)];
+            self.distanceText.text= [NSString stringWithFormat:@"%i FT",(int)(self.distance*3.28084)];
             self.unitText.text=@"FEET";
             
         }else{
-            self.distanceText.text= [NSString stringWithFormat:@"%.2f",self.distance*0.000621371];
+            self.distanceText.text= [NSString stringWithFormat:@"%.0f MILES",self.distance*0.000621371];
             self.unitText.text=@"MILES";
         }
         
     }
     else {
         if(self.distance<1000){
-            self.distanceText.text= [NSString stringWithFormat:@"%i",(int)self.distance];
+            self.distanceText.text= [NSString stringWithFormat:@"%i METERS",(int)self.distance];
             self.unitText.text=@"METERS";
             
             
         }else{
-            self.distanceText.text= [NSString stringWithFormat:@"%.2f",self.distance/1000];
+            self.distanceText.text= [NSString stringWithFormat:@"%.0f KM",self.distance/1000];
             self.unitText.text=@"KM";
             
         }
@@ -353,8 +346,6 @@
 
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         if (!error) {
-
-            
                 NSLog(@"objectId  %@", object.objectId);
                 NSLog(@"created   %@", object.updatedAt);
                 
@@ -375,52 +366,45 @@
 
                 }
             
-                
                 NSLog(@"retrieving %@", self.otherUserVendorIDString);
-
                 //retrieve otheruser's location
                 PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
                 [query whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString ];
                 [query orderByDescending:@"updatedAt"];
-                
-                
                 [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                     
                     if (!object) {
                         NSLog(@"The getFirstObject request failed.");
                     } else {
                         // The find succeeded.
-                        //NSLog(@"Successfully retrieved the object.");
                         self.dlat= [[object objectForKey:@"lat"] floatValue];
                         self.dlng= [[object objectForKey:@"lng"] floatValue];
-                        
-                        
-
                         NSLog(@"pointing: %@",[object objectForKey:@"vendorUUID"] );
+                        
+                        //query for message based on another's data
+                        NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f", self.dlat, self.dlng];
+                        NSURL  *iQuery = [NSURL URLWithString:url];
+                        NSString* mess    = [NSString stringWithContentsOfURL:iQuery encoding:NSUTF8StringEncoding error:NULL];
+                        NSLog(@"m:%@",mess);
+                        if(mess) self.mainMessage.text=mess;
+                        
+                        [self updateDistanceWithLatLng:0];
+
                     }
-                    
                 }];
-            
         }
         else {
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
             //I don't exist in the connection database! yet...
         }
+        
+        //end refresh animation
+        [(UIRefreshControl *)sender endRefreshing];
     }];
 
-    //query for message based on another's data
-    NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f", self.dlat, self.dlng];
-    NSURL  *iQuery = [NSURL URLWithString:url];
-    NSString* mess    = [NSString stringWithContentsOfURL:iQuery encoding:NSUTF8StringEncoding error:NULL];
 
-    NSLog(@"m:%@",mess);
-    if(mess) self.mainMessage.text=mess;
-    
-        
-    //end refresh animation
-    [(UIRefreshControl *)sender endRefreshing];
-    
+
 }
 
 -(void)calculateMaxDist{
@@ -540,6 +524,10 @@
 - (void)rotateArc:(NSTimeInterval)duration  degrees:(CGFloat)degrees
 {
 	CGAffineTransform transformRing = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(degrees));
+    
+    //float dd=degrees-90.0f;
+    //CGAffineTransform transformDistanceText = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(dd));
+
     [UIView animateWithDuration:duration
                           delay:0.0f
                         options: UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState
@@ -547,6 +535,7 @@
                          // The transform matrix
                          self.arrow.transform = transformRing;
                          self.arrowImage.transform = transformRing;
+                         //self.distanceText.transform = transformDistanceText;
 
                      }
                      completion: ^(BOOL finished){
@@ -562,11 +551,11 @@
         if(self.lastAngle!=self.angle){
             [self rotateArc:0.3f degrees:self.angle];
             self.lastAngle=self.angle;
+            //[self rotateText:self.distanceText duration:0.1 degrees:DEGREES_TO_RADIANS(self.angle)];
+
         }
 
     }
-
-    
     [self updateAccuracyText];
 }
 
@@ -601,13 +590,11 @@
                      animations:^{
                          if(!info) {
                              [self.displayText setAlpha: 0.0f];
-                             [self.pageNText setAlpha: 0.0f];
                              [self.accuracyText setAlpha: 0.0f];
                              //[self.arrow showExtras: FALSE];
                          }
                          else {
                              [self.displayText setAlpha: 1.0f];
-                             [self.pageNText setAlpha: 1.0f];
                              [self.accuracyText setAlpha: 1.0f];
                              //[self.arrow showExtras: TRUE];
                          }
@@ -678,6 +665,26 @@
 }
 
 
+- (void)rotateText:(UILabel *)label duration:(NSTimeInterval)duration degrees:(CGFloat)degrees {
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddArc(path,nil, self.arrow.center.x , self.arrow.center.y, 20, DEGREES_TO_RADIANS(degrees-1), DEGREES_TO_RADIANS(degrees), YES);
+    
+    CAKeyframeAnimation *theAnimation;
+    
+    // animation object for the key path
+    theAnimation = [CAKeyframeAnimation animationWithKeyPath:@"position"];
+    theAnimation.path=path;
+    CGPathRelease(path);
+    
+    // set the animation properties
+    theAnimation.duration=duration;
+    theAnimation.removedOnCompletion = NO;
+    theAnimation.autoreverses = NO;
+    theAnimation.rotationMode = kCAAnimationRotateAutoReverse;
+    theAnimation.fillMode = kCAFillModeForwards;
+    
+    [label.layer addAnimation:theAnimation forKey:@"position"];
+}
 
 
 

@@ -30,21 +30,8 @@
 @property (nonatomic,strong) CWTLocationViewController* locationViewController;
 
 
-
-
-//@property(nonatomic, strong, readonly) UISearchBar *searchBar;
-
-
 @property (nonatomic,assign) BOOL showInfo;
-@property (nonatomic,assign) BOOL showMapBool;
-@property (nonatomic,assign) BOOL showListBool;
 
-
-@property (nonatomic, strong) NSArray *places;
-@property (nonatomic, assign) MKCoordinateRegion boundingRegion;
-@property (nonatomic, strong) MKLocalSearch *localSearch;
-@property (nonatomic, strong) CLLocationManager *locationManager;
-@property (nonatomic) CLLocationCoordinate2D userLocation;
 
 
 @end

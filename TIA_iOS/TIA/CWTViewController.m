@@ -108,9 +108,6 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    
-    self.showMapBool=TRUE;
-    self.showListBool=TRUE;
 
     [self checkGPS];
     
@@ -156,10 +153,8 @@
 
 -(void)updateViewControllersWithName{
     
-    NSArray* viewC = [self.pageView viewControllers];
-    CWTLocationViewController * vc=[viewC objectAtIndex:0];
-
-    [vc updateDestinationName];
+ //   NSArray* viewC = [self.pageView viewControllers];
+ //   CWTLocationViewController * vc=[viewC objectAtIndex:0];
 }
 
 

@@ -32,7 +32,7 @@
     int thickness=1;
     CGContextRef context = UIGraphicsGetCurrentContext();
 
-	//arrow
+	//first line
 	CGContextSetLineWidth(context,thickness);
     CGContextSetStrokeColorWithColor(context, [UIColor colorWithWhite:0.4 alpha:1].CGColor);
     
@@ -54,7 +54,7 @@
     int h=8;
     ellipse.origin.x=points[0].x-w*.5;
     ellipse.origin.y=points[0].y-h*.5;
-
+    
     ellipse.size.width=w;
     ellipse.size.height=h;
     
@@ -62,6 +62,26 @@
     CGContextAddEllipseInRect(context, ellipse);
     CGContextSetFillColorWithColor(context, [UIColor colorWithWhite:0.4 alpha:1].CGColor);
     CGContextFillPath(context);
+    
+    
+    
+//    
+//    //second line
+//	CGContextSetLineWidth(context,thickness);
+//    CGContextSetStrokeColorWithColor(context, [UIColor colorWithWhite:0.4 alpha:1].CGColor);
+//    
+//    points[0].x=self.frame.size.width*.5;
+//    points[0].y=self.frame.size.height*.5;
+//    
+//    points[1].x=self.frame.size.width*.5;
+//    points[1].y=self.frame.size.height*.5-2500;
+//    
+//    CGContextAddLines(context, points, 2);
+//    CGContextStrokePath(context);
+//    
+//    
+    
+
 
 
 }
