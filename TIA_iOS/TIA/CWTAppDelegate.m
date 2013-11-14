@@ -22,6 +22,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    // Register for push notifications
+    [application registerForRemoteNotificationTypes:
+     UIRemoteNotificationTypeBadge |
+     UIRemoteNotificationTypeAlert |
+     UIRemoteNotificationTypeSound];
+    
 
     [Crashlytics startWithAPIKey:@"1eb6d15737d50f2df4316cb5b8b073da76a42b67"];
     
@@ -32,7 +39,9 @@
                   clientKey:@"sFvZ0SLtYB2kxQe4pX7QNtqIDwvaYYwuRqB4o1W5"];
     NSLog(@"i am      %@", [UIDevice currentDevice].identifierForVendor.UUIDString);
 
+    
 
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.viewController = [[CWTViewController alloc] init];
     self.window.rootViewController = self.viewController;
@@ -89,25 +98,35 @@
     return YES;
 }
 
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
+    // Store the deviceToken in the current installation and save it to Parse.
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setDeviceTokenFromData:newDeviceToken];
+    [currentInstallation setObject:[UIDevice currentDevice].identifierForVendor.UUIDString forKey:@"vendorUUID"];
+    [currentInstallation saveInBackground];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    [PFPush handlePush:userInfo];
+}
 
 
 -(void)updateUserLocation{
     
-    //NSLog(@"Update User Location");
 
-    
     //send location to parse
     //get parse Class
     PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
+
     
     //get existing entry of this device
     [query whereKey:@"vendorUUID" equalTo:[UIDevice currentDevice].identifierForVendor.UUIDString];
 
+    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             // The find succeeded. entry exists
             //NSLog(@"Successfully retrieved %d objects.", objects.count);
-            // Do something with the found objects. there should only be one!
             for (PFObject *object in objects)
             {
                 //NSLog(@"%@", object.objectId);
@@ -131,6 +150,8 @@
                 [object setObject:[NSNumber numberWithFloat:self.speed] forKey:@"speed"];
                 [object setObject:[NSNumber numberWithFloat:self.altitude] forKey:@"altitude"];
                 [object saveInBackground];
+                
+                
             }
         }
         else {

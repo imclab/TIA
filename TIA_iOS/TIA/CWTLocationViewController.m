@@ -222,9 +222,21 @@
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     
-//    if(scrollView.contentOffset.y>-30){
-    
-//    }
+    if(scrollView.contentOffset.y>-150){
+        // Create our Installation query
+        NSLog(@"scrolled a lot");
+
+        PFQuery *pushQuery = [PFInstallation query];
+       //[pushQuery whereKey:@"vendorUUID" equalTo:YES];
+        [pushQuery whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString];
+
+        
+        //        // Send push notification to query
+        PFPush *push = [[PFPush alloc] init];
+       [push setQuery:pushQuery]; // Set our Installation query
+        [push setMessage:@"Hi there."];
+       [push sendPushInBackground];
+   }
 }
 
 
@@ -367,7 +379,9 @@
                 }
             
                 NSLog(@"retrieving %@", self.otherUserVendorIDString);
-                //retrieve otheruser's location
+        
+            
+             
                 PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
                 [query whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString ];
                 [query orderByDescending:@"updatedAt"];
@@ -392,10 +406,11 @@
 
                     }
                 }];
+            
         }
         else {
             // Log details of the failure
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            NSLog(@"Connection Lookup Error: %@ %@", error, [error userInfo]);
             //I don't exist in the connection database! yet...
         }
         
