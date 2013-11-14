@@ -27,6 +27,17 @@
         margin-top:0;
       }
 
+      #debug {
+        white-space: pre;
+        float: right;
+        font-size: 7px;
+        text-align: right;
+        font-family: courier;
+        position: absolute;
+        top: 5;
+        right: 5;
+      }
+
     </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
@@ -49,6 +60,26 @@
   		var map = new google.maps.Map(document.getElementById('map-canvas'),
   		    mapOptions);
 
+      function responseToString(o,i){
+            if(typeof i=='undefined')i='';
+            if(i.length>50)return '[MAX ITERATIONS]';
+              var r=[];
+              for(var p in o){
+                if(o[p] == null){
+                  o[p] = "null";
+                }
+                var t=typeof o[p];
+                  
+                if(t == 'object' && o[p].length == 0){
+                  r.push(i+'"'+p+'":[]');
+  
+                } else {
+                r.push(i+'"'+p+'":'+(t=='object' ? '\n'+responseToString(o[p],i+' ') : o[p]+''));
+              } 
+            }
+            return r.join(i+'\n');
+      }
+
   		$("#getMessage").click(function(){
         clearMarkers();
 
@@ -60,8 +91,12 @@
         markers.push(marker);
 
   			locString = map.getCenter().ob + "," + map.getCenter().pb;
-  			$.get("/" + locString, function(data){
-  				$("#message").html(data);
+  			$.get("/" + locString + "?debug=1", function(data){
+          var response = $.parseJSON(data);
+  				$("#message").html(response.message);
+
+          $("#debug").html(responseToString(response));
+
   			});
 			return false;
 		});
@@ -77,6 +112,7 @@
   <div id="header">
 	<h1><a href="#" id="getMessage">Get Message Here</a></h1>
 	<h3 id="message">&nbsp;</h3>
+  <div id="debug"></div>
 </div>
 	<div id="map-canvas"></div>
 	</body>
