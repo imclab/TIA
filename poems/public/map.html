@@ -1,0 +1,85 @@
+<html>
+<head>
+<style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+
+      #header {
+        padding-left: 10px;
+      }
+
+      #getMessage {
+        margin-bottom:3px;
+        margin-top: 5px;
+        padding: 5px;
+        background-color: #66f;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      #getMessage:hover{
+        text-decoration: underline;
+      }
+      h3 {
+        margin-top:0;
+      }
+
+    </style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+<script>
+	function initialize() {
+      var markers = [];
+
+      function clearMarkers(){
+        for(var i = 0; i < markers.length; i++){
+          markers[i].setMap(null);
+        }
+      }
+
+  		var mapOptions = {
+  		  zoom: 7,
+  		  center: new google.maps.LatLng(42.36024,-71.08745),
+  		  mapTypeId: google.maps.MapTypeId.ROADMAP
+  		};
+		
+  		var map = new google.maps.Map(document.getElementById('map-canvas'),
+  		    mapOptions);
+
+  		$("#getMessage").click(function(){
+        clearMarkers();
+
+        var marker = new google.maps.Marker({
+          position: map.getCenter(),
+          map: map,
+        });
+
+        markers.push(marker);
+
+  			locString = map.getCenter().ob + "," + map.getCenter().pb;
+  			$.get("/" + locString, function(data){
+  				$("#message").html(data);
+  			});
+			return false;
+		});
+
+	}
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
+</head>
+
+<body>
+  <div id="header">
+	<h1><a href="#" id="getMessage">Get Message Here</a></h1>
+	<h3 id="message">&nbsp;</h3>
+</div>
+	<div id="map-canvas"></div>
+	</body>
+
+
+</html>

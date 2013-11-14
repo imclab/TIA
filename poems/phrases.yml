@@ -11,7 +11,7 @@ time: # this is in 24 hr time. It will snap to the closest hour present
   - It's bright and early.
   10:
   - It's morning.
-  - It's mid-monring.
+  - It's mid-morning.
   12:
   - It's the middle of the day.
   - It's around noon.
