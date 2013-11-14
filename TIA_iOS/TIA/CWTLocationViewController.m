@@ -111,6 +111,19 @@
     self.north.center=self.arrow.center;
     
     
+    //main message
+    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 240, 90)];
+    [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.25)];
+    self.mainMessage.numberOfLines=5;
+    self.mainMessage.textAlignment=NSTextAlignmentCenter;
+    [self.mainMessage setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:22.0]];
+    //self.mainMessage.adjustsFontSizeToFitWidth = YES;
+    self.mainMessage.backgroundColor=[UIColor clearColor];
+    [self.view addSubview:self.mainMessage];
+    
+    self.mainMessage.text=@"Hello";
+    
+    
     
     
     [self updateHeading];
@@ -139,6 +152,9 @@
     
     [self startBTLE];
 }
+
+
+
 
 -(void)startBTLE
 {
@@ -390,14 +406,18 @@
             // Log details of the failure
             NSLog(@"Error: %@ %@", error, [error userInfo]);
             //I don't exist in the connection database! yet...
-            
-            
-            
         }
     }];
 
-    
+    //query for message based on another's data
+    NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f", self.dlat, self.dlng];
+    NSURL  *iQuery = [NSURL URLWithString:url];
+    NSString* mess    = [NSString stringWithContentsOfURL:iQuery encoding:NSUTF8StringEncoding error:NULL];
 
+    NSLog(@"m:%@",mess);
+    if(mess) self.mainMessage.text=mess;
+    
+        
     //end refresh animation
     [(UIRefreshControl *)sender endRefreshing];
     

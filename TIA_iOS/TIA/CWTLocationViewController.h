@@ -34,7 +34,9 @@
 
 
 @property (nonatomic,strong) IBOutlet UIButton *destinationButton;
-@property (nonatomic,strong) IBOutlet UILabel *distanceText;
+@property (nonatomic,strong)  UILabel *mainMessage;
+@property (nonatomic,strong)  UILabel *distanceText;
+
 @property (nonatomic,strong) IBOutlet UILabel *pageNText;
 @property (nonatomic,strong) IBOutlet UILabel *accuracyText;
 @property (nonatomic,strong) IBOutlet UILabel *unitText;
