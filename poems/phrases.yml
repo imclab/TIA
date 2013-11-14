@@ -58,10 +58,12 @@ clouds: # amount of cloud cover on a range from 0-1. Snaps to closest value.
 sunrise: # this is minutes after sunrise (negative being before). When outside this range no message will be shown.
   -60:
   - The sky's just beginning to lighten.
+  - The sun is rising.
   0:
   - The sun just came up.
   60:
   - The sun's been up for an hour.
+  - The day is just beginning.
 sunset: # this is minutes after sunset (negative being before). When outside this range no message will be shown.
   -60:
   - It's sunset.
@@ -70,6 +72,7 @@ sunset: # this is minutes after sunset (negative being before). When outside thi
   - The sun is just disappearing over the horizon.
   60:
   - It just got dark.
+  - Twilight.
 rain:
   light:
   - It's drizzling.

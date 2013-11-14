@@ -88,16 +88,16 @@
     self.satSearchImage.hidden=TRUE;
     
     //main arrow
-    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0, 0, 10,screen.size.height*2.0)];
+    self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0, 0, 9,1200)];
     self.arrow.backgroundColor=[UIColor clearColor];
     [self.view addSubview:self.arrow];
     [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
     
     //main arrow hack
-    self.arrowImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 9,1200)];
+    self.arrowImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.arrow.frame.size.width ,self.arrow.frame.size.height)];
     [self.arrowImage setImage:[UIImage imageNamed:@"dotarrow.png"]];
-    [self.view addSubview:self.arrowImage];
-    self.arrowImage.center=self.arrow.center;
+    [self.arrow addSubview:self.arrowImage];
+    //self.arrowImage.center=self.arrow.center;
     
     //distance
     self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width*.25, 20)];
@@ -534,7 +534,7 @@
                      animations: ^(void){
                          // The transform matrix
                          self.arrow.transform = transformRing;
-                         self.arrowImage.transform = transformRing;
+                         //self.arrowImage.transform = transformRing;
                          //self.distanceText.transform = transformDistanceText;
 
                      }
