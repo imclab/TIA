@@ -222,9 +222,9 @@
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     
-    if(scrollView.contentOffset.y>-150){
+    if(scrollView.contentOffset.y>250){
         // Create our Installation query
-        NSLog(@"scrolled a lot");
+        NSLog(@"scrolled :%f ",scrollView.contentOffset.y);
 
         PFQuery *pushQuery = [PFInstallation query];
        //[pushQuery whereKey:@"vendorUUID" equalTo:YES];
