@@ -392,6 +392,8 @@
                         // The find succeeded.
                         self.dlat= [[object objectForKey:@"lat"] floatValue];
                         self.dlng= [[object objectForKey:@"lng"] floatValue];
+                        self.otherUsername=[object objectForKey:@"name"];
+
                         [self updateDistanceWithLatLng:0];
 
                         NSLog(@"pointing: %@",[object objectForKey:@"vendorUUID"] );
@@ -664,15 +666,16 @@
     
     if(headingAccuracy<0)headingAccuracy=0;
     statusString= [NSString stringWithFormat:@
-                   "speed   : %@ \n"
-                   "heading : %i° ±%i°\n"
-                   "bearing : %i° ±%i°\n"
-                   "altitude: %@\n"
-                   "current : %@\n"
-                   "target  : %f,%f \n"
-                   "myUUID  : %@\n"
-                   "atUUID  : %@\n"
-                   "user#   : %i\n"
+                   "speed    : %@ \n"
+                   "heading  : %i° ±%i°\n"
+                   "bearing  : %i° ±%i°\n"
+                   "altitude : %@\n"
+                   "current  : %@\n"
+                   "myUUID   : %@\n"
+                   "myuser#  : %i\n"
+                   "target   : %f,%f \n"
+                   "atUUID   : %@\n"
+                   "othername: %@\n"
 
                    ,
                    speedString,
@@ -680,10 +683,11 @@
                    (int)self.locBearing,(int)bearingAccuracy,
                    altitudeString,
                    currentString,
-                   self.dlat , self.dlng,
                    [UIDevice currentDevice].identifierForVendor.UUIDString,
+                   self.myUserNumber,
+                   self.dlat , self.dlng,
                    self.otherUserVendorIDString,
-                   self.myUserNumber
+                   self.otherUsername
                    ];
     
     self.displayText.text=statusString;
