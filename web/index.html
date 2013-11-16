@@ -2,6 +2,8 @@
 <head>
 <script src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+
 <script>
 
 function ready(){
@@ -52,7 +54,7 @@ function ready(){
 
 	function loadConnections(){
 		var query = new Parse.Query(ConnectionClass);
-		query.ascending("createdAt");
+		query.ascending("updatedAt");
 		query.doesNotExist("completedAt");
 		query.find({
 		  success: function(results) {
@@ -61,20 +63,22 @@ function ready(){
 		  		
 		  		for (var j = 0; j < results.length; j++) { 
 		  			var object = results[j];
-		  			for(key in userConnections){
-		  				if(userConnections[key].user == object.attributes.user1 || 
-		  					userConnections[key].user == object.attributes.user2){
-		  					delete userConnections[key];
-		  				}
-		  			}
+		  			// for(key in userConnections){
+		  			// 	if(userConnections[key].user == object.attributes.user1 || 
+		  			// 		userConnections[key].user == object.attributes.user2){
+		  			// 		delete userConnections[key];
+		  			// 	}
+		  			// }
 
-		  			userConnections[object.attributes.user1] = {user:object.attributes.user2, parseID:object.id};
-		  			userConnections[object.attributes.user2] = {user:object.attributes.user1, parseID:object.id};	
+		  			userConnections[object.attributes.user1] = {user:object.attributes.user2, parseID:object.id, vendorUUID:object.attributes.vendorUUID};
+		
+		
+		  			//userConnections[object.attributes.user2] = {user:object.attributes.user1, parseID:object.id};	
 		  		
 		  		}
 
 	      	  for(connection in userConnections){
-	      	  	$("#connectionList").append("<li>" +userDisplayNames[connection] + " TO " + userDisplayNames[userConnections[connection].user] + " [<a class='endConnectionLink' id='"+userConnections[connection].parseID+"' href='#'>end</a>]</li>");
+	      	  	$("#connectionList").append("<tr><th>" +userDisplayNames[connection] + "</th> <th>+</th> <th>" + userDisplayNames[userConnections[connection].user] + "</th> <th>[<a class='endConnectionLink' id='"+userConnections[connection].parseID+"' href='#'>end</a>]</th></tr>");
 	      	  }
 
 	      	  $(".endConnectionLink").click(function(event){
@@ -165,12 +169,12 @@ function ready(){
 	
 				userDisplayNames[object.attributes.vendorUUID] = displayName;
 
-				var li = "<li><span class='name'>" + displayName + "</span>";
+				var li = "<tr><th><span class='name'>" + displayName + "</span></th>";
 				if(!userHasDisplayName(object)){
 					li += formForUser(object.id, "", object.attributes.vendorUUID);
 				} else {
 
-					li += " <span class='uuid'>"+ object.attributes.vendorUUID +"</span><span style='display:none' class='parseID'>"+object.id+"</span><span style='display:none' class='name'>"+displayName+"</span> [<a class='editUser' href='#'>edit</a>] [<a class='deleteUser' href='#'>delete</a>]";
+					li += " <th><span class='uuid'>"+ object.attributes.vendorUUID +"</span><span style='display:none' class='parseID'>"+object.id+"</span><span style='display:none' class='name'>"+displayName+"</span></th> <th>[<a class='editUser' href='#'>edit</a>] [<a class='deleteUser' href='#'>delete</a>]</th></tr>";
 				}
 				li += "</li>";
 	
@@ -231,12 +235,28 @@ document.addEventListener("DOMContentLoaded", ready, false);
 </script>
 
 <style>
+body{
+	font-family:helvetica;
+	margin:30px;
+	font-size:14px;
+}
+
+th
+{
+	padding:0 10px;
+	text-align:left;
+}
+p {
+  margin:10px;
+  padding:10px;
+}
+
 .userForm p{
 	margin: 0;
 }
 .userForm label{
 	float:left;
-	width:90px;
+	width:130px;
 	text-align:right;
 	margin-right: 10px;
 }
