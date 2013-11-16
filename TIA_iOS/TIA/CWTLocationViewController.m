@@ -105,7 +105,7 @@
     self.distanceText.textColor=[UIColor colorWithWhite:.3 alpha:1];
     [self.distanceText setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.0]];
     [self.distanceText setTextAlignment:NSTextAlignmentCenter];
-    [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.5, self.arrow.center.y-screen.size.width*.35)];
+    [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.35, self.arrow.center.y-screen.size.width*.10)];
     self.distanceText.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90));
     self.distanceText.backgroundColor=[UIColor colorWithWhite:.95 alpha:1];
     [self.arrow addSubview:self.distanceText];
@@ -119,11 +119,11 @@
     self.north.center=self.arrow.center;
     
     //main message
-    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 240, 150)];
+    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 270, 240)];
     [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.35)];
-    self.mainMessage.numberOfLines=8;
+    self.mainMessage.numberOfLines=10;
     self.mainMessage.textAlignment=NSTextAlignmentCenter;
-    [self.mainMessage setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:22.0]];
+    [self.mainMessage setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:20.0]];
     //self.mainMessage.adjustsFontSizeToFitWidth = YES;
     self.mainMessage.backgroundColor=[UIColor clearColor];
     [self.mainView addSubview:self.mainMessage];
@@ -379,9 +379,7 @@
                 }
             
                 NSLog(@"retrieving %@", self.otherUserVendorIDString);
-        
             
-             
                 PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
                 [query whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString ];
                 [query orderByDescending:@"updatedAt"];
@@ -389,20 +387,42 @@
                     
                     if (!object) {
                         NSLog(@"The getFirstObject request failed.");
+
                     } else {
                         // The find succeeded.
                         self.dlat= [[object objectForKey:@"lat"] floatValue];
                         self.dlng= [[object objectForKey:@"lng"] floatValue];
+                        [self updateDistanceWithLatLng:0];
+
                         NSLog(@"pointing: %@",[object objectForKey:@"vendorUUID"] );
                         
                         //query for message based on another's data
                         NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f", self.dlat, self.dlng];
                         NSURL  *iQuery = [NSURL URLWithString:url];
-                        NSString* mess    = [NSString stringWithContentsOfURL:iQuery encoding:NSUTF8StringEncoding error:NULL];
-                        NSLog(@"m:%@",mess);
-                        if(mess) self.mainMessage.text=mess;
+                        NSString* weatherMess    = [NSString stringWithContentsOfURL:iQuery encoding:NSUTF8StringEncoding error:NULL];
+                        NSLog(@"weather:%@",weatherMess);
+                        self.mainMessage.text=[NSString stringWithFormat:@"%@",weatherMess];
+
+                        //reverse geocode message
+                        CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
+                        CLLocation *theirLocation=[[CLLocation alloc] initWithLatitude:self.dlat longitude:self.dlng];
+                        [geocoder reverseGeocodeLocation:theirLocation
+                                       completionHandler:^(NSArray *placemarks, NSError *error) {
+                                           if (error){
+                                               NSLog(@"Geocode failed with error: %@", error);
+                                               return;
+                                           }
+                                           CLPlacemark *placemark = [placemarks objectAtIndex:0];
+                                           NSLog(@"placemark.%@",placemark);
+                                           NSString*  gpsMess = [NSString stringWithFormat:@"On %@",placemark.thoroughfare];
+                                           NSLog(@"gpsMess %@",gpsMess);
+                                           self.mainMessage.text=[NSString stringWithFormat:@"%@ %@",self.mainMessage.text,gpsMess];
+                                       }];
                         
-                        [self updateDistanceWithLatLng:0];
+                        
+                        
+                        //end refresh animation
+                        [(UIRefreshControl *)sender endRefreshing];
 
                     }
                 }];
@@ -412,10 +432,11 @@
             // Log details of the failure
             NSLog(@"Connection Lookup Error: %@ %@", error, [error userInfo]);
             //I don't exist in the connection database! yet...
+            
+            //end refresh animation
+            [(UIRefreshControl *)sender endRefreshing];
         }
-        
-        //end refresh animation
-        [(UIRefreshControl *)sender endRefreshing];
+
     }];
 
 
