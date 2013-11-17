@@ -64,7 +64,7 @@
     
     
     //stats
-    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+15, 320, 100)];
+    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+20, 320, 100)];
     self.displayText.numberOfLines=15;
     self.displayText.backgroundColor=[UIColor clearColor];
     self.displayText.textColor=[UIColor colorWithWhite:0 alpha:1];
@@ -98,6 +98,16 @@
     [self.arrowImage setImage:[UIImage imageNamed:@"dotarrow.png"]];
     [self.arrow addSubview:self.arrowImage];
     //self.arrowImage.center=self.arrow.center;
+    
+    
+    //push dot
+    self.dot=[[CWTDot alloc] initWithFrame:CGRectMake(0, 0, 500,500)];
+    self.dot.backgroundColor=[UIColor clearColor];
+    self.dot.dotColor=[UIColor colorWithWhite:.2 alpha:.5];
+    [self.scrollView addSubview:self.dot];
+    [self.dot setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+270+250)];
+    
+    
     
     //distance
     self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width*.25, 20)];
@@ -151,7 +161,16 @@
     [self.mainView addSubview:self.time];
     [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
     
+    //pushmessage
+    self.pushMessage=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height+180, screen.size.width, 20)];
+    self.pushMessage.numberOfLines=10;
+    self.pushMessage.textColor=[UIColor colorWithWhite:.3 alpha:1];
+    [self.pushMessage setFont:[UIFont fontWithName:@"Andale Mono" size:12.0]];
+    [self.pushMessage setTextAlignment:NSTextAlignmentCenter];
+    [self.pushMessage setTextAlignment:NSTextAlignmentCenter];
 
+    //[self.mainView addSubview:self.pushMessage];
+ 
     [self updateHeading];
     [self startBTLE];
 }
@@ -218,6 +237,15 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     //NSLog(@"scrolling");
+    if(scrollView.contentOffset.y>250){
+        [self.dot inflate:250];
+        [self.dot progress:360];
+        
+    }else{
+        [self.dot inflate:scrollView.contentOffset.y];
+        [self.dot progress:scrollView.contentOffset.y/250*360.0];
+
+    }
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
@@ -226,16 +254,31 @@
         // Create our Installation query
         NSLog(@"scrolled :%f ",scrollView.contentOffset.y);
 
-        PFQuery *pushQuery = [PFInstallation query];
-       //[pushQuery whereKey:@"vendorUUID" equalTo:YES];
-        [pushQuery whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString];
-
-        
-        //        // Send push notification to query
-        PFPush *push = [[PFPush alloc] init];
-       [push setQuery:pushQuery]; // Set our Installation query
-        [push setMessage:@"Hi there."];
-       [push sendPushInBackground];
+        //reverse geocode location message
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
+        CLLocation *myLocation=[[CLLocation alloc] initWithLatitude:dele.myLat longitude:dele.myLng];
+        [geocoder reverseGeocodeLocation:myLocation
+                       completionHandler:^(NSArray *placemarks, NSError *error) {
+                           if (error){
+                               NSLog(@"Geocode failed with error: %@", error);
+                               return;
+                           }
+                           CLPlacemark *placemark = [placemarks objectAtIndex:0];
+                           NSLog(@"placemark.%@",placemark);
+                           NSString*  gpsMess = [NSString stringWithFormat:@"Hi there. From %@.",placemark.thoroughfare];
+                           NSLog(@"gpsMess %@",gpsMess);
+                           self.mainMessage.text=[NSString stringWithFormat:@"%@ %@",self.mainMessage.text,gpsMess];
+                           
+                           PFQuery *pushQuery = [PFInstallation query];
+                           [pushQuery whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString];
+                           // Send push notification to query
+                           PFPush *push = [[PFPush alloc] init];
+                           [push setQuery:pushQuery]; // Set our Installation query
+                           [push setMessage:gpsMess];
+                           [push sendPushInBackground];
+                           
+                           
+                       }];
    }
 }
 
@@ -355,7 +398,8 @@
     
     [query orderByDescending:@"updatedAt"];
     //[query orderByAscending:@"updatedAt"];
-
+    [query whereKeyDoesNotExist:@"completedAt"];
+    
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
         if (!error) {
                 NSLog(@"objectId  %@", object.objectId);
@@ -666,16 +710,16 @@
     
     if(headingAccuracy<0)headingAccuracy=0;
     statusString= [NSString stringWithFormat:@
-                   "speed    : %@ \n"
-                   "heading  : %i° ±%i°\n"
-                   "bearing  : %i° ±%i°\n"
-                   "altitude : %@\n"
-                   "current  : %@\n"
-                   "myUUID   : %@\n"
-                   "myuser#  : %i\n"
-                   "target   : %f,%f \n"
-                   "atUUID   : %@\n"
-                   "othername: %@\n"
+                   "speed      : %@ \n"
+                   "heading    : %i° ±%i°\n"
+                   "bearing    : %i° ±%i°\n"
+                   "altitude   : %@\n"
+                   "current    : %@\n"
+                   "myUUID     : %@\n"
+                   "myuser#    : %i\n"
+                   "target     : %f,%f \n"
+                   "targetUUID : %@\n"
+                   "targetname : %@\n"
 
                    ,
                    speedString,

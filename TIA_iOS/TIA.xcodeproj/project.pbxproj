@@ -66,6 +66,7 @@
 		44DAE01E17359AC900C17F07 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE01D17359AC900C17F07 /* Foundation.framework */; };
 		44DAE02017359AC900C17F07 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE01F17359AC900C17F07 /* CoreGraphics.framework */; };
 		44DAE0601735A08C00C17F07 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE05F1735A08C00C17F07 /* CoreLocation.framework */; };
+		44FF8CB518385A3500F6125D /* CWTDot.m in Sources */ = {isa = PBXBuildFile; fileRef = 44FF8CB418385A3500F6125D /* CWTDot.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -145,6 +146,8 @@
 		44DAE04217359ACA00C17F07 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		44DAE05F1735A08C00C17F07 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		44E7EBBC17A700B20054E1BB /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		44FF8CB318385A3500F6125D /* CWTDot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTDot.h; sourceTree = "<group>"; };
+		44FF8CB418385A3500F6125D /* CWTDot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTDot.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +191,8 @@
 				446D50FC1819C79700E6DBE7 /* CWTLocationViewController.m */,
 				446D51011819C79700E6DBE7 /* CWTArrow.h */,
 				446D51021819C79700E6DBE7 /* CWTArrow.m */,
+				44FF8CB318385A3500F6125D /* CWTDot.h */,
+				44FF8CB418385A3500F6125D /* CWTDot.m */,
 				44CDF5441829F0AE00018672 /* BTLECentralViewController.h */,
 				44CDF5451829F0AE00018672 /* BTLECentralViewController.m */,
 				44CDF5461829F0AE00018672 /* BTLEPeripheralViewController.h */,
@@ -454,6 +459,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44FF8CB518385A3500F6125D /* CWTDot.m in Sources */,
 				446D513C1819C79800E6DBE7 /* CWTLocationViewController.m in Sources */,
 				44CDF5491829F0AE00018672 /* BTLEPeripheralViewController.m in Sources */,
 				446D513F1819C79800E6DBE7 /* CWTArrow.m in Sources */,

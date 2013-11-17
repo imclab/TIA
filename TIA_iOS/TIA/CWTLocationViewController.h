@@ -10,6 +10,7 @@
 #import "CWTAppDelegate.h"
 
 #import "CWTArrow.h"
+#import "CWTDot.h"
 
 #import <AudioToolbox/AudioToolbox.h>
 
@@ -26,6 +27,7 @@
 @property (nonatomic,strong)  UIImageView *arrowImage;
 
 @property (nonatomic,strong)  CWTArrow* arrow;
+@property (nonatomic,strong)  CWTDot* dot;
 
 @property (nonatomic,strong)  UIImageView *satSearchImage;
 @property (nonatomic,strong)  UIImageView *dnArrow;
@@ -34,6 +36,7 @@
 
 @property (nonatomic,strong)  UILabel *mainMessage;
 @property (nonatomic,strong)  UILabel *distanceText;
+@property (nonatomic,strong)  UILabel *pushMessage;
 
 @property (nonatomic,strong) IBOutlet UILabel *accuracyText;
 @property (nonatomic,strong) IBOutlet UILabel *unitText;
