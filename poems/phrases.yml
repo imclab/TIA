@@ -5,62 +5,85 @@ time: # this is in 24 hr time. It will snap to the closest hour present
   - It's the middle of the night.
   - It's late.
   - It's the darkest night.
+  - Dark out.
   6:
   - It's early in the morning.
   - It's early.
   - It's bright and early.
+  - Morning.
   10:
   - It's morning.
   - It's mid-morning.
+  - Breakfast.
+  - Maybe time for eggs.
   12:
   - It's the middle of the day.
   - It's around noon.
+  - Noon.
+  - Hungry for lunch.
   16:
   - It's the afternoon.
   - The day's almost over.
+  - Winding down.
   20:
   - It's evening.
   - It's night.
+  - Night.
   22:
   - It's night time.
   - It's starting to get late.
+  - Brush and flush.
 temperature: # this is in degrees F. It will snap to the closest value
   20:
   - It is seriously cold out.
+  - Freezing outside.
+  - Wearing long johns.
+  - Needing long johns.
   30:
   - It's freezing.
   - It feels like winter.
+  - Freezing.
   40:
   - It's nippy.
   - It's cold.
+  - Brisk.
   50:
   - It's pretty chilly outside.
   - It's crisp.
+  - Sweater.
   60:
   - It's almost nice out.
-  - The weather is absolutely unremarkable.
+  - Considering a sweater.
   70:
-  - It's nice out.
-  - The weather is beautiful.
+  - Warm.
   80:
-  - The sun is beating down.
+  - Hot.
+  - Toasty.
   90:
-  - It's hot. Almost unbearable.
+  - It's hot.
+  - Umbearably hot.
+  - Muggy.
+  - Balmy.
 clouds: # amount of cloud cover on a range from 0-1. Snaps to closest value.
   0:
   - There's not a cloud in the sky.
+  - No clouds in the sky.
   0.4:
   - There's streaks of clouds across the sky.
+  - Scattered clouds.
   0.75:
   - It's cloudy out.
+  - Cloudy.
   1:
   - The sky is the color of television tuned to a dead channel.
+  - Gloomy.
 sunrise: # this is minutes after sunrise (negative being before). When outside this range no message will be shown.
   -60:
   - The sky's just beginning to lighten.
   - The sun is rising.
   0:
   - The sun just came up.
+  - Sunrise.
   60:
   - The sun's been up for an hour.
   - The day is just beginning.
@@ -70,23 +93,26 @@ sunset: # this is minutes after sunset (negative being before). When outside thi
   - The sky is starting to darken.
   0:
   - The sun is just disappearing over the horizon.
+  - Sunset.
   60:
   - It just got dark.
   - Twilight.
 rain:
   light:
   - It's drizzling.
-  - It's pissing down rain.
+  - Drizzling.
+  - Sprinkling rain.
   heavy:
-  - It's poouring.
-  - It's raiing cats and dogs
+  - It's pouring.
+  - It's raining cats and dogs
+  - Stormy.
 snow:
   light:
   - It's misting snow.
   - The ground is flaked with melting snow.
   heavy:
   - It's snowing.
-  - It's snowing hard.
+  - Snowing hard.
   - The air is filled with snow.
 sleet:
   light:
