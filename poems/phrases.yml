@@ -10,10 +10,9 @@ time: # this is in 24 hr time. It will snap to the closest hour present
   - It's early in the morning.
   - It's early.
   - It's bright and early.
-  - Morning.
+  - Early morning.
   10:
   - It's morning.
-  - It's mid-morning.
   - Breakfast.
   - Maybe time for eggs.
   12:
@@ -25,6 +24,8 @@ time: # this is in 24 hr time. It will snap to the closest hour present
   - It's the afternoon.
   - The day's almost over.
   - Winding down.
+  18:
+  - Dinner time.
   20:
   - It's evening.
   - It's night.
@@ -33,18 +34,18 @@ time: # this is in 24 hr time. It will snap to the closest hour present
   - It's night time.
   - It's starting to get late.
   - Brush and flush.
+  - Bedtime.
 temperature: # this is in degrees F. It will snap to the closest value
   20:
   - It is seriously cold out.
   - Freezing outside.
   - Wearing long johns.
-  - Needing long johns.
+  - Needing a scarf.
   30:
   - It's freezing.
-  - It feels like winter.
+  - Feels like winter.
   - Freezing.
   40:
-  - It's nippy.
   - It's cold.
   - Brisk.
   50:
@@ -56,11 +57,11 @@ temperature: # this is in degrees F. It will snap to the closest value
   - Considering a sweater.
   70:
   - Warm.
+  - T-shirt weather.
   80:
-  - Hot.
+  - It's hot.
   - Toasty.
   90:
-  - It's hot.
   - Umbearably hot.
   - Muggy.
   - Balmy.
@@ -89,14 +90,17 @@ sunrise: # this is minutes after sunrise (negative being before). When outside t
   - The day is just beginning.
 sunset: # this is minutes after sunset (negative being before). When outside this range no message will be shown.
   -60:
-  - It's sunset.
+  - The sun is setting.
   - The sky is starting to darken.
   0:
   - The sun is just disappearing over the horizon.
   - Sunset.
+  30:
+  - It just got dark.
+  - Street lights just turned on.
+  - Twilight.
   60:
   - It just got dark.
-  - Twilight.
 rain:
   light:
   - It's drizzling.
@@ -104,16 +108,18 @@ rain:
   - Sprinkling rain.
   heavy:
   - It's pouring.
-  - It's raining cats and dogs
+  - It's raining cats and dogs.
   - Stormy.
 snow:
   light:
   - It's misting snow.
   - The ground is flaked with melting snow.
+  - Sprinkling snow.
   heavy:
   - It's snowing.
   - Snowing hard.
-  - The air is filled with snow.
+  - Heavy snow.
+  - Snow is covering everything.
 sleet:
   light:
   - It's slushy.
