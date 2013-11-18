@@ -75,8 +75,8 @@ clouds: # amount of cloud cover on a range from 0-1. Snaps to closest value.
   - It's cloudy out.
   - Cloudy.
   1:
+  - Gloomy.    
   - The sky is the color of television tuned to a dead channel.
-  - Gloomy.
 sunrise: # this is minutes after sunrise (negative being before). When outside this range no message will be shown.
   -60:
   - The sky's just beginning to lighten.
