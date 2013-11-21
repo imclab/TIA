@@ -194,8 +194,7 @@
             
             //matched peripheral, show alert
             CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
-            [dele lookUP:@"Look Up."];
-            
+            [dele alert:@"Look Up."];
         }
     }
     
@@ -269,8 +268,8 @@
     NSLog(@"Peripheral Disconnected");
     self.discoveredPeripheral = nil;
     
-    CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
-    [dele lookUP:@"Lost BT Connection"];
+    //CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
+    //[dele alert:@"Lost BT Connection"];
     
     
     // We're disconnected, so start scanning again

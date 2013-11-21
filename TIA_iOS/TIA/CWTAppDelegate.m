@@ -330,7 +330,7 @@
 
 
 
-- (void)lookUP: (NSString *)title{
+- (void)alert: (NSString *)title{
     
     
     //if app is in foreground.

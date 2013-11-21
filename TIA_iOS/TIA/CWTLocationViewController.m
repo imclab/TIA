@@ -56,12 +56,13 @@
     self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width , self.view.frame.size.height+55);
 
     
-    //add down arrow
+    /*
+     //add down arrow
     self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
     self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
     [self.mainView addSubview: self.dnArrow];
-    
+    */
     
     //stats
     self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+20, 320, 100)];
@@ -90,8 +91,8 @@
     //main arrow
     self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0, 0, 9,1200)];
     self.arrow.backgroundColor=[UIColor clearColor];
-    [self.view addSubview:self.arrow];
-    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+220)];
+    [self.mainView addSubview:self.arrow];
+    [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5)];
     
     //main arrow hack
     self.arrowImage=[[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.arrow.frame.size.width ,self.arrow.frame.size.height)];
@@ -110,12 +111,12 @@
     
     
     //distance
-    self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width*.25, 20)];
+    self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width*.35, 20)];
     self.distanceText.numberOfLines=1;
     self.distanceText.textColor=[UIColor colorWithWhite:.3 alpha:1];
     [self.distanceText setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.0]];
     [self.distanceText setTextAlignment:NSTextAlignmentCenter];
-    [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.35, self.arrow.center.y-screen.size.width*.10)];
+    [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.35, self.arrow.center.y+screen.size.width*.4)];
     self.distanceText.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90));
     self.distanceText.backgroundColor=[UIColor colorWithWhite:.95 alpha:1];
     [self.arrow addSubview:self.distanceText];
@@ -124,7 +125,7 @@
     //add north arrow
     self.north = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16*.25, 263*.25)];
     [self.north setImage:[UIImage imageNamed:@"north.png"]];
-    [self.view addSubview: self.north];
+    [self.mainView addSubview: self.north];
 
     self.north.center=self.arrow.center;
     
@@ -171,6 +172,9 @@
 
     //[self.mainView addSubview:self.pushMessage];
  
+    //get two phrases on launch
+    self.numPhrases=2;
+    
     [self updateHeading];
     [self startBTLE];
 }
@@ -277,7 +281,8 @@
                            [push setMessage:gpsMess];
                            [push sendPushInBackground];
                            
-                           
+                           [dele alert:@"Sent push notification to your other."];
+
                        }];
    }
 }
@@ -431,6 +436,8 @@
                     
                     if (!object) {
                         NSLog(@"The getFirstObject request failed.");
+                        self.mainMessage.text=@"Error getting your other's data.";
+
 
                     } else {
                         // The find succeeded.
@@ -443,7 +450,9 @@
                         NSLog(@"pointing: %@",[object objectForKey:@"vendorUUID"] );
                         
                         //query for message based on another's data
-                        NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f", self.dlat, self.dlng];
+                        if(self.numPhrases>1) self.numPhrases--;
+                        
+                        NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f,%i", self.dlat, self.dlng, self.numPhrases];
                         NSURL  *iQuery = [NSURL URLWithString:url];
                         NSString* weatherMess    = [NSString stringWithContentsOfURL:iQuery encoding:NSUTF8StringEncoding error:NULL];
                         NSLog(@"weather:%@",weatherMess);
@@ -460,7 +469,21 @@
                                            }
                                            CLPlacemark *placemark = [placemarks objectAtIndex:0];
                                            NSLog(@"placemark.%@",placemark);
-                                           NSString*  gpsMess = [NSString stringWithFormat:@"On %@",placemark.thoroughfare];
+                                           
+                                           
+                                           NSInteger randomNumber = arc4random() % 3;
+                                           NSString*  gpsMess;
+                                           
+                                           if(randomNumber==0){
+                                             gpsMess = [NSString stringWithFormat:@"Walking on %@.",placemark.thoroughfare];
+                                           }else if (randomNumber==1){
+                                               gpsMess = [NSString stringWithFormat:@"Strolling past %@.",placemark.thoroughfare];
+                                           }
+                                           else if (randomNumber==2){
+                                               gpsMess = [NSString stringWithFormat:@"Standing on %@.",placemark.thoroughfare];
+                                           }
+
+                                           
                                            NSLog(@"gpsMess %@",gpsMess);
                                            self.mainMessage.text=[NSString stringWithFormat:@"%@ %@",self.mainMessage.text,gpsMess];
                                        }];
@@ -477,7 +500,10 @@
         else {
             // Log details of the failure
             NSLog(@"Connection Lookup Error: %@ %@", error, [error userInfo]);
-            //I don't exist in the connection database! yet...
+            
+            //No connection entry in database
+            self.mainMessage.text=@"You don't have another. Please try again later when we connect you to your other.";
+
             
             //end refresh animation
             [(UIRefreshControl *)sender endRefreshing];

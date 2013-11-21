@@ -37,7 +37,7 @@
 @property (nonatomic) float accuracy;
 @property (nonatomic,strong) UINavigationController *navController;
 
-- (void)lookUP: (NSString *)title;
+- (void)alert: (NSString *)title;
 
 
 @property (nonatomic) BOOL hasInternet;

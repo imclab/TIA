@@ -99,7 +99,7 @@
     
     
     CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
-    [dele lookUP:@"Look Up."];
+    [dele alert:@"Look Up."];
 
     
     // Get the data
@@ -123,7 +123,7 @@
     NSLog(@"Central unsubscribed from characteristic");
     
     CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
-    [dele lookUP:@"Lost BT Connection"];
+    [dele alert:@"Lost BT Connection"];
 }
 
 

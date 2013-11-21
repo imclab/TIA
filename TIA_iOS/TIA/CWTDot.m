@@ -28,7 +28,7 @@
 
  - (void)drawRect:(CGRect)rect
 {
-    NSLog(@"Draw Dot");
+    //NSLog(@"Draw Dot");
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     CGPoint point;

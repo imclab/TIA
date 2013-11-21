@@ -58,6 +58,7 @@
 @property (nonatomic) int spread;
 @property (nonatomic) int lastSpread;
 @property (nonatomic) int myUserNumber;
+@property (nonatomic) int numPhrases;
 
 @property (nonatomic) BOOL spinning;
 
