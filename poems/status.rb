@@ -5,21 +5,30 @@ require 'pathname'
 require 'active_support/time'
 
 class Status
-	attr_accessor :forecast
+	attr_accessor :forecast, :num_phrases
 
 	def initialize(params)
-		lat = params[:lat]
-		lng = params[:lng]
 		ForecastIO.api_key = params[:forecast_key]
-		self.forecast = ForecastIO.forecast(params[:lat].to_f,params[:lng].to_f)	
+		self.forecast = ForecastIO.forecast(params[:lat].to_f,params[:lng].to_f)
+		self.num_phrases = params[:num_phrases]	
 	end
 
 	def message
-		[hour_phrase, sunrise_phrase, temperature_phrase, cloud_phrase, precipitation_phrase, sunset_phrase].select{|p| !p.empty?}.join(" ")
+		selected_phrases = 0
+		phrases = [hour_phrase, sunrise_phrase, temperature_phrase, cloud_phrase, precipitation_phrase, sunset_phrase].select{|p| !p.empty?}
+
+		selected_phrases = []
+		while selected_phrases.length < num_phrases
+			rand_index = rand( phrases.length )
+			selected_phrases << phrases[rand_index]
+			phrases.delete_at(rand_index)
+		end
+
+		selected_phrases.join(" ")
 	end
 
 	def cloud_phrase
-		Status.phrases_for_closest_value("clouds", forecast.currently.cloudCover)
+		Status.phrases_for_closest_value("clouds", forecast.currently.cloudCover).sample
 	end
 
 	def precipitation_phrase

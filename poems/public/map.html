@@ -90,7 +90,8 @@
 
         markers.push(marker);
 
-  			locString = map.getCenter().ob + "," + map.getCenter().pb;
+        nPhrases = 4;
+  			locString = map.getCenter().ob + "," + map.getCenter().pb +"," + nPhrases;
   			$.get("/" + locString + "?debug=1", function(data){
           var response = $.parseJSON(data);
   				$("#message").html(response.message);

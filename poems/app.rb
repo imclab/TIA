@@ -8,12 +8,13 @@ use Rack::Logger
 # Thailand (rain likely): 15.3500,101.0333
 FORECAST_KEY = "23b22b200d5ff8700237a133c6d39b5e"
 
-get "/:lat,:lng" do
+get "/:lat,:lng,:num_phrases" do
 	request.logger.info params.inspect
 
 	status = Status.new({:lat => params[:lat], 
 						 :lng => params[:lng], 
-						 :forecast_key => FORECAST_KEY})
+						 :forecast_key => FORECAST_KEY,
+						 :num_phrases => params[:num_phrases].to_i})
 
 	if params["debug"]
 		{"message" => status.message, 
