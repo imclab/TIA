@@ -173,13 +173,13 @@
     //[self.mainView addSubview:refreshControl];
     
     //time from launch
-    self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height+140, screen.size.width, 20)];
-    self.time.numberOfLines=10;
+    self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height+140, screen.size.width, 40)];
+    self.time.numberOfLines=3;
     self.time.textColor=[UIColor colorWithWhite:.3 alpha:1];
-    [self.time setFont:[UIFont fontWithName:@"Andale Mono" size:18.0]];
+    [self.time setFont:[UIFont fontWithName:@"Andale Mono" size:9.0]];
     [self.time setTextAlignment:NSTextAlignmentCenter];
     [self.mainView addSubview:self.time];
-    [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(timerTick:) userInfo:nil repeats:YES];
+    //[NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(updateTimer) userInfo:nil repeats:YES];
     
     //pushmessage
     self.pushMessage=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height+180, screen.size.width, 20)];
@@ -257,7 +257,6 @@
 
 }
 
-
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     //NSLog(@"scrolling");
     
@@ -294,8 +293,10 @@
         [self.pushProgress progress:(scrollView.contentOffset.y-10)/(maxOffsetY-10)*360.0];
     }
     
+    //timer is showing so update it
+    [self updateTimer];
     
-    
+
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
@@ -426,15 +427,12 @@
 }
 
 
-- (void)timerTick:(NSTimer *)tick {
-    
+- (void)updateTimer {
     //NSDate date is in GMT
     NSDate *now = [NSDate date];
-    
     //launch time pulled from parse is in GMT
     NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.launchTime];
     self.time.text=[self stringFromTimeInterval:timeInterval];
-
  }
 
 - (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
@@ -442,10 +440,12 @@
     NSInteger seconds = ti % 60;
     NSInteger minutes = (ti / 60) % 60;
     NSInteger hours = (ti / 3600) % 24;
-    NSInteger days = (ti / 86400) % 999;
+    NSInteger days = (ti / 86400) ;
     //NSInteger years = (ti / 31556952) % 9999;//86400 * 365.2425
 
-    return [NSString stringWithFormat:@"%03i:%02i:%02i:%02i", days, hours, minutes, seconds];
+    //return [NSString stringWithFormat:@"%03i:%02i:%02i:%02i", days, hours, minutes, seconds];
+    return [NSString stringWithFormat:@"%i days %i hours %i minutes %i seconds\nsince the two of you have been connected", days, hours, minutes, seconds];
+
 }
 
 
