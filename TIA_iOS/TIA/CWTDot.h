@@ -24,5 +24,5 @@
 
 -(void) inflate:(CGFloat)radius;
 -(void) progress:(CGFloat)progress;
--(void) loadingAnimation;
+-(void) loadingAnimation : (CGFloat) increaseTo delay:(CGFloat) d;
 @end

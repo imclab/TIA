@@ -147,7 +147,7 @@
 
     
     //main message
-    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 270, 88)];
+    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 270, 120)];
     [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height-40)];
     self.mainMessage.numberOfLines=10;
     self.mainMessage.textAlignment=NSTextAlignmentCenter;
@@ -306,10 +306,11 @@
     if(scrollView.contentOffset.y<=-100){
         self.mainMessage.center=CGPointMake(self.mainMessage.center.x,scrollView.frame.size.height+100);
         [self getFriendPosition:nil];
+        
     }
     
     //pull up to send push notification
-    else if(scrollView.contentOffset.y>=250){
+    else if(scrollView.contentOffset.y>=200){
         // Create our Installation query
         NSLog(@"scrolled :%f ",scrollView.contentOffset.y);
 
@@ -324,25 +325,34 @@
                            }
                            CLPlacemark *placemark = [placemarks objectAtIndex:0];
                            NSLog(@"placemark.%@",placemark);
-                           NSString*  gpsMess = [NSString stringWithFormat:@"Hi there. From %@.",placemark.thoroughfare];
-                           NSLog(@"gpsMess %@",gpsMess);
-                           self.mainMessage.text=[NSString stringWithFormat:@"%@ %@",self.mainMessage.text,gpsMess];
+                           NSString*  pushMess = [NSString stringWithFormat:@"Hi there. From %@.",placemark.thoroughfare];
+                           NSLog(@"pushMess %@",pushMess);
+                           self.mainMessage.text=[NSString stringWithFormat:@"%@ %@",self.mainMessage.text,pushMess];
                            
                            PFQuery *pushQuery = [PFInstallation query];
                            [pushQuery whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString];
                            // Send push notification to query
                            PFPush *push = [[PFPush alloc] init];
                            [push setQuery:pushQuery]; // Set our Installation query
-                           [push setMessage:gpsMess];
+                           [push setMessage:pushMess];
                            [push sendPushInBackground];
                            
                            [dele alert:@"Sent push notification to your other."];
 
                        }];
-   }
+    }
+    
+
 }
 
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    
+    if(self.mainMessage.center.y>scrollView.frame.size.height) {
+        [self.refreshProgress loadingAnimation:.5f delay:0.0f];
 
+    }
+
+}
 
 
 -(void)loadLocation{
@@ -450,21 +460,22 @@
 
 
 -(void)getFriendPosition:(id)sender{
-
-    //start animating refresh progress
-    //[self.refreshProgress loadingAnimation];
-    
     
     //get connection data
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((user1 = %@) OR (user2 = %@))",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
-    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
+   
     
+    //query connection database
+    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
+    //based on last updated
     [query orderByDescending:@"updatedAt"];
-    //[query orderByAscending:@"updatedAt"];
+    //exclude closed connections
     [query whereKeyDoesNotExist:@"completedAt"];
     
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+
         if (!error) {
+            
                 NSLog(@"objectId  %@", object.objectId);
                 NSLog(@"created   %@", object.updatedAt);
                 
@@ -487,16 +498,19 @@
             
                 NSLog(@"retrieving %@", self.otherUserVendorIDString);
             
+                //query users database
                 PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
+                //find other's uuid
                 [query whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString ];
+                //get latest version in case there are more than one
                 [query orderByDescending:@"updatedAt"];
                 [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
                 {
                     
                     if (!object) {
                         NSLog(@"The getFirstObject request failed.");
-                        self.mainMessage.text=@"Error getting your other's data.";
-
+                        self.mainMessage.text=@"Error getting your other's data. Please try again later.";
+                        [self animateMainMessage];
 
                     } else {
                         // The find succeeded.
@@ -511,17 +525,28 @@
                         //query for message based on another's data
                         if(self.numPhrases>1) self.numPhrases--;
                         
+                        
+                        //async url request for sentences
                         NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f,%i", self.dlat, self.dlng, self.numPhrases];
-                        NSURL  *iQuery = [NSURL URLWithString:url];
-                        NSString* weatherMess    = [NSString stringWithContentsOfURL:iQuery encoding:NSUTF8StringEncoding error:NULL];
-                        NSLog(@"weather:%@",weatherMess);
-                        self.mainMessage.text=[NSString stringWithFormat:@"%@",weatherMess];
+                        NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+                        [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                            
+                            
+                            
+                            NSString *mainMess = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                        
+                        
+                            
+                            //set message
+                            NSLog(@"weather:%@",mainMess);
+                            self.mainMessage.text=[NSString stringWithFormat:@"%@",mainMess];
 
-                        //reverse geocode message
-                        CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
-                        CLLocation *theirLocation=[[CLLocation alloc] initWithLatitude:self.dlat longitude:self.dlng];
-                        [geocoder reverseGeocodeLocation:theirLocation
+                            //reverse geocode message
+                            CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
+                            CLLocation *theirLocation=[[CLLocation alloc] initWithLatitude:self.dlat longitude:self.dlng];
+                            [geocoder reverseGeocodeLocation:theirLocation
                                        completionHandler:^(NSArray *placemarks, NSError *error) {
+
                                            if (error){
                                                NSLog(@"Geocode failed with error: %@", error);
                                                return;
@@ -541,7 +566,6 @@
                                            else if (randomNumber==2){
                                                gpsMess = [NSString stringWithFormat:@"Standing on %@.",placemark.thoroughfare];
                                            }
-
                                            
                                            NSLog(@"gpsMess %@",gpsMess);
                                            self.mainMessage.text=[NSString stringWithFormat:@"%@ %@",self.mainMessage.text,gpsMess];
@@ -551,11 +575,14 @@
                                            
                                            //animate main message onto screen
                                            [self animateMainMessage];
+                                           //[self.refreshProgress setAlpha:1];
 
-                                           
+                                           [self.refreshProgress.layer removeAllAnimations];
+                                           [self.refreshProgress progress:0];
+
                                        }];
                         
-                        
+                          }];
                         
                     
 

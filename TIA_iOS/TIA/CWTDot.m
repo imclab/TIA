@@ -67,6 +67,9 @@
 	CGContextStrokePath(context);
     
     
+
+    
+    
     
     
 }
@@ -84,22 +87,32 @@
     self.radius = radius;
     [self setNeedsDisplay];
 }
--(void) loadingAnimation
+
+
+-(void) loadingAnimation : (CGFloat) a delay:(CGFloat) d
 {
-    
-    
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options:UIViewAnimationOptionRepeat
+    //[self setAlpha:0];
+    [self setAlpha:0];
+
+    [self progress:360];
+
+    [UIView animateWithDuration:.4f
+                          delay:d
+                        options:UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAutoreverse | UIViewAnimationOptionRepeat
                      animations:^{
-                         self.progress=360;
+                         [self setAlpha:a];
+                         [self.layer displayIfNeeded];
                      }
-                     completion:nil];
+     completion:^(BOOL finished) {
+         [self setAlpha:1.0f];
+
+     }];
+
+
     
     
-    //self.progress = self.animationProgress;
-    //self.animationProgress++;
-    [self setNeedsDisplay];
+    
+    
 }
 
 
