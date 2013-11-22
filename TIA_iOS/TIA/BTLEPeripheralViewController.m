@@ -123,7 +123,7 @@
     NSLog(@"Central unsubscribed from characteristic");
     
     CWTAppDelegate* dele=[[UIApplication sharedApplication] delegate];
-    [dele alert:@"Lost BT Connection"];
+    //[dele alert:@"Lost BT Connection"];
 }
 
 

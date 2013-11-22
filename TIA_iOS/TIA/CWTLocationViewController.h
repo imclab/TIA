@@ -19,7 +19,6 @@
 
 @interface CWTLocationViewController : UIViewController<UIScrollViewDelegate>{
     CWTAppDelegate* dele;
-    
     int bearingAccuracy;
 
 }
@@ -27,7 +26,9 @@
 @property (nonatomic,strong)  UIImageView *arrowImage;
 
 @property (nonatomic,strong)  CWTArrow* arrow;
-@property (nonatomic,strong)  CWTDot* dot;
+@property (nonatomic,strong)  CWTDot* pushProgress;
+@property (nonatomic,strong)  CWTDot* refreshProgress;
+
 
 @property (nonatomic,strong)  UIImageView *satSearchImage;
 @property (nonatomic,strong)  UIImageView *dnArrow;

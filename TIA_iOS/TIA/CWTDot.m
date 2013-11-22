@@ -18,6 +18,9 @@
     if (self) {
         // Initialization code
         self.start=-90;
+        self.lineWidth=16;
+        self.animationProgress=0;
+        self.lineColor=[UIColor colorWithWhite:0 alpha:1.0f];
     }
     return self;
 }
@@ -52,13 +55,15 @@
     
     
     //progress arc
-	CGContextSetLineWidth(context, 16);
-    CGContextSetStrokeColorWithColor(context, [UIColor colorWithWhite:0 alpha:1.0f].CGColor);
+	CGContextSetLineWidth(context, self.lineWidth);
+    CGContextSetStrokeColorWithColor(context, self.lineColor.CGColor);
     if(_progress>=359.99) _progress=359.99;
-    //if(_progress<=5 ) _progress=5;
+    else if(_progress<=1 ) _progress=1;
     _end=_start+360-_progress;
     
-    CGContextAddArc(context, ellipse.origin.x+self.radius*.5, ellipse.origin.y+self.radius*.5, self.radius*.5+8, DEGREES_TO_RADIANS(_start),DEGREES_TO_RADIANS(_end),1);
+    if(_progress>1){
+        CGContextAddArc(context, ellipse.origin.x+self.radius*.5, ellipse.origin.y+self.radius*.5, self.radius*.5+self.lineWidth*.5, DEGREES_TO_RADIANS(_start),DEGREES_TO_RADIANS(_end),1);
+    }
 	CGContextStrokePath(context);
     
     
@@ -79,7 +84,23 @@
     self.radius = radius;
     [self setNeedsDisplay];
 }
-
+-(void) loadingAnimation
+{
+    
+    
+    [UIView animateWithDuration:0.3f
+                          delay:0.0f
+                        options:UIViewAnimationOptionRepeat
+                     animations:^{
+                         self.progress=360;
+                     }
+                     completion:nil];
+    
+    
+    //self.progress = self.animationProgress;
+    //self.animationProgress++;
+    [self setNeedsDisplay];
+}
 
 
 @end

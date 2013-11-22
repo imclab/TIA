@@ -56,13 +56,13 @@
     self.scrollView.contentSize = CGSizeMake(self.view.frame.size.width , self.view.frame.size.height+55);
 
     
-    /*
+    
      //add down arrow
     self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
-    self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
+    self.dnArrow.center=CGPointMake(screen.size.width*.5,50);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
     [self.mainView addSubview: self.dnArrow];
-    */
+    
     
     //stats
     self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+20, 320, 100)];
@@ -91,7 +91,7 @@
     //main arrow
     self.arrow=[[CWTArrow alloc] initWithFrame:CGRectMake(0, 0, 9,1200)];
     self.arrow.backgroundColor=[UIColor clearColor];
-    [self.mainView addSubview:self.arrow];
+    [self.view addSubview:self.arrow];
     [self.arrow setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5)];
     
     //main arrow hack
@@ -101,42 +101,61 @@
     //self.arrowImage.center=self.arrow.center;
     
     
-    //push dot
-    self.dot=[[CWTDot alloc] initWithFrame:CGRectMake(0, 0, 500,500)];
-    self.dot.backgroundColor=[UIColor clearColor];
-    self.dot.dotColor=[UIColor colorWithWhite:.2 alpha:.5];
-    [self.scrollView addSubview:self.dot];
-    [self.dot setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.5+270+250)];
+    //add north arrow
+    self.north = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16*.25, 263*.25)];
+    [self.north setImage:[UIImage imageNamed:@"north.png"]];
+    [self.view addSubview: self.north];
     
+    self.north.center=self.arrow.center;
+    
+    
+    //pushnotification dot
+    self.pushProgress=[[CWTDot alloc] initWithFrame:CGRectMake(0, 0, 500,500)];
+    self.pushProgress.backgroundColor=[UIColor clearColor];
+    self.pushProgress.dotColor=[UIColor clearColor];
+    self.pushProgress.lineColor=[UIColor colorWithWhite:.1 alpha:.5];
+
+    [self.mainView addSubview:self.pushProgress];
+    [self.pushProgress setCenter:CGPointMake(screen.size.width*.5, screen.size.height-40)];
+    
+   
+    //refresh dot
+    self.refreshProgress=[[CWTDot alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    self.refreshProgress.backgroundColor=[UIColor clearColor];
+    //self.refreshProgress.dotColor=[UIColor colorWithWhite:.2 alpha:.5];
+    self.refreshProgress.dotColor=[UIColor clearColor];
+    self.refreshProgress.lineWidth=4;
+    [self.refreshProgress inflate:50];
+
+    
+    [self.scrollView addSubview:self.refreshProgress];
+    [self.refreshProgress setCenter:CGPointMake(screen.size.width*.5, self.dnArrow.center.y+self.refreshProgress.frame.size.height*.5)];
     
     
     //distance
-    self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width*.35, 20)];
+    self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width*.2, 20)];
     self.distanceText.numberOfLines=1;
     self.distanceText.textColor=[UIColor colorWithWhite:.3 alpha:1];
     [self.distanceText setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.0]];
     [self.distanceText setTextAlignment:NSTextAlignmentCenter];
-    [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.35, self.arrow.center.y+screen.size.width*.4)];
+    [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.5, self.arrow.center.y+screen.size.width*.7)];
     self.distanceText.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90));
     self.distanceText.backgroundColor=[UIColor colorWithWhite:.95 alpha:1];
     [self.arrow addSubview:self.distanceText];
     
     
-    //add north arrow
-    self.north = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16*.25, 263*.25)];
-    [self.north setImage:[UIImage imageNamed:@"north.png"]];
-    [self.mainView addSubview: self.north];
 
-    self.north.center=self.arrow.center;
     
     //main message
-    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 270, 240)];
-    [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height*.35)];
+    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 270, 88)];
+    [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height-40)];
     self.mainMessage.numberOfLines=10;
     self.mainMessage.textAlignment=NSTextAlignmentCenter;
     [self.mainMessage setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:20.0]];
     //self.mainMessage.adjustsFontSizeToFitWidth = YES;
-    self.mainMessage.backgroundColor=[UIColor clearColor];
+    //self.mainMessage.backgroundColor=[UIColor clearColor];
+    //self.mainMessage.backgroundColor=[UIColor colorWithWhite:.5 alpha:1];
+
     [self.mainView addSubview:self.mainMessage];
     self.mainMessage.text=@"...";
     
@@ -149,9 +168,9 @@
     //[[NSRunLoop mainRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
     
     //pull to refresh
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
-    [refreshControl addTarget:self action:@selector(getFriendPosition:)forControlEvents:UIControlEventValueChanged];
-    [self.mainView addSubview:refreshControl];
+    //UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    //[refreshControl addTarget:self action:@selector(getFriendPosition:)forControlEvents:UIControlEventValueChanged];
+    //[self.mainView addSubview:refreshControl];
     
     //time from launch
     self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height+140, screen.size.width, 20)];
@@ -241,20 +260,55 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView{
     //NSLog(@"scrolling");
-    if(scrollView.contentOffset.y>250){
-        [self.dot inflate:250];
-        [self.dot progress:360];
-        
+    
+    CGPoint offset = scrollView.contentOffset;
+    int minOffsetY=-100;
+    int maxOffsetY=200;
+    // Check if current offset is within limit and adjust if it is not
+    if (offset.y < minOffsetY) offset.y = minOffsetY;
+    if (offset.y > maxOffsetY) offset.y = maxOffsetY;
+    
+    // Set offset to adjusted value
+    scrollView.contentOffset = offset;
+    
+    
+    //pull down
+    if(scrollView.contentOffset.y<minOffsetY){
+        //animate scroll
+        [self.refreshProgress inflate:50];
+        [self.refreshProgress progress:360];
     }else{
-        [self.dot inflate:scrollView.contentOffset.y];
-        [self.dot progress:scrollView.contentOffset.y/250*360.0];
+        [self.refreshProgress inflate:50];
+        [self.refreshProgress progress:scrollView.contentOffset.y/minOffsetY*360.0];
 
     }
+    
+    //pull up
+    if(scrollView.contentOffset.y>maxOffsetY){
+        [self.pushProgress inflate:180];
+        [self.pushProgress progress:360];
+        
+    }else{
+        //[self.pushProgress inflate:scrollView.contentOffset.y];
+        [self.pushProgress inflate:180];
+        [self.pushProgress progress:(scrollView.contentOffset.y-10)/(maxOffsetY-10)*360.0];
+    }
+    
+    
+    
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+
     
-    if(scrollView.contentOffset.y>250){
+    //pull down to refresh
+    if(scrollView.contentOffset.y<=-100){
+        self.mainMessage.center=CGPointMake(self.mainMessage.center.x,scrollView.frame.size.height+100);
+        [self getFriendPosition:nil];
+    }
+    
+    //pull up to send push notification
+    else if(scrollView.contentOffset.y>=250){
         // Create our Installation query
         NSLog(@"scrolled :%f ",scrollView.contentOffset.y);
 
@@ -397,6 +451,10 @@
 
 -(void)getFriendPosition:(id)sender{
 
+    //start animating refresh progress
+    //[self.refreshProgress loadingAnimation];
+    
+    
     //get connection data
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((user1 = %@) OR (user2 = %@))",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
     PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
@@ -432,7 +490,8 @@
                 PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
                 [query whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString ];
                 [query orderByDescending:@"updatedAt"];
-                [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
+                {
                     
                     if (!object) {
                         NSLog(@"The getFirstObject request failed.");
@@ -486,12 +545,19 @@
                                            
                                            NSLog(@"gpsMess %@",gpsMess);
                                            self.mainMessage.text=[NSString stringWithFormat:@"%@ %@",self.mainMessage.text,gpsMess];
+                                           
+                                           //end refresh animation
+                                           //[(UIRefreshControl *)sender endRefreshing];
+                                           
+                                           //animate main message onto screen
+                                           [self animateMainMessage];
+
+                                           
                                        }];
                         
                         
                         
-                        //end refresh animation
-                        [(UIRefreshControl *)sender endRefreshing];
+                    
 
                     }
                 }];
@@ -503,10 +569,10 @@
             
             //No connection entry in database
             self.mainMessage.text=@"You don't have another. Please try again later when we connect you to your other.";
-
+            [self animateMainMessage];
             
             //end refresh animation
-            [(UIRefreshControl *)sender endRefreshing];
+            //[(UIRefreshControl *)sender endRefreshing];
         }
 
     }];
@@ -515,6 +581,20 @@
 
 }
 
+
+-(void)animateMainMessage{
+    
+    //animate main message onto screen
+    [UIView animateWithDuration:0.3f
+                          delay:0.0f
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         CGRect screen = [[UIScreen mainScreen] applicationFrame];
+                         
+                         [self.mainMessage setCenter:CGPointMake(self.mainMessage.center.x,  screen.size.height-40)];
+                     }
+                     completion:nil];
+}
 -(void)calculateMaxDist{
     if( self.page < [dele.locationDictionaryArray count] ) {
         NSMutableDictionary * dictionary = [dele.locationDictionaryArray objectAtIndex:self.page];
@@ -745,7 +825,7 @@
                    "myuser#    : %i\n"
                    "target     : %f,%f \n"
                    "targetUUID : %@\n"
-                   "targetname : %@\n"
+                   //"targetname : %@\n"
 
                    ,
                    speedString,
@@ -756,8 +836,8 @@
                    [UIDevice currentDevice].identifierForVendor.UUIDString,
                    self.myUserNumber,
                    self.dlat , self.dlng,
-                   self.otherUserVendorIDString,
-                   self.otherUsername
+                   self.otherUserVendorIDString
+                   ////self.otherUsername
                    ];
     
     self.displayText.text=statusString;
