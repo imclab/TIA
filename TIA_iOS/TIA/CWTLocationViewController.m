@@ -126,10 +126,10 @@
     self.refreshProgress.dotColor=[UIColor clearColor];
     self.refreshProgress.lineWidth=4;
     [self.refreshProgress inflate:50];
+    [self.refreshProgress setCenter:CGPointMake(screen.size.width*.5, self.dnArrow.center.y+self.refreshProgress.frame.size.height*.5)];
 
     
     [self.scrollView addSubview:self.refreshProgress];
-    [self.refreshProgress setCenter:CGPointMake(screen.size.width*.5, self.dnArrow.center.y+self.refreshProgress.frame.size.height*.5)];
     
     
     //distance
@@ -353,8 +353,8 @@
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     
     if(self.mainMessage.center.y>scrollView.frame.size.height) {
-        [self.refreshProgress loadingAnimation:.5f delay:0.0f];
-
+        //[self.refreshProgress loadingAnimation:.5f delay:0.0f];
+        [self.refreshProgress startSpin];
     }
 
 }
@@ -516,8 +516,7 @@
                         NSLog(@"The getFirstObject request failed.");
                         self.mainMessage.text=@"Error getting your other's data. Please try again later.";
                         [self animateMainMessage];
-                        [self.refreshProgress.layer removeAllAnimations];
-                        [self.refreshProgress progress:0];
+                        [self.refreshProgress stopSpin];
 
                     } else {
                         // The find succeeded.
@@ -585,8 +584,7 @@
                                            [self animateMainMessage];
                                            //[self.refreshProgress setAlpha:1];
 
-                                           [self.refreshProgress.layer removeAllAnimations];
-                                           [self.refreshProgress progress:0];
+                                           [self.refreshProgress stopSpin];
 
                                        }];
                         
@@ -605,8 +603,7 @@
             //No connection entry in database
             self.mainMessage.text=@"You don't have another. Please try again later when we connect you to your other.";
             [self animateMainMessage];
-            [self.refreshProgress.layer removeAllAnimations];
-            [self.refreshProgress progress:0];
+            [self.refreshProgress stopSpin];
             //end refresh animation
             //[(UIRefreshControl *)sender endRefreshing];
         }
