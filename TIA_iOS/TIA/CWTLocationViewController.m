@@ -59,7 +59,7 @@
     
      //add down arrow
     self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
-    self.dnArrow.center=CGPointMake(screen.size.width*.5,50);
+    self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
     [self.mainView addSubview: self.dnArrow];
     
@@ -119,7 +119,7 @@
     [self.pushProgress setCenter:CGPointMake(screen.size.width*.5, screen.size.height-40)];
     
    
-    //refresh dot
+    //refresh arc
     self.refreshProgress=[[CWTDot alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     self.refreshProgress.backgroundColor=[UIColor clearColor];
     //self.refreshProgress.dotColor=[UIColor colorWithWhite:.2 alpha:.5];
@@ -141,6 +141,7 @@
     [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.5, self.arrow.center.y+screen.size.width*.7)];
     self.distanceText.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90));
     self.distanceText.backgroundColor=[UIColor colorWithWhite:.95 alpha:1];
+    self.distanceText.text=@"000";
     [self.arrow addSubview:self.distanceText];
     
     
@@ -279,7 +280,11 @@
     }else{
         [self.refreshProgress inflate:50];
         [self.refreshProgress progress:scrollView.contentOffset.y/minOffsetY*360.0];
+        
+        //CGRect screen = [[UIScreen mainScreen] applicationFrame];
 
+        //[self.dnArrow setCenter:CGPointMake(self.dnArrow.center.x,50+(screen.size.height-120-50)*scrollView.contentOffset.y/minOffsetY)];
+        //[self.refreshProgress setCenter:CGPointMake(self.dnArrow.center.x, self.dnArrow.center.y+50)];
     }
     
     //pull up
@@ -511,6 +516,8 @@
                         NSLog(@"The getFirstObject request failed.");
                         self.mainMessage.text=@"Error getting your other's data. Please try again later.";
                         [self animateMainMessage];
+                        [self.refreshProgress.layer removeAllAnimations];
+                        [self.refreshProgress progress:0];
 
                     } else {
                         // The find succeeded.
@@ -523,11 +530,12 @@
                         NSLog(@"pointing: %@",[object objectForKey:@"vendorUUID"] );
                         
                         //query for message based on another's data
-                        if(self.numPhrases>1) self.numPhrases--;
                         
                         
                         //async url request for sentences
                         NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f,%i", self.dlat, self.dlng, self.numPhrases];
+                        if(self.numPhrases>1) self.numPhrases--;
+
                         NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
                         [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                             
@@ -597,7 +605,8 @@
             //No connection entry in database
             self.mainMessage.text=@"You don't have another. Please try again later when we connect you to your other.";
             [self animateMainMessage];
-            
+            [self.refreshProgress.layer removeAllAnimations];
+            [self.refreshProgress progress:0];
             //end refresh animation
             //[(UIRefreshControl *)sender endRefreshing];
         }
