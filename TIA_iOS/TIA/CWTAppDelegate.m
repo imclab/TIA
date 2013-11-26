@@ -94,7 +94,7 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeBadge];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeAlert];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeSound];
-    
+    [self registerForBackgroundNotifications];
     
     
     
@@ -250,23 +250,34 @@
     [self.locationManager stopUpdatingHeading];
     [self.locationManager stopUpdatingLocation];
     
+    [self.locationManager startMonitoringSignificantLocationChanges];
+    NSLog(@"resign active");
+    
+    
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    
+   
+
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    [self.locationManager stopMonitoringSignificantLocationChanges];
+    NSLog(@"will enter foreground");
+
+    
 
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
+    NSLog(@"did become active");
+
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     
@@ -295,7 +306,7 @@
     [self.locationManager startUpdatingLocation];
     
     //for background cell tower position changes
-    [self.locationManager startMonitoringSignificantLocationChanges];
+    //[self.locationManager startMonitoringSignificantLocationChanges];
 
     
     //heading

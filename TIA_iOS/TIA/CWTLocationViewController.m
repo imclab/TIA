@@ -227,7 +227,7 @@
     
     
     //get two phrases on launch
-    self.numPhrases=2;
+    self.numPhrases=3;
     
     [self updateHeading];
     [self startBTLE];
@@ -332,7 +332,7 @@
     }
     
     //pull up
-    if(self.heart.selected==FALSE){
+    if(self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""]){
         if(scrollView.contentOffset.y>pullUpTrigger){
             [self.pushProgress progress:360];
         }else{
@@ -355,10 +355,11 @@
         self.mainMessage.center=CGPointMake(self.mainMessage.center.x,scrollView.frame.size.height+100);
         [self getFriendPosition:nil];
         [self.heart setSelected:NO];
+        self.mainMessage.text=@"";
     }
     
     //pull up to send push notification
-    else if(scrollView.contentOffset.y>=100 && self.heart.selected==FALSE){
+    else if(scrollView.contentOffset.y>=100 && self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""]){
         // Create our Installation query
         NSLog(@"scrolled :%f ",scrollView.contentOffset.y);
 
@@ -578,7 +579,7 @@
                         
                         //async url request for sentences
                         NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f,%i", self.dlat, self.dlng, self.numPhrases];
-                        if(self.numPhrases>1) self.numPhrases--;
+                        if(self.numPhrases>2) self.numPhrases--;
 
                         NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
                         [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
@@ -590,9 +591,10 @@
                         
                             
                             //set message
-                            NSLog(@"weather:%@",mainMess);
+                            NSLog(@"mainMess:%@",mainMess);
                             self.mainMessage.text=[NSString stringWithFormat:@"%@",mainMess];
 
+                            /*
                             //reverse geocode message
                             CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
                             CLLocation *theirLocation=[[CLLocation alloc] initWithLatitude:self.dlat longitude:self.dlng];
@@ -621,14 +623,18 @@
                                            
                                            //end refresh animation
                                            //[(UIRefreshControl *)sender endRefreshing];
-                                           
-                                           //animate main message onto screen
-                                           [self animateMainMessage];
-                                           //[self.refreshProgress setAlpha:1];
 
-                                           [self.refreshProgress stopSpin];
 
                                        }];
+                             */
+                            
+                            
+                            
+                            //animate main message onto screen
+                            [self animateMainMessage];
+                            //[self.refreshProgress setAlpha:1];
+                            
+                            [self.refreshProgress stopSpin];
                         
                           }];
                         
