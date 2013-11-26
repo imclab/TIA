@@ -68,6 +68,10 @@
 		44DAE01E17359AC900C17F07 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE01D17359AC900C17F07 /* Foundation.framework */; };
 		44DAE02017359AC900C17F07 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE01F17359AC900C17F07 /* CoreGraphics.framework */; };
 		44DAE0601735A08C00C17F07 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE05F1735A08C00C17F07 /* CoreLocation.framework */; };
+		44F230771844465A002EFCB2 /* empty_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = 44F230731844465A002EFCB2 /* empty_heart.png */; };
+		44F230781844465A002EFCB2 /* heart.png in Resources */ = {isa = PBXBuildFile; fileRef = 44F230741844465A002EFCB2 /* heart.png */; };
+		44F230791844465A002EFCB2 /* empty_heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44F230751844465A002EFCB2 /* empty_heart@2x.png */; };
+		44F2307A1844465A002EFCB2 /* heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44F230761844465A002EFCB2 /* heart@2x.png */; };
 		44FF8CB518385A3500F6125D /* CWTDot.m in Sources */ = {isa = PBXBuildFile; fileRef = 44FF8CB418385A3500F6125D /* CWTDot.m */; };
 /* End PBXBuildFile section */
 
@@ -150,6 +154,10 @@
 		44DAE04217359ACA00C17F07 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		44DAE05F1735A08C00C17F07 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		44E7EBBC17A700B20054E1BB /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		44F230731844465A002EFCB2 /* empty_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_heart.png; sourceTree = "<group>"; };
+		44F230741844465A002EFCB2 /* heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart.png; sourceTree = "<group>"; };
+		44F230751844465A002EFCB2 /* empty_heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty_heart@2x.png"; sourceTree = "<group>"; };
+		44F230761844465A002EFCB2 /* heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "heart@2x.png"; sourceTree = "<group>"; };
 		44FF8CB318385A3500F6125D /* CWTDot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWTDot.h; sourceTree = "<group>"; };
 		44FF8CB418385A3500F6125D /* CWTDot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWTDot.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -221,6 +229,10 @@
 		446D51161819C79700E6DBE7 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				44F230731844465A002EFCB2 /* empty_heart.png */,
+				44F230741844465A002EFCB2 /* heart.png */,
+				44F230751844465A002EFCB2 /* empty_heart@2x.png */,
+				44F230761844465A002EFCB2 /* heart@2x.png */,
 				44A0A4E018442F44002AB85E /* heartMask.png */,
 				44A0A4E118442F44002AB85E /* heartMask@2x.png */,
 				4404A675183124AA0000F2FC /* dotarrow.png */,
@@ -412,6 +424,8 @@
 				4446B4821830402F008409DE /* north@2x.png in Resources */,
 				4404A677183124AA0000F2FC /* dotarrow.png in Resources */,
 				446D515C1819C79800E6DBE7 /* satellite_0003.png in Resources */,
+				44F230771844465A002EFCB2 /* empty_heart.png in Resources */,
+				44F230791844465A002EFCB2 /* empty_heart@2x.png in Resources */,
 				446D51501819C79800E6DBE7 /* compass-n.png in Resources */,
 				44A0A4E218442F44002AB85E /* heartMask.png in Resources */,
 				446D515A1819C79800E6DBE7 /* satellite_0002.png in Resources */,
@@ -434,6 +448,7 @@
 				446D51471819C79800E6DBE7 /* Default.png in Resources */,
 				446D515B1819C79800E6DBE7 /* satellite_0002@2x.png in Resources */,
 				446D514B1819C79800E6DBE7 /* Icon.png in Resources */,
+				44F230781844465A002EFCB2 /* heart.png in Resources */,
 				446D514D1819C79800E6DBE7 /* arrow-line.png in Resources */,
 				446D51561819C79800E6DBE7 /* satellite_0000.png in Resources */,
 				446D51461819C79800E6DBE7 /* Default-568h@2x.png in Resources */,
@@ -441,6 +456,7 @@
 				446D51651819C79800E6DBE7 /* Settings.bundle in Resources */,
 				4404A678183124AA0000F2FC /* dotarrow@2x.png in Resources */,
 				446D51631819C79800E6DBE7 /* PointingAtYou-Info.plist in Resources */,
+				44F2307A1844465A002EFCB2 /* heart@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
