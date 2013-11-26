@@ -39,7 +39,7 @@ class Status
 		if range_phrase
 			range_phrase.sample + " " + places_result[:name] + "."
 		else
-			false
+			return ""
 		end
 	end
 
