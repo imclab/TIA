@@ -63,6 +63,7 @@
 @property (nonatomic) int numPhrases;
 
 @property (nonatomic) BOOL spinning;
+@property (nonatomic) BOOL hasAnother;
 
 
 @property (nonatomic) NSString * otherUserVendorIDString;

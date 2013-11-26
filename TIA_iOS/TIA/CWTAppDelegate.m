@@ -95,7 +95,8 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeAlert];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeSound];
     
-    
+    deviceAddedToParse=false;
+
     
     return YES;
 }
@@ -143,7 +144,9 @@
             }
             
             //user not found. save new entry to database
-            if(objects.count==0){
+            if(objects.count==0 && deviceAddedToParse==FALSE){
+                NSLog(@"New Device");
+
                 //add user to parse Class
                 PFObject *object = [PFObject objectWithClassName:@"TIA_Users"];
                 [object setObject:[UIDevice currentDevice].identifierForVendor.UUIDString forKey:@"vendorUUID"];
@@ -152,9 +155,12 @@
                 [object setObject:[NSNumber numberWithFloat:self.speed] forKey:@"speed"];
                 [object setObject:[NSNumber numberWithFloat:self.altitude] forKey:@"altitude"];
                 [object saveInBackground];
-                
+                deviceAddedToParse=true;
                 
             }
+            
+            if(deviceAddedToParse) self.viewController.locationViewController.mainMessage.text=@"Just added you. We'll connect you to another soon.";
+
         }
         else {
             // Log details of the failure

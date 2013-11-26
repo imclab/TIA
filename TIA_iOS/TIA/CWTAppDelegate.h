@@ -16,7 +16,8 @@
 
 @interface CWTAppDelegate : UIResponder <UIApplicationDelegate>{
     //MTStatusBarOverlay *overlay;
-
+    BOOL deviceAddedToParse;
+    
 }
 
 @property (strong, nonatomic) UIWindow *window;

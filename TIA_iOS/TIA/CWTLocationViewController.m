@@ -77,8 +77,8 @@
 
     
     //add satSearchImage
-    self.satSearchImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 5)];
-    self.satSearchImage.center=CGPointMake(screen.size.width*.95,80);
+    self.satSearchImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    self.satSearchImage.center=CGPointMake(screen.size.width*.95,40);
     self.satSearchImage.animationImages = [NSArray arrayWithObjects:
                                            [UIImage imageNamed:@"satellite_0003.png"],
                                            [UIImage imageNamed:@"satellite_0002.png"],
@@ -151,15 +151,18 @@
     
     
     //distance
-    self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width*.2, 20)];
+    self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 0,0)];
     self.distanceText.numberOfLines=1;
     self.distanceText.textColor=[UIColor colorWithWhite:.3 alpha:1];
     [self.distanceText setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.0]];
     [self.distanceText setTextAlignment:NSTextAlignmentCenter];
-    [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.5, self.arrow.center.y+screen.size.width*.7)];
     self.distanceText.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90));
     self.distanceText.backgroundColor=[UIColor colorWithWhite:.95 alpha:1];
     self.distanceText.text=@"000";
+   // self.distanceText.frame=CGRectMake(0,0, screen.size.width*.2, 20);
+    //[self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.5, self.arrow.center.y+screen.size.width*.7)];
+    [self.distanceText setCenter:CGPointMake(-4, self.arrow.center.y+screen.size.width*.6)];
+
     [self.arrow addSubview:self.distanceText];
     
     
@@ -332,7 +335,7 @@
     }
     
     //pull up
-    if(self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""]){
+    if(self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""] && self.hasAnother){
         if(scrollView.contentOffset.y>pullUpTrigger){
             [self.pushProgress progress:360];
         }else{
@@ -359,7 +362,8 @@
     }
     
     //pull up to send push notification
-    else if(scrollView.contentOffset.y>=100 && self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""]){
+    else if(scrollView.contentOffset.y>=100 && self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""] &&                             self.hasAnother
+){
         // Create our Installation query
         NSLog(@"scrolled :%f ",scrollView.contentOffset.y);
 
@@ -485,6 +489,13 @@
         }
     }
     
+    
+    //set label size to text
+    CGSize textSize = [[self.distanceText text] sizeWithFont:[self.distanceText font]];
+    CGRect newFrame =  self.distanceText.frame;
+    newFrame.size = CGSizeMake(textSize.height, textSize.width+20);
+    self.distanceText.frame=newFrame;
+
 }
 
 
@@ -563,12 +574,14 @@
                         self.mainMessage.text=@"Error getting your other's data. Please try again later.";
                         [self animateMainMessage];
                         [self.refreshProgress stopSpin];
+                        self.hasAnother=false;
 
                     } else {
                         // The find succeeded.
                         self.dlat= [[object objectForKey:@"lat"] floatValue];
                         self.dlng= [[object objectForKey:@"lng"] floatValue];
                         self.otherUsername=[object objectForKey:@"name"];
+                        self.hasAnother=true;
 
                         [self updateDistanceWithLatLng:0];
 
@@ -635,7 +648,7 @@
                             //[self.refreshProgress setAlpha:1];
                             
                             [self.refreshProgress stopSpin];
-                        
+
                           }];
                         
                     
@@ -652,9 +665,10 @@
             if (dele.hasInternet==FALSE) {
                 self.mainMessage.text=@"Couldn't reach the internet.";
 
-            }else self.mainMessage.text=@"You don't have another. Please try again later when we connect you to your other.";
+            }else self.mainMessage.text=@"You don't have another yet. Please try again later when we connect you to your other.";
             [self animateMainMessage];
             [self.refreshProgress stopSpin];
+            self.hasAnother=false;
             //end refresh animation
             //[(UIRefreshControl *)sender endRefreshing];
         }
