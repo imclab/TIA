@@ -22,7 +22,7 @@ class Status
 
 	def message
 		selected_phrases = 0
-		phrases = [hour_phrase, sunrise_phrase, temperature_phrase, cloud_phrase, precipitation_phrase, sunset_phrase].select{|p| !p.empty?}
+		phrases = [place_phrase, hour_phrase, sunrise_phrase, temperature_phrase, cloud_phrase, precipitation_phrase, sunset_phrase].select{|p| !p.empty?}
 
 		selected_phrases = []
 		while selected_phrases.length < num_phrases
@@ -32,6 +32,15 @@ class Status
 		end
 
 		selected_phrases.join(" ")
+	end
+
+	def place_phrase
+		range_phrase = Status.phrases_within_range("place", places_result[:distance])
+		if range_phrase
+			range_phrase.sample + " " + places_result[:name] + "."
+		else
+			false
+		end
 	end
 
 	def cloud_phrase
@@ -114,9 +123,8 @@ class Status
     	spots.sort! do |a,b| 
 			GeoDistance.distance(lat,lng,a.lat,a.lng).distance <=> GeoDistance.distance(lat,lng,b.lat,b.lng).distance
 		end
-		puts spots.inspect
 
-		@places_result = spots[0].name
+		@places_result = {:name => spots[0].name, :distance => GeoDistance.distance(lat,lng, spots[0].lat, spots[0].lng).meters.number }
 
     	return @places_result
     end

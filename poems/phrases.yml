@@ -1,4 +1,15 @@
 ---
+place: # this is distance in meters, it's followed by the name of the landmark
+  0:
+  - I'm at
+  30:
+  - I'm right near
+  500:
+  - I'm kind of close to
+  1000:
+  - I'm a bit away from
+  2000:
+  - I'm in the general area of
 time: # this is in 24 hr time. It will snap to the closest hour present
   2:
   - It's really late.
