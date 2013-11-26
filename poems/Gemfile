@@ -3,3 +3,5 @@ gem "sinatra"
 gem "forecast_io"
 gem "active_support"
 gem "tzinfo"
+gem 'google_places'
+gem "geo-distance"

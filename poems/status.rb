@@ -3,13 +3,20 @@ require 'json'
 require 'yaml'
 require 'pathname'
 require 'active_support/time'
+require 'google_places'
+require "geo-distance"
+
+GOOGLE_KEY = "AIzaSyC6Nikc4HTkRkPksWkEbPj3PIPcXhatIt8"
+PLACE_SEARCH_RADIUS = 100
 
 class Status
-	attr_accessor :forecast, :num_phrases
+	attr_accessor :forecast, :num_phrases, :lat, :lng
 
 	def initialize(params)
 		ForecastIO.api_key = params[:forecast_key]
-		self.forecast = ForecastIO.forecast(params[:lat].to_f,params[:lng].to_f)
+		self.lat = params[:lat].to_f
+		self.lng = params[:lng].to_f
+		self.forecast = ForecastIO.forecast(lat,lng)
 		self.num_phrases = params[:num_phrases]	
 	end
 
@@ -96,6 +103,22 @@ class Status
 
     def self.phrase_hash
     	@@phrase_hash ||= YAML.load(open(File.expand_path(File.dirname(__FILE__)) + "/phrases.yml").read)
+    end
+
+    def places_result
+    	return @places_result if @places_result
+
+    	client = GooglePlaces::Client.new(GOOGLE_KEY)
+    	spots = client.spots(lat,lng, :radius => PLACE_SEARCH_RADIUS)
+    	GeoDistance.default_algorithm = :haversine
+    	spots.sort! do |a,b| 
+			GeoDistance.distance(lat,lng,a.lat,a.lng).distance <=> GeoDistance.distance(lat,lng,b.lat,b.lng).distance
+		end
+		puts spots.inspect
+
+		@places_result = spots[0].name
+
+    	return @places_result
     end
 
 end
