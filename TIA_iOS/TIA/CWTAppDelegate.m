@@ -94,7 +94,6 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeBadge];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeAlert];
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeSound];
-    [self registerForBackgroundNotifications];
     
     
     
