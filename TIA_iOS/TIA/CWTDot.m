@@ -22,6 +22,12 @@
         self.lineWidth=16;
         self.animationProgress=0;
         self.lineColor=[UIColor colorWithWhite:0 alpha:1.0f];
+        
+        CGRect screen = [[UIScreen mainScreen] applicationFrame];
+        heartImage=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"heart.png"]];
+        heartImage.frame = CGRectMake(0,0, 200, 200);
+        [heartImage setCenter:CGPointMake(screen.size.width*.5, screen.size.height+100)];
+        
     }
     return self;
 }
@@ -32,29 +38,24 @@
 
  - (void)drawRect:(CGRect)rect
 {
-    //NSLog(@"Draw Dot");
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     CGPoint point;
     point.x=self.frame.size.width*.5;
     point.y=self.frame.size.height*.5;
 
-    //draw dot
+    //draw
     CGRect ellipse;
-
     ellipse.origin.x=point.x-self.radius*.5;
     ellipse.origin.y=point.y-self.radius*.5;
-    
     ellipse.size.width=self.radius;
     ellipse.size.height=self.radius;
     
     
-    CGContextAddEllipseInRect(context, ellipse);
-    CGContextSetFillColorWithColor(context, self.dotColor.CGColor);
-    CGContextFillPath(context);
-    
-    
-    
+    //CGContextAddEllipseInRect(context, ellipse);
+    //CGContextSetFillColorWithColor(context, self.dotColor.CGColor);
+    //CGContextFillPath(context);
+
     //progress arc
 	CGContextSetLineWidth(context, self.lineWidth);
     CGContextSetStrokeColorWithColor(context, self.lineColor.CGColor);
@@ -62,16 +63,12 @@
     else if(_progress<=1 ) _progress=1;
     _end=_start+360-_progress;
     
+    
     if(_progress>1){
-        CGContextAddArc(context, ellipse.origin.x+self.radius*.5, ellipse.origin.y+self.radius*.5, self.radius*.5+self.lineWidth*.5, DEGREES_TO_RADIANS(_start),DEGREES_TO_RADIANS(_end),TRUE);
+        CGContextAddArc(context, ellipse.origin.x+self.radius*.5, ellipse.origin.y+self.radius*.5, self.radius+self.lineWidth*.5, DEGREES_TO_RADIANS(_end),DEGREES_TO_RADIANS(_start),FALSE);
     }
-	CGContextStrokePath(context);
-    
-    
 
-    
-    
-    
+	CGContextStrokePath(context);
     
 }
 

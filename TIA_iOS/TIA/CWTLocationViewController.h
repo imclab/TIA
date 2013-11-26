@@ -33,6 +33,7 @@
 @property (nonatomic,strong)  UIImageView *satSearchImage;
 @property (nonatomic,strong)  UIImageView *dnArrow;
 @property (nonatomic,strong)  UIImageView *north;
+@property (nonatomic,strong) UIButton *heart;
 
 
 @property (nonatomic,strong)  UILabel *mainMessage;

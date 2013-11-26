@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CWTDot : UIView
+@interface CWTDot : UIView{
+    
+    UIImageView * heartImage;
+}
 
 
 
