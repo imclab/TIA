@@ -77,7 +77,7 @@
 
     
     //add satSearchImage
-    self.satSearchImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    self.satSearchImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 5)];
     self.satSearchImage.center=CGPointMake(screen.size.width*.95,80);
     self.satSearchImage.animationImages = [NSArray arrayWithObjects:
                                            [UIImage imageNamed:@"satellite_0003.png"],
@@ -222,8 +222,8 @@
     [self.heart setImage:[UIImage imageNamed:@"heart.png"] forState:UIControlStateSelected];
 
     self.heart.frame = CGRectMake(0,0, 12, 12);
-    [self.heart setCenter:CGPointMake(screen.size.width-22, screen.size.height-16)];
-    [self.view addSubview:self.heart];
+    [self.heart setCenter:CGPointMake(screen.size.width-22, screen.size.height+55-6)];
+    [self.scrollView addSubview:self.heart];
     
     
     //get two phrases on launch
@@ -643,7 +643,10 @@
             NSLog(@"Connection Lookup Error: %@ %@", error, [error userInfo]);
             
             //No connection entry in database
-            self.mainMessage.text=@"You don't have another. Please try again later when we connect you to your other.";
+            if (dele.hasInternet==FALSE) {
+                self.mainMessage.text=@"Couldn't reach the internet.";
+
+            }else self.mainMessage.text=@"You don't have another. Please try again later when we connect you to your other.";
             [self animateMainMessage];
             [self.refreshProgress stopSpin];
             //end refresh animation
@@ -766,9 +769,7 @@
                      animations: ^(void){
                          //[self rotateArc:0 degrees:self.spin];
                          self.arrow.transform = transform;
-                         self.arrowImage.transform = transform;
-
-
+                         //self.arrowImage.transform = transform;
                      }
                      completion: ^(BOOL finished){
                          if(finished){
