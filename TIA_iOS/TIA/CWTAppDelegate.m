@@ -37,6 +37,9 @@
     //playfulsystems on parse.com
     [Parse setApplicationId:@"yk0JyC64oKQCprmJwXiyJ13JmIS1HyfSvmfMAQ6w"
                   clientKey:@"sFvZ0SLtYB2kxQe4pX7QNtqIDwvaYYwuRqB4o1W5"];
+    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    
     NSLog(@"i am      %@", [UIDevice currentDevice].identifierForVendor.UUIDString);
 
     
