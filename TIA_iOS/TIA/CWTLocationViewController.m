@@ -9,6 +9,8 @@
 #import "CWTLocationViewController.h"
 #import "CWTAppDelegate.h"
 #import "CWTViewController.h"
+#import <QuartzCore/QuartzCore.h>
+
 #define EARTH_RAD_M 3956.0
 #define EARTH_RAD_KM 6367.0
 #define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
@@ -59,13 +61,13 @@
     
      //add down arrow
     self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
-    self.dnArrow.center=CGPointMake(screen.size.width*.5,50);
+    self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
     [self.mainView addSubview: self.dnArrow];
     
     
     //stats
-    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+20, 320, 100)];
+    self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+120, 320, 100)];
     self.displayText.numberOfLines=15;
     self.displayText.backgroundColor=[UIColor clearColor];
     self.displayText.textColor=[UIColor colorWithWhite:0 alpha:1];
@@ -110,26 +112,42 @@
     
     
     //pushnotification dot
-    self.pushProgress=[[CWTDot alloc] initWithFrame:CGRectMake(0, 0, 500,500)];
+    self.pushProgress=[[CWTDot alloc] initWithFrame:CGRectMake(0, 0, 200,200)];
     self.pushProgress.backgroundColor=[UIColor clearColor];
     self.pushProgress.dotColor=[UIColor clearColor];
     self.pushProgress.lineColor=[UIColor colorWithWhite:.1 alpha:.5];
-
-    [self.mainView addSubview:self.pushProgress];
+    [self.pushProgress inflate:10];
+    self.pushProgress.lineWidth=200;
     [self.pushProgress setCenter:CGPointMake(screen.size.width*.5, screen.size.height-40)];
+    [self.mainView addSubview:self.pushProgress];
+
     
+    // Create  mask layer
+    CALayer* maskLayer = [CALayer layer];
+    maskLayer.frame = CGRectMake(0,0,self.pushProgress.frame.size.width,self.pushProgress.frame.size.height);
+    maskLayer.contents = (__bridge id)[[UIImage imageNamed:@"heartMask.png"] CGImage];
+    // Apply the mask to  uiview layer
+    self.pushProgress.layer.mask = maskLayer;
+
+    
+    self.heart = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.heart setImage:[UIImage imageNamed:@"heartMask.png"] forState:UIControlStateNormal];
+    self.heart.frame = CGRectMake(screen.size.width*.5-150, screen.size.height-40-150,300,300);
+    //[self.mainView addSubview:self.heart];
+
+ 
    
-    //refresh dot
+    //refresh arc
     self.refreshProgress=[[CWTDot alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     self.refreshProgress.backgroundColor=[UIColor clearColor];
     //self.refreshProgress.dotColor=[UIColor colorWithWhite:.2 alpha:.5];
     self.refreshProgress.dotColor=[UIColor clearColor];
     self.refreshProgress.lineWidth=4;
-    [self.refreshProgress inflate:50];
+    [self.refreshProgress inflate:25];
+    [self.refreshProgress setCenter:CGPointMake(screen.size.width*.5, self.dnArrow.center.y+self.refreshProgress.frame.size.height*.5)];
 
     
     [self.scrollView addSubview:self.refreshProgress];
-    [self.refreshProgress setCenter:CGPointMake(screen.size.width*.5, self.dnArrow.center.y+self.refreshProgress.frame.size.height*.5)];
     
     
     //distance
@@ -141,13 +159,14 @@
     [self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.5, self.arrow.center.y+screen.size.width*.7)];
     self.distanceText.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90));
     self.distanceText.backgroundColor=[UIColor colorWithWhite:.95 alpha:1];
+    self.distanceText.text=@"000";
     [self.arrow addSubview:self.distanceText];
     
     
 
     
     //main message
-    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 270, 88)];
+    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 270, 120)];
     [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height-40)];
     self.mainMessage.numberOfLines=10;
     self.mainMessage.textAlignment=NSTextAlignmentCenter;
@@ -173,7 +192,7 @@
     //[self.mainView addSubview:refreshControl];
     
     //time from launch
-    self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height+140, screen.size.width, 40)];
+    self.time=[[UILabel alloc] initWithFrame:CGRectMake(0, screen.size.height+240, screen.size.width, 40)];
     self.time.numberOfLines=3;
     self.time.textColor=[UIColor colorWithWhite:.3 alpha:1];
     [self.time setFont:[UIFont fontWithName:@"Andale Mono" size:9.0]];
@@ -191,6 +210,22 @@
 
     //[self.mainView addSubview:self.pushMessage];
  
+    
+    //add heart
+    self.heart = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.heart addTarget:self
+                   action:@selector(heartPressed:)
+         forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.heart setTitle:@"Show View" forState:UIControlStateNormal];
+    [self.heart setImage:NULL forState:UIControlStateNormal];
+    [self.heart setImage:[UIImage imageNamed:@"heart.png"] forState:UIControlStateSelected];
+
+    self.heart.frame = CGRectMake(0,0, 12, 12);
+    [self.heart setCenter:CGPointMake(screen.size.width-22, screen.size.height-16)];
+    [self.view addSubview:self.heart];
+    
+    
     //get two phrases on launch
     self.numPhrases=2;
     
@@ -199,6 +234,19 @@
 }
 
 
+/*
+-(IBAction)heartPressed:(id)sender{
+        if ([sender isSelected]) {
+            //[sender setImage:unselectedImage forState:UIControlStateNormal];
+            [sender setSelected:NO];
+        } else {
+            //[sender setImage:selectedImage forState:UIControlStateSelected];
+            [sender setSelected:YES];
+        }
+    
+    
+}
+*/
 
 
 -(void)startBTLE
@@ -262,7 +310,7 @@
     
     CGPoint offset = scrollView.contentOffset;
     int minOffsetY=-100;
-    int maxOffsetY=200;
+    int maxOffsetY=300;
     // Check if current offset is within limit and adjust if it is not
     if (offset.y < minOffsetY) offset.y = minOffsetY;
     if (offset.y > maxOffsetY) offset.y = maxOffsetY;
@@ -270,29 +318,29 @@
     // Set offset to adjusted value
     scrollView.contentOffset = offset;
     
+    int pullUpTrigger=100;
     
     //pull down
     if(scrollView.contentOffset.y<minOffsetY){
         //animate scroll
-        [self.refreshProgress inflate:50];
+        [self.refreshProgress inflate:25];
         [self.refreshProgress progress:360];
     }else{
-        [self.refreshProgress inflate:50];
+        [self.refreshProgress inflate:25];
         [self.refreshProgress progress:scrollView.contentOffset.y/minOffsetY*360.0];
-
+        
     }
     
     //pull up
-    if(scrollView.contentOffset.y>maxOffsetY){
-        [self.pushProgress inflate:180];
-        [self.pushProgress progress:360];
-        
+    if(self.heart.selected==FALSE){
+        if(scrollView.contentOffset.y>pullUpTrigger){
+            [self.pushProgress progress:360];
+        }else{
+            [self.pushProgress progress:(scrollView.contentOffset.y-10)/(pullUpTrigger-10)*360.0];
+        }
     }else{
-        //[self.pushProgress inflate:scrollView.contentOffset.y];
-        [self.pushProgress inflate:180];
-        [self.pushProgress progress:(scrollView.contentOffset.y-10)/(maxOffsetY-10)*360.0];
+        [self.pushProgress progress:0];
     }
-    
     //timer is showing so update it
     [self updateTimer];
     
@@ -306,10 +354,11 @@
     if(scrollView.contentOffset.y<=-100){
         self.mainMessage.center=CGPointMake(self.mainMessage.center.x,scrollView.frame.size.height+100);
         [self getFriendPosition:nil];
+        [self.heart setSelected:NO];
     }
     
     //pull up to send push notification
-    else if(scrollView.contentOffset.y>=250){
+    else if(scrollView.contentOffset.y>=100 && self.heart.selected==FALSE){
         // Create our Installation query
         NSLog(@"scrolled :%f ",scrollView.contentOffset.y);
 
@@ -324,25 +373,36 @@
                            }
                            CLPlacemark *placemark = [placemarks objectAtIndex:0];
                            NSLog(@"placemark.%@",placemark);
-                           NSString*  gpsMess = [NSString stringWithFormat:@"Hi there. From %@.",placemark.thoroughfare];
-                           NSLog(@"gpsMess %@",gpsMess);
-                           self.mainMessage.text=[NSString stringWithFormat:@"%@ %@",self.mainMessage.text,gpsMess];
+                           //NSString*  pushMess = [NSString stringWithFormat:@"♥ %@ From %@.",self.mainMessage.text, placemark.thoroughfare];
+                            NSString*  pushMess = [NSString stringWithFormat:@"♥ %@",self.mainMessage.text];
+                           NSLog(@"pushMess %@",pushMess);
                            
                            PFQuery *pushQuery = [PFInstallation query];
                            [pushQuery whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString];
                            // Send push notification to query
                            PFPush *push = [[PFPush alloc] init];
                            [push setQuery:pushQuery]; // Set our Installation query
-                           [push setMessage:gpsMess];
+                           [push setMessage:pushMess];
                            [push sendPushInBackground];
                            
-                           [dele alert:@"Sent push notification to your other."];
-
+                           //[dele alert:@"Sent push notification to your other."];
+                           //
+                           [self.heart setSelected:YES];
+                           
                        }];
-   }
+    }
+    
+
 }
 
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    
+    if(self.mainMessage.center.y>scrollView.frame.size.height) {
+        //[self.refreshProgress loadingAnimation:.5f delay:0.0f];
+        [self.refreshProgress startSpin];
+    }
 
+}
 
 
 -(void)loadLocation{
@@ -450,21 +510,22 @@
 
 
 -(void)getFriendPosition:(id)sender{
-
-    //start animating refresh progress
-    //[self.refreshProgress loadingAnimation];
-    
     
     //get connection data
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"((user1 = %@) OR (user2 = %@))",[UIDevice currentDevice].identifierForVendor.UUIDString,[UIDevice currentDevice].identifierForVendor.UUIDString];
-    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
+   
     
+    //query connection database
+    PFQuery *query = [PFQuery queryWithClassName:@"TIA_Connection" predicate:predicate];
+    //based on last updated
     [query orderByDescending:@"updatedAt"];
-    //[query orderByAscending:@"updatedAt"];
+    //exclude closed connections
     [query whereKeyDoesNotExist:@"completedAt"];
     
     [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+
         if (!error) {
+            
                 NSLog(@"objectId  %@", object.objectId);
                 NSLog(@"created   %@", object.updatedAt);
                 
@@ -487,16 +548,20 @@
             
                 NSLog(@"retrieving %@", self.otherUserVendorIDString);
             
+                //query users database
                 PFQuery *query = [PFQuery queryWithClassName:@"TIA_Users"];
+                //find other's uuid
                 [query whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString ];
+                //get latest version in case there are more than one
                 [query orderByDescending:@"updatedAt"];
                 [query getFirstObjectInBackgroundWithBlock:^(PFObject *object, NSError *error)
                 {
                     
                     if (!object) {
                         NSLog(@"The getFirstObject request failed.");
-                        self.mainMessage.text=@"Error getting your other's data.";
-
+                        self.mainMessage.text=@"Error getting your other's data. Please try again later.";
+                        [self animateMainMessage];
+                        [self.refreshProgress stopSpin];
 
                     } else {
                         // The find succeeded.
@@ -509,19 +574,31 @@
                         NSLog(@"pointing: %@",[object objectForKey:@"vendorUUID"] );
                         
                         //query for message based on another's data
-                        if(self.numPhrases>1) self.numPhrases--;
                         
+                        
+                        //async url request for sentences
                         NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f,%i", self.dlat, self.dlng, self.numPhrases];
-                        NSURL  *iQuery = [NSURL URLWithString:url];
-                        NSString* weatherMess    = [NSString stringWithContentsOfURL:iQuery encoding:NSUTF8StringEncoding error:NULL];
-                        NSLog(@"weather:%@",weatherMess);
-                        self.mainMessage.text=[NSString stringWithFormat:@"%@",weatherMess];
+                        if(self.numPhrases>1) self.numPhrases--;
 
-                        //reverse geocode message
-                        CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
-                        CLLocation *theirLocation=[[CLLocation alloc] initWithLatitude:self.dlat longitude:self.dlng];
-                        [geocoder reverseGeocodeLocation:theirLocation
+                        NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+                        [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                            
+                            
+                            
+                            NSString *mainMess = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                        
+                        
+                            
+                            //set message
+                            NSLog(@"weather:%@",mainMess);
+                            self.mainMessage.text=[NSString stringWithFormat:@"%@",mainMess];
+
+                            //reverse geocode message
+                            CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
+                            CLLocation *theirLocation=[[CLLocation alloc] initWithLatitude:self.dlat longitude:self.dlng];
+                            [geocoder reverseGeocodeLocation:theirLocation
                                        completionHandler:^(NSArray *placemarks, NSError *error) {
+
                                            if (error){
                                                NSLog(@"Geocode failed with error: %@", error);
                                                return;
@@ -530,17 +607,13 @@
                                            NSLog(@"placemark.%@",placemark);
                                            
                                            
-                                           NSInteger randomNumber = arc4random() % 3;
+                                           NSInteger randomNumber = arc4random() % 4;
                                            NSString*  gpsMess;
                                            
-                                           if(randomNumber==0){
-                                             gpsMess = [NSString stringWithFormat:@"Walking on %@.",placemark.thoroughfare];
-                                           }else if (randomNumber==1){
-                                               gpsMess = [NSString stringWithFormat:@"Strolling past %@.",placemark.thoroughfare];
-                                           }
-                                           else if (randomNumber==2){
-                                               gpsMess = [NSString stringWithFormat:@"Standing on %@.",placemark.thoroughfare];
-                                           }
+                                           if(randomNumber==0)gpsMess = [NSString stringWithFormat:@"Near %@.",placemark.thoroughfare];
+                                           else if (randomNumber==1) gpsMess = [NSString stringWithFormat:@"By %@.",placemark.thoroughfare];
+                                           else if (randomNumber==2)gpsMess = [NSString stringWithFormat:@"Around %@.",placemark.thoroughfare];
+                                           else if (randomNumber==3)gpsMess = [NSString stringWithFormat:@"Close to %@.",placemark.thoroughfare];
 
                                            
                                            NSLog(@"gpsMess %@",gpsMess);
@@ -551,11 +624,13 @@
                                            
                                            //animate main message onto screen
                                            [self animateMainMessage];
+                                           //[self.refreshProgress setAlpha:1];
 
-                                           
+                                           [self.refreshProgress stopSpin];
+
                                        }];
                         
-                        
+                          }];
                         
                     
 
@@ -570,7 +645,7 @@
             //No connection entry in database
             self.mainMessage.text=@"You don't have another. Please try again later when we connect you to your other.";
             [self animateMainMessage];
-            
+            [self.refreshProgress stopSpin];
             //end refresh animation
             //[(UIRefreshControl *)sender endRefreshing];
         }

@@ -7,6 +7,7 @@
 //
 
 #import "CWTDot.h"
+#import <QuartzCore/QuartzCore.h>
 #define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
 
 
@@ -21,6 +22,12 @@
         self.lineWidth=16;
         self.animationProgress=0;
         self.lineColor=[UIColor colorWithWhite:0 alpha:1.0f];
+        
+        CGRect screen = [[UIScreen mainScreen] applicationFrame];
+        heartImage=[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"heart.png"]];
+        heartImage.frame = CGRectMake(0,0, 200, 200);
+        [heartImage setCenter:CGPointMake(screen.size.width*.5, screen.size.height+100)];
+        
     }
     return self;
 }
@@ -31,29 +38,24 @@
 
  - (void)drawRect:(CGRect)rect
 {
-    //NSLog(@"Draw Dot");
     CGContextRef context = UIGraphicsGetCurrentContext();
 
     CGPoint point;
     point.x=self.frame.size.width*.5;
     point.y=self.frame.size.height*.5;
 
-    //draw dot
+    //draw
     CGRect ellipse;
-
     ellipse.origin.x=point.x-self.radius*.5;
     ellipse.origin.y=point.y-self.radius*.5;
-    
     ellipse.size.width=self.radius;
     ellipse.size.height=self.radius;
     
     
-    CGContextAddEllipseInRect(context, ellipse);
-    CGContextSetFillColorWithColor(context, self.dotColor.CGColor);
-    CGContextFillPath(context);
-    
-    
-    
+    //CGContextAddEllipseInRect(context, ellipse);
+    //CGContextSetFillColorWithColor(context, self.dotColor.CGColor);
+    //CGContextFillPath(context);
+
     //progress arc
 	CGContextSetLineWidth(context, self.lineWidth);
     CGContextSetStrokeColorWithColor(context, self.lineColor.CGColor);
@@ -61,13 +63,12 @@
     else if(_progress<=1 ) _progress=1;
     _end=_start+360-_progress;
     
+    
     if(_progress>1){
-        CGContextAddArc(context, ellipse.origin.x+self.radius*.5, ellipse.origin.y+self.radius*.5, self.radius*.5+self.lineWidth*.5, DEGREES_TO_RADIANS(_start),DEGREES_TO_RADIANS(_end),1);
+        CGContextAddArc(context, ellipse.origin.x+self.radius*.5, ellipse.origin.y+self.radius*.5, self.radius+self.lineWidth*.5, DEGREES_TO_RADIANS(_end),DEGREES_TO_RADIANS(_start),FALSE);
     }
+
 	CGContextStrokePath(context);
-    
-    
-    
     
 }
 
@@ -84,22 +85,88 @@
     self.radius = radius;
     [self setNeedsDisplay];
 }
--(void) loadingAnimation
+
+-(void) spin : (UIViewAnimationOptions) options
 {
+    //[self setAlpha:1];
+    
+    [self progress:60];
     
     
-    [UIView animateWithDuration:0.3f
-                          delay:0.0f
-                        options:UIViewAnimationOptionRepeat
-                     animations:^{
-                         self.progress=360;
+    [UIView animateWithDuration: 0.4f
+                          delay: 0.0f
+                        options: UIViewAnimationOptionCurveLinear
+                     animations: ^{
+                         self.transform = CGAffineTransformRotate(self.transform, M_PI / 2);
+                         
+                         if (options == UIViewAnimationOptionCurveEaseIn){
+                             [self setAlpha:1];
+                             [self.layer displayIfNeeded];
+                         }
+                          else if (options == UIViewAnimationOptionCurveEaseOut){
+                              [self setAlpha:0];
+                              [self.layer displayIfNeeded];
+                          }
+                         
+                         
+                         
                      }
-                     completion:nil];
+                     completion: ^(BOOL finished) {
+                         if (finished) {
+                             if (self.spinning) {
+                                 // if flag still set, keep spinning with constant speed
+                                 [self spin: UIViewAnimationOptionCurveLinear];
+                             } else if (options != UIViewAnimationOptionCurveEaseOut) {
+                                 // one last spin, with deceleration
+                                 [self spin: UIViewAnimationOptionCurveEaseOut];
+                             }
+                             
+                             else if (options == UIViewAnimationOptionCurveEaseOut){
+                                  [self setAlpha:1.0f];
+                                  [self progress:0];
+                             }
+                         }
+                     }];
     
-    
-    //self.progress = self.animationProgress;
-    //self.animationProgress++;
-    [self setNeedsDisplay];
+
+
+}
+
+
+- (void) startSpin {
+    if (!self.spinning) {
+        self.spinning = YES;
+        [self setAlpha:0];
+        [self spin: UIViewAnimationOptionCurveEaseIn];
+    }
+}
+
+- (void) stopSpin {
+    // set the flag to stop spinning after one last 90 degree increment
+    self.spinning = NO;
+}
+
+
+
+-(void) pulse : (CGFloat) a delay:(CGFloat) d
+{
+    //[self setAlpha:0];
+    [self setAlpha:0];
+
+    [self progress:360];
+
+    [UIView animateWithDuration:.4f
+                          delay:d
+                        options:UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAutoreverse | UIViewAnimationOptionRepeat
+                     animations:^{
+                         [self setAlpha:a];
+                         [self.layer displayIfNeeded];
+                     }
+     completion:^(BOOL finished) {
+         [self setAlpha:1.0f];
+
+     }];
+
 }
 
 

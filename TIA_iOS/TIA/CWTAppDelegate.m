@@ -309,7 +309,8 @@
     }
     
 
-    
+    [UIApplication sharedApplication].applicationIconBadgeNumber=0;
+
 
 }
 
