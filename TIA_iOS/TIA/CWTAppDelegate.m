@@ -265,9 +265,10 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
+    NSLog(@"will enter foreground");
+
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     [self.locationManager stopMonitoringSignificantLocationChanges];
-    NSLog(@"will enter foreground");
 
     
 
@@ -321,6 +322,8 @@
         [self.locationManager startUpdatingHeading];
     }
     
+    self.viewController.locationViewController.numPhrases=3;
+
 
     [UIApplication sharedApplication].applicationIconBadgeNumber=0;
 
