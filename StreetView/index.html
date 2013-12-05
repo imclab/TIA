@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Street View</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script>
+var intervalSpeed=150;
+
+  //var fenway = new google.maps.LatLng(42.345573,-71.098326);
+//var fenway = new google.maps.LatLng(48.8577,2.295);
+//var fenway = new google.maps.LatLng(47.6284, 122.3126);
+var fenway;
+
+
+var panorama;
+ var panoOption;
+var panInterval;
+function initialize() {
+
+
+
+var rand=Math.floor(Math.random()*2);
+if(rand==0) fenway = new google.maps.LatLng(48.8577,2.295);//paris
+//else if(rand==1) fenway = new google.maps.LatLng(47.6353, 122.3017);//seattle
+else fenway = new google.maps.LatLng(42.345573,-71.098326);//fenway
+
+//fenway = new google.maps.LatLng(48.51128,2.21029);
+
+  // Note: constructed panorama objects have visible: true
+  // set by default.
+   panoOptions = {
+    position: fenway,
+    addressControlOptions: {
+      position: google.maps.ControlPosition.BOTTOM_CENTER
+    },
+  pov: {
+    heading: 180,
+    pitch: 90,
+	zoom:5
+  },
+    linksControl: false,
+    panControl: false,
+    zoomControlOptions: {
+      style: google.maps.ZoomControlStyle.SMALL
+    },
+    enableCloseButton: false
+  };
+
+  panorama = new google.maps.StreetViewPanorama(
+      document.getElementById('map-canvas'), panoOptions);
+
+	panInterval=window.setTimeout(panTo,intervalSpeed);
+}
+
+function panTo(){
+	
+	panoOptions.pov = {		
+    heading:panoOptions.pov.heading-3.75,
+    pitch: panoOptions.pov.pitch-1.5,
+	zoom:panoOptions.pov.zoom-.07
+  };
+
+
+
+
+  panorama.setPov(panoOptions.pov);
+
+	if(panoOptions.pov.zoom>1) window.setTimeout(panTo,intervalSpeed);
+
+
+
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+
+
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+
+<style>
+@media screen and (max-device-width: 480px){
+    body{
+        -webkit-text-size-adjust:none;
+        font-family:Helvetica, Arial, Verdana, sans-serif;
+        padding:5px;
+    }	
+    div{
+        clear:both!important;
+        display:block!important;
+        width:100%!important;
+        float:none!important;
+        margin:0!important;
+        padding:0!important;
+    }
+}
+
+		
+</style>
+</html>
