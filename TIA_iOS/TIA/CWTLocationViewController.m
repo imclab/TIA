@@ -193,7 +193,7 @@
 
     
     //main message
-    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width, 120)];
+    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 260, 120)];
     [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height-40)];
     self.mainMessage.numberOfLines=10;
     self.mainMessage.textAlignment=NSTextAlignmentCenter;
