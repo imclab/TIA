@@ -174,6 +174,8 @@
 //    NSArray* viewC = [self.pageView viewControllers];
 //    [[viewC objectAtIndex:0] updateHeading];
 //    [self.locationViewController rotateCompass:.1 degrees:-dele.heading];
+    
+    [self.locationViewController updateHeading];
     [self.locationViewController rotateCompass:.1 degrees:-dele.heading];
 
 }

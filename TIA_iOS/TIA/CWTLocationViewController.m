@@ -57,8 +57,8 @@
     [self.view addSubview:self.scrollView];
     self.scrollView.frame=CGRectMake(0,-50, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds)+50);
     self.scrollView.contentSize = screen.size;
-    CGSize scrollableSize = CGSizeMake(320, 900);
-    [self.scrollView setContentSize:scrollableSize];
+//    CGSize scrollableSize = CGSizeMake(320, 900);
+//    [self.scrollView setContentSize:scrollableSize];
     
     self.mainView=[[UIView alloc] init];
     self.mainView.frame=CGRectMake(0,50, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds));
@@ -70,7 +70,6 @@
     
     
      //add down arrow
-
     self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
     self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
@@ -281,7 +280,26 @@
 {
     NSString *FLICKR_KEY=@"b0a198db96a6a9854ee27e04909bd940";
 
-    NSString *urlString = [NSString stringWithFormat:@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%@&content_type=1&lat=%f&lon=%f&per_page=1&page=1&format=json&nojsoncallback=1", FLICKR_KEY, self.dlat,self.dlng];
+    NSString *urlString = [NSString stringWithFormat:@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%@&content_type=1&geo_context=2&lat=%f&lon=%f&per_page=1&page=1&format=json&nojsoncallback=1", FLICKR_KEY, self.dlat,self.dlng];
+   /*
+    geo_context (Optional)
+    
+    0, not defined.
+    1, indoors.
+    2, outdoors.
+    
+    content_type (Optional)
+    1 for photos only.
+    2 for screenshots only.
+    3 for 'other' only.
+    4 for photos and screenshots.
+    5 for screenshots and 'other'.
+    6 for photos and 'other'.
+    7 for photos, screenshots, and 'other' (all).
+    */
+    
+    
+    
     //async url request for flickr images
     NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
@@ -300,11 +318,11 @@
             UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:photoURLString]]];
             
             CGRect screen = [[UIScreen mainScreen] applicationFrame];
-            int scale=screen.size.height*1.25;
+            //int bleed=320;
+            int imageSize=screen.size.height+100;
+            UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(imageSize,imageSize)];
+            CGRect backgroundFrame=CGRectMake(-imageSize*.5+screen.size.width*.5,0,imageSize,imageSize);
             
-            UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(scale,scale)];
-            int bleed=200;
-            CGRect backgroundFrame=CGRectMake(-bleed,-bleed, screen.size.height+bleed, screen.size.height+bleed);
             
             
             //Blur the UIImage with a CIFilter
@@ -315,7 +333,6 @@
             CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
             UIImage *endImage = [[UIImage alloc] initWithCIImage:resultImage];
 
-            
             [self.backgroundImage setImage:endImage];
             [self.backgroundImage setFrame:backgroundFrame];
             [self.scrollView sendSubviewToBack:self.backgroundImage];
