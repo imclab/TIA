@@ -17,6 +17,9 @@
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 #define DISTANCE_TEXT_TAG 1
 
+
+
+
 @interface CWTLocationViewController ()
 
 @end
@@ -60,10 +63,24 @@
     
     
      //add down arrow
+
     self.dnArrow = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 8, 8)];
     self.dnArrow.center=CGPointMake(screen.size.width*.5,80);
     [self.dnArrow setImage:[UIImage imageNamed:@"arrow-dn.png"]];
-    [self.mainView addSubview: self.dnArrow];
+    
+    if( [[NSUserDefaults standardUserDefaults] boolForKey:@"pull_to_refresh"]){
+        [self.mainView addSubview: self.dnArrow];
+    }
+    
+    
+    
+    self.backgroundImage = [[UIImageView alloc] init];
+//    [self.backgroundImage setImage:[UIImage imageNamed:@"arrow-dn.png"]];
+    [self.scrollView addSubview: self.backgroundImage];
+    
+    
+    
+    
     
     
     //stats
@@ -153,15 +170,16 @@
     //distance
     self.distanceText=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 0,0)];
     self.distanceText.numberOfLines=1;
-    self.distanceText.textColor=[UIColor colorWithWhite:.3 alpha:1];
+    self.distanceText.textColor=[UIColor colorWithWhite:0 alpha:1];
     [self.distanceText setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:12.0]];
     [self.distanceText setTextAlignment:NSTextAlignmentCenter];
     self.distanceText.transform = CGAffineTransformMakeRotation(DEGREES_TO_RADIANS(90));
-    self.distanceText.backgroundColor=[UIColor colorWithWhite:.95 alpha:1];
+    //self.distanceText.backgroundColor=[UIColor colorWithWhite:.95 alpha:1];
     self.distanceText.text=@"000";
    // self.distanceText.frame=CGRectMake(0,0, screen.size.width*.2, 20);
     //[self.distanceText setCenter:CGPointMake(self.arrow.frame.size.width*.5, self.arrow.center.y+screen.size.width*.7)];
-    [self.distanceText setCenter:CGPointMake(-4, self.arrow.center.y+screen.size.width*.6)];
+    //[self.distanceText setCenter:CGPointMake(-4, self.arrow.center.y+screen.size.width*.6)];
+    [self.distanceText setCenter:CGPointMake(10, self.arrow.center.y+screen.size.width*.6)];
 
     [self.arrow addSubview:self.distanceText];
     
@@ -220,7 +238,6 @@
                    action:@selector(heartPressed:)
          forControlEvents:UIControlEventTouchUpInside];
     
-    [self.heart setTitle:@"Show View" forState:UIControlStateNormal];
     [self.heart setImage:NULL forState:UIControlStateNormal];
     [self.heart setImage:[UIImage imageNamed:@"heart.png"] forState:UIControlStateSelected];
 
@@ -250,6 +267,126 @@
     
 }
 */
+
+-(void)getFlickrImage
+{
+NSString *FLICKR_KEY=@"b0a198db96a6a9854ee27e04909bd940";
+    
+//NSString *FLICKR_SECRET =@"f7f634665aa45b8c";
+    
+//    NSString *urlString = [NSString stringWithFormat:@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%@&tags=%@&per_page=1&format=json&nojsoncallback=1", FLICKR_KEY, @"green"];
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%@&lat=%f&lon=%f&per_page=1&page=1&format=json&nojsoncallback=1", FLICKR_KEY, self.dlat,self.dlng];
+
+    
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    // 2. Get URLResponse string & parse JSON to Foundation objects.
+    NSString *jsonString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
+    
+    // 3. Pick thru results and build our arrays
+    NSArray *photos = [[results objectForKey:@"photos"] objectForKey:@"photo"];
+    for (NSDictionary *photo in photos) {
+        // 3.b Construct URL for e/ photo.
+        NSString *photoURLString = [NSString stringWithFormat:@"http://farm%@.static.flickr.com/%@/%@_%@_s.jpg", [photo objectForKey:@"farm"], [photo objectForKey:@"server"], [photo objectForKey:@"id"], [photo objectForKey:@"secret"]];
+        //[photoURLs addObject:[NSURL URLWithString:photoURLString]];
+        
+        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:photoURLString]]];
+
+        
+        
+        CGRect screen = [[UIScreen mainScreen] applicationFrame];
+        UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(screen.size.height*2, screen.size.height*2)];
+        CGRect backgroundFrame=CGRectMake(0,0, screen.size.height*2, screen.size.height*2);
+        
+        [self.backgroundImage setImage:scaledImage];
+        [self.backgroundImage setFrame:backgroundFrame];
+        
+        NSLog(@"image Loaded: %@", photoURLString);
+
+    }
+    
+    
+}
+
+
+-(UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
+    //UIGraphicsBeginImageContext(newSize);
+    // In next line, pass 0.0 to use the current device's pixel scaling factor (and thus account for Retina resolution).
+    // Pass 1.0 to force exact pixel size.
+    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+
+-(UIImage *)boxblurImageWithBlur:(CGFloat)blur {
+    if (blur < 0.f || blur > 1.f) {
+        blur = 0.5f;
+    }
+    int boxSize = (int)(blur * 50);
+    boxSize = boxSize - (boxSize % 2) + 1;
+    
+    CGImageRef img = self.CGImage;
+    
+    vImage_Buffer inBuffer, outBuffer;
+    
+    vImage_Error error;
+    
+    void *pixelBuffer;
+    
+    CGDataProviderRef inProvider = CGImageGetDataProvider(img);
+    CFDataRef inBitmapData = CGDataProviderCopyData(inProvider);
+    
+    inBuffer.width = CGImageGetWidth(img);
+    inBuffer.height = CGImageGetHeight(img);
+    inBuffer.rowBytes = CGImageGetBytesPerRow(img);
+    
+    inBuffer.data = (void*)CFDataGetBytePtr(inBitmapData);
+    
+    pixelBuffer = malloc(CGImageGetBytesPerRow(img) * CGImageGetHeight(img));
+    
+    if(pixelBuffer == NULL)
+        NSLog(@"No pixelbuffer");
+    
+    outBuffer.data = pixelBuffer;
+    outBuffer.width = CGImageGetWidth(img);
+    outBuffer.height = CGImageGetHeight(img);
+    outBuffer.rowBytes = CGImageGetBytesPerRow(img);
+    
+    error = vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend);
+    
+    if (error) {
+        NSLog(@"JFDepthView: error from convolution %ld", error);
+    }
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef ctx = CGBitmapContextCreate(outBuffer.data,
+                                             outBuffer.width,
+                                             outBuffer.height,
+                                             8,
+                                             outBuffer.rowBytes,
+                                             colorSpace,
+                                             kCGImageAlphaNoneSkipLast);
+    CGImageRef imageRef = CGBitmapContextCreateImage (ctx);
+    UIImage *returnImage = [UIImage imageWithCGImage:imageRef];
+    
+    //clean up
+    CGContextRelease(ctx);
+    CGColorSpaceRelease(colorSpace);
+    
+    free(pixelBuffer);
+    CFRelease(inBitmapData);
+    
+    CGImageRelease(imageRef);
+    
+    return returnImage;
+}
+
 
 
 -(void)startBTLE
@@ -324,25 +461,29 @@
     int pullUpTrigger=100;
     
     //pull down
-    if(scrollView.contentOffset.y<minOffsetY){
-        //animate scroll
-        [self.refreshProgress inflate:25];
-        [self.refreshProgress progress:360];
-    }else{
-        [self.refreshProgress inflate:25];
-        [self.refreshProgress progress:scrollView.contentOffset.y/minOffsetY*360.0];
-        
+    if( [[NSUserDefaults standardUserDefaults] boolForKey:@"pull_to_refresh"]){
+        if(scrollView.contentOffset.y<minOffsetY){
+            //animate scroll
+            [self.refreshProgress inflate:25];
+            [self.refreshProgress progress:360];
+        }else{
+            [self.refreshProgress inflate:25];
+            [self.refreshProgress progress:scrollView.contentOffset.y/minOffsetY*360.0];
+            
+        }
     }
     
     //pull up
-    if(self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""] && self.hasAnother){
-        if(scrollView.contentOffset.y>pullUpTrigger){
-            [self.pushProgress progress:360];
+    if( [[NSUserDefaults standardUserDefaults] boolForKey:@"enable_send_push_notifications"]){
+        if(self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""] && self.hasAnother){
+            if(scrollView.contentOffset.y>pullUpTrigger){
+                [self.pushProgress progress:360];
+            }else{
+                [self.pushProgress progress:(scrollView.contentOffset.y-10)/(pullUpTrigger-10)*360.0];
+            }
         }else{
-            [self.pushProgress progress:(scrollView.contentOffset.y-10)/(pullUpTrigger-10)*360.0];
+            [self.pushProgress progress:0];
         }
-    }else{
-        [self.pushProgress progress:0];
     }
     //timer is showing so update it
     [self updateTimer];
@@ -354,15 +495,15 @@
 
     
     //pull down to refresh
-    if(scrollView.contentOffset.y<=-100){
+    if(scrollView.contentOffset.y<=-100 && [[NSUserDefaults standardUserDefaults] boolForKey:@"pull_to_refresh"] ){
         self.mainMessage.center=CGPointMake(self.mainMessage.center.x,scrollView.frame.size.height+100);
         [self getFriendPosition:nil];
         [self.heart setSelected:NO];
         self.mainMessage.text=@"";
     }
-    
+
     //pull up to send push notification
-    else if(scrollView.contentOffset.y>=100 && self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""] &&                             self.hasAnother
+    else if(scrollView.contentOffset.y>=100 && self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""] &&                             self.hasAnother && [[NSUserDefaults standardUserDefaults] boolForKey:@"enable_send_push_notifications"]
 ){
         // Create our Installation query
         NSLog(@"scrolled :%f ",scrollView.contentOffset.y);
@@ -580,6 +721,12 @@
                         // The find succeeded.
                         self.dlat= [[object objectForKey:@"lat"] floatValue];
                         self.dlng= [[object objectForKey:@"lng"] floatValue];
+                        
+                        
+                        if([[NSUserDefaults standardUserDefaults] boolForKey:@"fetch_flickr"])[self getFlickrImage];
+
+                        
+                        
                         self.otherUsername=[object objectForKey:@"name"];
                         self.hasAnother=true;
 

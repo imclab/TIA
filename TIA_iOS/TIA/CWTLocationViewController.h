@@ -33,6 +33,8 @@
 @property (nonatomic,strong)  UIImageView *satSearchImage;
 @property (nonatomic,strong)  UIImageView *dnArrow;
 @property (nonatomic,strong)  UIImageView *north;
+@property (nonatomic,strong)  UIImageView *backgroundImage;
+
 @property (nonatomic,strong) UIButton *heart;
 
 
@@ -88,6 +90,7 @@
 
 @property (nonatomic,strong) BTLECentralViewController *BTLECentral;
 @property (nonatomic,strong) BTLEPeripheralViewController *BTLPeripheral;
+-(UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
 
 @end
