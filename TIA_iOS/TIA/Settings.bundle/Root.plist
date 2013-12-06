@@ -13,10 +13,10 @@
 		<dict>
 			<key>DefaultValue</key>
 			<false/>
-			<key>Key</key>
-			<string>pull_to_refresh</string>
 			<key>Title</key>
 			<string>Pull to Refresh</string>
+			<key>Key</key>
+			<string>pull_to_refresh</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
@@ -29,6 +29,20 @@
 			<string>fetch_instagram</string>
 			<key>DefaultValue</key>
 			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSSliderSpecifier</string>
+			<key>MinimumValueImage</key>
+			<string></string>
+			<key>Key</key>
+			<string>blur_radius</string>
+			<key>DefaultValue</key>
+			<integer>50</integer>
+			<key>MinimumValue</key>
+			<integer>0</integer>
+			<key>MaximumValue</key>
+			<integer>100</integer>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -47,6 +61,16 @@
 			<string>Enable Send Push Notifications</string>
 			<key>Key</key>
 			<string>enable_send_push_notifications</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Enable Bluetooth iBeacon</string>
+			<key>Key</key>
+			<string>enable_bluetooth_ibeacon</string>
 			<key>DefaultValue</key>
 			<false/>
 		</dict>

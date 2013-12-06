@@ -50,7 +50,6 @@
 		446D51611819C79800E6DBE7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 446D512E1819C79800E6DBE7 /* Reachability.m */; };
 		446D51621819C79800E6DBE7 /* SourceSansPro-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 446D512F1819C79800E6DBE7 /* SourceSansPro-Light.ttf */; };
 		446D51631819C79800E6DBE7 /* PointingAtYou-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 446D51331819C79800E6DBE7 /* PointingAtYou-Info.plist */; };
-		446D51651819C79800E6DBE7 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 446D51371819C79800E6DBE7 /* Settings.bundle */; };
 		447965CD175008C300A45031 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 447965CC175008C300A45031 /* MessageUI.framework */; };
 		448AC1AA17BD687700281208 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448AC1A917BD687700281208 /* SystemConfiguration.framework */; };
 		44A0A4E218442F44002AB85E /* heartMask.png in Resources */ = {isa = PBXBuildFile; fileRef = 44A0A4E018442F44002AB85E /* heartMask.png */; };
@@ -69,6 +68,7 @@
 		44DAE02017359AC900C17F07 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE01F17359AC900C17F07 /* CoreGraphics.framework */; };
 		44DAE0601735A08C00C17F07 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44DAE05F1735A08C00C17F07 /* CoreLocation.framework */; };
 		44E9AA7818516AF200A7D310 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 44E9AA7718516AF200A7D310 /* Settings.bundle */; };
+		44E9AA7A18517D8500A7D310 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44E9AA7918517D8500A7D310 /* CoreImage.framework */; };
 		44F230771844465A002EFCB2 /* empty_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = 44F230731844465A002EFCB2 /* empty_heart.png */; };
 		44F230781844465A002EFCB2 /* heart.png in Resources */ = {isa = PBXBuildFile; fileRef = 44F230741844465A002EFCB2 /* heart.png */; };
 		44F230791844465A002EFCB2 /* empty_heart@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 44F230751844465A002EFCB2 /* empty_heart@2x.png */; };
@@ -131,7 +131,6 @@
 		446D51321819C79800E6DBE7 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFlight.h; path = ../TestFlight.h; sourceTree = "<group>"; };
 		446D51331819C79800E6DBE7 /* PointingAtYou-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "PointingAtYou-Info.plist"; sourceTree = "<group>"; };
 		446D51341819C79800E6DBE7 /* TIA-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TIA-Prefix.pch"; sourceTree = "<group>"; };
-		446D51371819C79800E6DBE7 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		447965CC175008C300A45031 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		448AC1A917BD687700281208 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		44A0A4E018442F44002AB85E /* heartMask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heartMask.png; sourceTree = "<group>"; };
@@ -156,6 +155,7 @@
 		44DAE05F1735A08C00C17F07 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		44E7EBBC17A700B20054E1BB /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		44E9AA7718516AF200A7D310 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = TIA/Settings.bundle; sourceTree = "<group>"; };
+		44E9AA7918517D8500A7D310 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		44F230731844465A002EFCB2 /* empty_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_heart.png; sourceTree = "<group>"; };
 		44F230741844465A002EFCB2 /* heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart.png; sourceTree = "<group>"; };
 		44F230751844465A002EFCB2 /* empty_heart@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty_heart@2x.png"; sourceTree = "<group>"; };
@@ -169,6 +169,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44E9AA7A18517D8500A7D310 /* CoreImage.framework in Frameworks */,
 				44CDF54C1829F0E700018672 /* CoreBluetooth.framework in Frameworks */,
 				44A3E7CF1819C5F4006409E7 /* AudioToolbox.framework in Frameworks */,
 				44354FB21808C93D000BC9E5 /* Security.framework in Frameworks */,
@@ -281,7 +282,6 @@
 				446D51301819C79800E6DBE7 /* TestFlight+AsyncLogging.h */,
 				446D51311819C79800E6DBE7 /* TestFlight+ManualSessions.h */,
 				446D51321819C79800E6DBE7 /* TestFlight.h */,
-				446D51371819C79800E6DBE7 /* Settings.bundle */,
 			);
 			path = TIAFrameworks;
 			sourceTree = "<group>";
@@ -337,6 +337,7 @@
 		44DAE01A17359AC900C17F07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				44E9AA7918517D8500A7D310 /* CoreImage.framework */,
 				44CDF54B1829F0E700018672 /* CoreBluetooth.framework */,
 				44354FB11808C93D000BC9E5 /* Security.framework */,
 				44354FAF1808C935000BC9E5 /* MobileCoreServices.framework */,
@@ -457,7 +458,6 @@
 				446D51561819C79800E6DBE7 /* satellite_0000.png in Resources */,
 				446D51461819C79800E6DBE7 /* Default-568h@2x.png in Resources */,
 				446D514A1819C79800E6DBE7 /* InfoPlist.strings in Resources */,
-				446D51651819C79800E6DBE7 /* Settings.bundle in Resources */,
 				4404A678183124AA0000F2FC /* dotarrow@2x.png in Resources */,
 				446D51631819C79800E6DBE7 /* PointingAtYou-Info.plist in Resources */,
 				44F2307A1844465A002EFCB2 /* heart@2x.png in Resources */,

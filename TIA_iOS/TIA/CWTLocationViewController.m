@@ -10,6 +10,8 @@
 #import "CWTAppDelegate.h"
 #import "CWTViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import <CoreImage/CoreImage.h>
+
 
 #define EARTH_RAD_M 3956.0
 #define EARTH_RAD_KM 6367.0
@@ -49,10 +51,15 @@
     self.scrollView=[[UIScrollView alloc] init];
     self.scrollView.delegate = self;
     self.scrollView.scrollEnabled=YES;
+    self.scrollView.pagingEnabled=NO;
+    self.scrollView.directionalLockEnabled=YES;
+
     [self.view addSubview:self.scrollView];
     self.scrollView.frame=CGRectMake(0,-50, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds)+50);
     self.scrollView.contentSize = screen.size;
-
+    CGSize scrollableSize = CGSizeMake(320, 900);
+    [self.scrollView setContentSize:scrollableSize];
+    
     self.mainView=[[UIView alloc] init];
     self.mainView.frame=CGRectMake(0,50, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds));
     //self.mainView.backgroundColor=[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
@@ -75,7 +82,7 @@
     
     
     self.backgroundImage = [[UIImageView alloc] init];
-//    [self.backgroundImage setImage:[UIImage imageNamed:@"arrow-dn.png"]];
+    //    [self.backgroundImage setImage:[UIImage imageNamed:@"arrow-dn.png"]];
     [self.scrollView addSubview: self.backgroundImage];
     
     
@@ -187,14 +194,16 @@
 
     
     //main message
-    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 270, 120)];
+    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width, 120)];
     [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height-40)];
     self.mainMessage.numberOfLines=10;
     self.mainMessage.textAlignment=NSTextAlignmentCenter;
+    
     [self.mainMessage setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:20.0]];
     //self.mainMessage.adjustsFontSizeToFitWidth = YES;
     //self.mainMessage.backgroundColor=[UIColor clearColor];
-    //self.mainMessage.backgroundColor=[UIColor colorWithWhite:.5 alpha:1];
+    //self.mainMessage.backgroundColor=[UIColor colorWithWhite:1 alpha:1];
+    //self.mainMessage.backgroundColor=[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
 
     [self.mainView addSubview:self.mainMessage];
     self.mainMessage.text=@"...";
@@ -270,44 +279,51 @@
 
 -(void)getFlickrImage
 {
-NSString *FLICKR_KEY=@"b0a198db96a6a9854ee27e04909bd940";
-    
-//NSString *FLICKR_SECRET =@"f7f634665aa45b8c";
-    
-//    NSString *urlString = [NSString stringWithFormat:@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%@&tags=%@&per_page=1&format=json&nojsoncallback=1", FLICKR_KEY, @"green"];
-    
-    NSString *urlString = [NSString stringWithFormat:@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%@&lat=%f&lon=%f&per_page=1&page=1&format=json&nojsoncallback=1", FLICKR_KEY, self.dlat,self.dlng];
+    NSString *FLICKR_KEY=@"b0a198db96a6a9854ee27e04909bd940";
 
-    
-    
-    NSURL *url = [NSURL URLWithString:urlString];
-    // 2. Get URLResponse string & parse JSON to Foundation objects.
-    NSString *jsonString = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
-    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
-    
-    // 3. Pick thru results and build our arrays
-    NSArray *photos = [[results objectForKey:@"photos"] objectForKey:@"photo"];
-    for (NSDictionary *photo in photos) {
-        // 3.b Construct URL for e/ photo.
-        NSString *photoURLString = [NSString stringWithFormat:@"http://farm%@.static.flickr.com/%@/%@_%@_s.jpg", [photo objectForKey:@"farm"], [photo objectForKey:@"server"], [photo objectForKey:@"id"], [photo objectForKey:@"secret"]];
-        //[photoURLs addObject:[NSURL URLWithString:photoURLString]];
+    NSString *urlString = [NSString stringWithFormat:@"http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%@&content_type=1&lat=%f&lon=%f&per_page=1&page=1&format=json&nojsoncallback=1", FLICKR_KEY, self.dlat,self.dlng];
+    //async url request for flickr images
+    NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
-        UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:photoURLString]]];
+        // 2. Get URLResponse string & parse JSON to Foundation objects.
+        NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
+        
+        // 3. Pick thru results and build our arrays
+        NSArray *photos = [[results objectForKey:@"photos"] objectForKey:@"photo"];
+        for (NSDictionary *photo in photos) {
+            // 3.b Construct URL for e/ photo.
+            NSString *photoURLString = [NSString stringWithFormat:@"http://farm%@.static.flickr.com/%@/%@_%@_q.jpg", [photo objectForKey:@"farm"], [photo objectForKey:@"server"], [photo objectForKey:@"id"], [photo objectForKey:@"secret"]];
+            
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:photoURLString]]];
+            
+            CGRect screen = [[UIScreen mainScreen] applicationFrame];
+            int scale=screen.size.height*1.25;
+            
+            UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(scale,scale)];
+            int bleed=200;
+            CGRect backgroundFrame=CGRectMake(-bleed,-bleed, screen.size.height+bleed, screen.size.height+bleed);
+            
+            
+            //Blur the UIImage with a CIFilter
+            CIImage *imageToBlur = [CIImage imageWithCGImage:scaledImage.CGImage];
+            CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
+            [gaussianBlurFilter setValue:imageToBlur forKey: @"inputImage"];
+            [gaussianBlurFilter setValue:[NSNumber numberWithFloat: [[NSUserDefaults standardUserDefaults] integerForKey:@"blur_radius"] ] forKey: @"inputRadius"];
+            CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
+            UIImage *endImage = [[UIImage alloc] initWithCIImage:resultImage];
 
-        
-        
-        CGRect screen = [[UIScreen mainScreen] applicationFrame];
-        UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(screen.size.height*2, screen.size.height*2)];
-        CGRect backgroundFrame=CGRectMake(0,0, screen.size.height*2, screen.size.height*2);
-        
-        [self.backgroundImage setImage:scaledImage];
-        [self.backgroundImage setFrame:backgroundFrame];
-        
-        NSLog(@"image Loaded: %@", photoURLString);
+            
+            [self.backgroundImage setImage:endImage];
+            [self.backgroundImage setFrame:backgroundFrame];
+            [self.scrollView sendSubviewToBack:self.backgroundImage];
+            
+            NSLog(@"image Loaded: %@", photoURLString);
 
-    }
-    
+        }
+    }];
     
 }
 
@@ -323,69 +339,6 @@ NSString *FLICKR_KEY=@"b0a198db96a6a9854ee27e04909bd940";
     return newImage;
 }
 
-
--(UIImage *)boxblurImageWithBlur:(CGFloat)blur {
-    if (blur < 0.f || blur > 1.f) {
-        blur = 0.5f;
-    }
-    int boxSize = (int)(blur * 50);
-    boxSize = boxSize - (boxSize % 2) + 1;
-    
-    CGImageRef img = self.CGImage;
-    
-    vImage_Buffer inBuffer, outBuffer;
-    
-    vImage_Error error;
-    
-    void *pixelBuffer;
-    
-    CGDataProviderRef inProvider = CGImageGetDataProvider(img);
-    CFDataRef inBitmapData = CGDataProviderCopyData(inProvider);
-    
-    inBuffer.width = CGImageGetWidth(img);
-    inBuffer.height = CGImageGetHeight(img);
-    inBuffer.rowBytes = CGImageGetBytesPerRow(img);
-    
-    inBuffer.data = (void*)CFDataGetBytePtr(inBitmapData);
-    
-    pixelBuffer = malloc(CGImageGetBytesPerRow(img) * CGImageGetHeight(img));
-    
-    if(pixelBuffer == NULL)
-        NSLog(@"No pixelbuffer");
-    
-    outBuffer.data = pixelBuffer;
-    outBuffer.width = CGImageGetWidth(img);
-    outBuffer.height = CGImageGetHeight(img);
-    outBuffer.rowBytes = CGImageGetBytesPerRow(img);
-    
-    error = vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend);
-    
-    if (error) {
-        NSLog(@"JFDepthView: error from convolution %ld", error);
-    }
-    
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef ctx = CGBitmapContextCreate(outBuffer.data,
-                                             outBuffer.width,
-                                             outBuffer.height,
-                                             8,
-                                             outBuffer.rowBytes,
-                                             colorSpace,
-                                             kCGImageAlphaNoneSkipLast);
-    CGImageRef imageRef = CGBitmapContextCreateImage (ctx);
-    UIImage *returnImage = [UIImage imageWithCGImage:imageRef];
-    
-    //clean up
-    CGContextRelease(ctx);
-    CGColorSpaceRelease(colorSpace);
-    
-    free(pixelBuffer);
-    CFRelease(inBitmapData);
-    
-    CGImageRelease(imageRef);
-    
-    return returnImage;
-}
 
 
 
@@ -724,6 +677,7 @@ NSString *FLICKR_KEY=@"b0a198db96a6a9854ee27e04909bd940";
                         
                         
                         if([[NSUserDefaults standardUserDefaults] boolForKey:@"fetch_flickr"])[self getFlickrImage];
+                        else [self.backgroundImage setImage:nil];
 
                         
                         

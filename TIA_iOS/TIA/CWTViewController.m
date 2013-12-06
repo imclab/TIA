@@ -16,7 +16,8 @@
 #define DEGREES_TO_RADIANS(angle) (angle / 180.0 * M_PI)
 
 
-@interface CWTViewController ()<UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+//@interface CWTViewController ()<UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+@interface CWTViewController ()
 
 
 @end
@@ -48,16 +49,17 @@
     
     self.view.layer.masksToBounds=NO;
  
-    self.pageView=[[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
-    self.pageView.dataSource = self;
-    self.pageView.delegate = self;
-    self.pageView.view.layer.masksToBounds=FALSE;
-    [self.view addSubview:self.pageView.view];
-    self.pageView.view.frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds)+40);
-    self.locationViewController.page=0;
-    
+//    self.pageView=[[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+//    self.pageView.dataSource = self;
+//    self.pageView.delegate = self;
+//    self.pageView.view.layer.masksToBounds=FALSE;
+//    [self.view addSubview:self.pageView.view];
+//    self.pageView.view.frame=CGRectMake(0, 0, CGRectGetWidth(self.view.bounds),  CGRectGetHeight(self.view.bounds)+40);
+//    self.locationViewController.page=0;
+//    
     
     self.locationViewController=[[CWTLocationViewController alloc] init];
+    [self.view addSubview:self.locationViewController.view];
 
     
     int iconWidth=44;
@@ -90,10 +92,10 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     
-    [self.pageView setViewControllers:@[self.locationViewController] direction:UIPageViewControllerNavigationDirectionForward  animated:NO completion:^(BOOL finished) {
-        //code
-    }
-     ];
+//    [self.pageView setViewControllers:@[self.locationViewController] direction:UIPageViewControllerNavigationDirectionForward  animated:NO completion:^(BOOL finished) {
+//        //code
+//    }
+//     ];
     self.locationViewController.page=0;
 
     
@@ -159,18 +161,21 @@
 
 
 -(void)updateViewControllersWithLatLng: (int)_page{
-    NSArray* viewC = [self.pageView viewControllers];
-    CWTLocationViewController * vc=[viewC objectAtIndex:0];
-    [vc updateDistanceWithLatLng:.3];
+//    NSArray* viewC = [self.pageView viewControllers];
+//    CWTLocationViewController * vc=[viewC objectAtIndex:0];
+//    [vc updateDistanceWithLatLng:.3];
+    
+    [self.locationViewController updateDistanceWithLatLng:.3];
     
 }
 
 
 -(void)updateViewControllersWithHeading: (int)_page{
-    NSArray* viewC = [self.pageView viewControllers];
-    [[viewC objectAtIndex:0] updateHeading];
+//    NSArray* viewC = [self.pageView viewControllers];
+//    [[viewC objectAtIndex:0] updateHeading];
+//    [self.locationViewController rotateCompass:.1 degrees:-dele.heading];
     [self.locationViewController rotateCompass:.1 degrees:-dele.heading];
-    
+
 }
 
 
@@ -216,64 +221,64 @@
 
 #pragma mark - UIPageViewController Data Source
 
-- (UIViewController*)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
-{
-    
-    //disable pages
-    //return nil;
-    
-    
-    NSInteger indx = [(CWTLocationViewController*)viewController page];
-    indx++;
-    
-    if( indx>= [dele.locationDictionaryArray count] ) return nil;
-    
-
-    CWTLocationViewController* newLoc = [[CWTLocationViewController alloc] init];
-    newLoc.page = indx;
-
-    return newLoc;
-}
-
-- (UIViewController*)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
-{
-    
-    //disable pages
-    //return nil;
-    
-    
-    NSInteger indx = [(CWTLocationViewController*)viewController page];
-    indx--;
-    
-    if( indx<0 ) return nil;
-    
-    CWTLocationViewController* newLoc = [[CWTLocationViewController alloc] init];
-    newLoc.page = indx;
-    
-
-    return newLoc;
-}
-
-
+//- (UIViewController*)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
+//{
+//    
+//    //disable pages
+//    //return nil;
+//    
+//    
+//    NSInteger indx = [(CWTLocationViewController*)viewController page];
+//    indx++;
+//    
+//    if( indx>= [dele.locationDictionaryArray count] ) return nil;
+//    
+//
+//    CWTLocationViewController* newLoc = [[CWTLocationViewController alloc] init];
+//    newLoc.page = indx;
+//
+//    return newLoc;
+//}
+//
+//- (UIViewController*)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
+//{
+//    
+//    //disable pages
+//    //return nil;
+//    
+//    
+//    NSInteger indx = [(CWTLocationViewController*)viewController page];
+//    indx--;
+//    
+//    if( indx<0 ) return nil;
+//    
+//    CWTLocationViewController* newLoc = [[CWTLocationViewController alloc] init];
+//    newLoc.page = indx;
+//    
+//
+//    return newLoc;
+//}
 
 
-- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController
-{
-    NSArray* viewC = [self.pageView viewControllers];
-    
-    return   [viewC count];
-}
-
-- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController
-{
-    return   self.locationViewController.page;
-    
-}
 
 
-- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers{
-    
-}
+//- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController
+//{
+//    NSArray* viewC = [self.pageView viewControllers];
+//    
+//    return   [viewC count];
+//}
+
+//- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController
+//{
+//    return   self.locationViewController.page;
+//    
+//}
+
+
+//- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers{
+//    
+//}
 
 
 

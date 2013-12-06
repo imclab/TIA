@@ -26,7 +26,7 @@
 -(void)updateViewControllersWithHeading: (int)_page;
 
 
-@property (nonatomic,strong) UIPageViewController *pageView;
+//@property (nonatomic,strong) UIPageViewController *pageView;
 @property (nonatomic,strong) CWTLocationViewController* locationViewController;
 
 
