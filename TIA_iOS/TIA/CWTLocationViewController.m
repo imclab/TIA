@@ -276,6 +276,69 @@
 }
 */
 
+
+-(void)getInstagramImage
+{
+    NSString *Client_ID=@"ba3eb3445c4c42d8902a74d5641761f3";
+    
+    NSString *urlString = [NSString stringWithFormat:@"https://api.instagram.com/v1/media/search?lat=%f&lng=%f&client_id=%@",self.dlat,self.dlng, Client_ID];
+    /*
+     
+     */
+    
+    
+    
+    //async url request for flickr images
+    NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        
+        // 2. Get URLResponse string & parse JSON to Foundation objects.
+        NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
+        
+        // 3. Pick thru results and build our arrays
+        NSArray *datainstagram = [[results objectForKey:@"data"] objectForKey:@"link"];
+        for (NSDictionary *link in datainstagram) {
+            // 3.b Construct URL for e/ photo.
+            NSString *photoURLString = [NSString stringWithFormat:@"%@", [link objectForKey:@"link"]];
+            
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:photoURLString]]];
+            
+            CGRect screen = [[UIScreen mainScreen] applicationFrame];
+            //int bleed=320;
+            int imageSize=screen.size.height*[[NSUserDefaults standardUserDefaults] integerForKey:@"image_scale"]/100.0;
+            
+            UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(imageSize,imageSize)];
+            CGRect backgroundFrame=CGRectMake(-imageSize*.5+screen.size.width*.5,50-imageSize*.5+screen.size.height*.5,imageSize,imageSize);
+            
+            //Blur the UIImage with a CIFilter
+            CIImage *imageToBlur = [CIImage imageWithCGImage:scaledImage.CGImage];
+            CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
+            [gaussianBlurFilter setValue:imageToBlur forKey: @"inputImage"];
+            [gaussianBlurFilter setValue:[NSNumber numberWithFloat: [[NSUserDefaults standardUserDefaults] integerForKey:@"blur_radius"] ] forKey: @"inputRadius"];
+            CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
+            UIImage *endImage = [[UIImage alloc] initWithCIImage:resultImage];
+            
+            [self.backgroundImage setImage:endImage];
+            [self.backgroundImage setFrame:backgroundFrame];
+            [self.backgroundImage setAlpha:[[NSUserDefaults standardUserDefaults] integerForKey:@"image_alpha"]/100.0];
+            [self.scrollView sendSubviewToBack:self.backgroundImage];
+            
+            NSLog(@"image Loaded: %@", photoURLString);
+            
+        }
+    }];
+    
+}
+
+
+
+
+
+
+
+
 -(void)getFlickrImage
 {
     NSString *FLICKR_KEY=@"b0a198db96a6a9854ee27e04909bd940";
@@ -695,7 +758,9 @@
                         
                         
                         if([[NSUserDefaults standardUserDefaults] boolForKey:@"fetch_flickr"])[self getFlickrImage];
-                        else [self.backgroundImage setImage:nil];
+                       
+                        
+                       else if([[NSUserDefaults standardUserDefaults] boolForKey:@"fetch_instagram"])[self getInstagramImage];else [self.backgroundImage setImage:nil];
 
                         
                         
