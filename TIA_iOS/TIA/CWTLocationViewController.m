@@ -280,13 +280,8 @@
 -(void)getInstagramImage
 {
     NSString *Client_ID=@"ba3eb3445c4c42d8902a74d5641761f3";
-    
     NSString *urlString = [NSString stringWithFormat:@"https://api.instagram.com/v1/media/search?lat=%f&lng=%f&client_id=%@",self.dlat,self.dlng, Client_ID];
-    /*
-     
-     */
-    
-    
+
     
     //async url request for flickr images
     NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
@@ -294,16 +289,20 @@
         
         // 2. Get URLResponse string & parse JSON to Foundation objects.
         NSString *jsonString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        //NSLog(jsonString);
         NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
+        
+        
+        
+        NSArray *results = [[NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil] objectForKey:@"data"];
+        
         
         // 3. Pick thru results and build our arrays
-        NSArray *datainstagram = [[results objectForKey:@"data"] objectForKey:@"link"];
-        for (NSDictionary *link in datainstagram) {
-            // 3.b Construct URL for e/ photo.
-            NSString *photoURLString = [NSString stringWithFormat:@"%@", [link objectForKey:@"link"]];
-            
-            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:photoURLString]]];
+        NSString *imageURL = [[[[results objectAtIndex:0] objectForKey:@"images"] objectForKey:@"thumbnail"] objectForKey:@"url"];
+        NSLog(@"url: %@", imageURL);
+        
+        
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]]];
             
             CGRect screen = [[UIScreen mainScreen] applicationFrame];
             //int bleed=320;
@@ -325,9 +324,7 @@
             [self.backgroundImage setAlpha:[[NSUserDefaults standardUserDefaults] integerForKey:@"image_alpha"]/100.0];
             [self.scrollView sendSubviewToBack:self.backgroundImage];
             
-            NSLog(@"image Loaded: %@", photoURLString);
-            
-        }
+
     }];
     
 }
