@@ -139,6 +139,8 @@
                     object[@"lng"] = [NSNumber numberWithFloat:self.myLng];
                     object[@"speed"] = [NSNumber numberWithFloat:self.speed];
                     object[@"altitude"] = [NSNumber numberWithFloat:self.altitude];
+                    object[@"accuracy"] = [NSNumber numberWithFloat:self.accuracy];
+
                     [object saveInBackground];
                     
             }
@@ -154,6 +156,8 @@
                 [object setObject:[NSNumber numberWithFloat:self.myLng] forKey:@"lng"];
                 [object setObject:[NSNumber numberWithFloat:self.speed] forKey:@"speed"];
                 [object setObject:[NSNumber numberWithFloat:self.altitude] forKey:@"altitude"];
+                [object setObject:[NSNumber numberWithFloat:self.accuracy] forKey:@"accuracy"];
+
                 [object saveInBackground];
                 deviceAddedToParse=true;
                 
