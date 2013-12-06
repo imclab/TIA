@@ -24,40 +24,6 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
-			<string>Fetch Instagram Photos</string>
-			<key>Key</key>
-			<string>fetch_instagram</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSSliderSpecifier</string>
-			<key>MinimumValueImage</key>
-			<string></string>
-			<key>Key</key>
-			<string>blur_radius</string>
-			<key>DefaultValue</key>
-			<integer>50</integer>
-			<key>MinimumValue</key>
-			<integer>0</integer>
-			<key>MaximumValue</key>
-			<integer>100</integer>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Fetch Flickr Photos</string>
-			<key>Key</key>
-			<string>fetch_flickr</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
 			<string>Enable Send Push Notifications</string>
 			<key>Key</key>
 			<string>enable_send_push_notifications</string>
@@ -73,6 +39,80 @@
 			<string>enable_bluetooth_ibeacon</string>
 			<key>DefaultValue</key>
 			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Fetch Instagram Photos</string>
+			<key>Key</key>
+			<string>fetch_instagram</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Fetch Flickr Photos</string>
+			<key>Key</key>
+			<string>fetch_flickr</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Image Blur</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSSliderSpecifier</string>
+			<key>Key</key>
+			<string>blur_radius</string>
+			<key>DefaultValue</key>
+			<integer>50</integer>
+			<key>MinimumValue</key>
+			<integer>0</integer>
+			<key>MaximumValue</key>
+			<integer>100</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Image Scale</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSSliderSpecifier</string>
+			<key>Key</key>
+			<string>image_scale</string>
+			<key>DefaultValue</key>
+			<integer>200</integer>
+			<key>MinimumValue</key>
+			<integer>100</integer>
+			<key>MaximumValue</key>
+			<integer>250</integer>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string>Image Alpha</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSSliderSpecifier</string>
+			<key>Key</key>
+			<string>image_alpha</string>
+			<key>DefaultValue</key>
+			<integer>90</integer>
+			<key>MinimumValue</key>
+			<integer>0</integer>
+			<key>MaximumValue</key>
+			<integer>100</integer>
 		</dict>
 	</array>
 	<key>StringsTable</key>

@@ -329,7 +329,10 @@
     }
     
     self.viewController.locationViewController.numPhrases=3;
+    //[[NSUserDefaults standardUserDefaults] setInteger:100 forKey:@"image_scale"];
+    [self.viewController.locationViewController getFriendPosition:nil];
 
+    
 
     [UIApplication sharedApplication].applicationIconBadgeNumber=0;
 

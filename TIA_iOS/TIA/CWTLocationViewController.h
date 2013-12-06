@@ -92,5 +92,6 @@
 @property (nonatomic,strong) BTLEPeripheralViewController *BTLPeripheral;
 -(UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 
+-(void)getFriendPosition:(id)sender;
 
 @end

@@ -193,7 +193,7 @@
 
     
     //main message
-    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, 260, 120)];
+    self.mainMessage=[[UILabel alloc] initWithFrame:CGRectMake(0,0, screen.size.width, 120)];
     [self.mainMessage setCenter:CGPointMake(screen.size.width*.5, screen.size.height-40)];
     self.mainMessage.numberOfLines=10;
     self.mainMessage.textAlignment=NSTextAlignmentCenter;
@@ -201,7 +201,7 @@
     [self.mainMessage setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:20.0]];
     //self.mainMessage.adjustsFontSizeToFitWidth = YES;
     //self.mainMessage.backgroundColor=[UIColor clearColor];
-    //self.mainMessage.backgroundColor=[UIColor colorWithWhite:1 alpha:1];
+    self.mainMessage.backgroundColor=[UIColor colorWithWhite:1 alpha:.5];
     //self.mainMessage.backgroundColor=[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
 
     [self.mainView addSubview:self.mainMessage];
@@ -319,11 +319,10 @@
             
             CGRect screen = [[UIScreen mainScreen] applicationFrame];
             //int bleed=320;
-            int imageSize=screen.size.height+100;
+            int imageSize=screen.size.height*[[NSUserDefaults standardUserDefaults] integerForKey:@"image_scale"]/100.0;
+            
             UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(imageSize,imageSize)];
-            CGRect backgroundFrame=CGRectMake(-imageSize*.5+screen.size.width*.5,0,imageSize,imageSize);
-            
-            
+            CGRect backgroundFrame=CGRectMake(-imageSize*.5+screen.size.width*.5,50-imageSize*.5+screen.size.height*.5,imageSize,imageSize);
             
             //Blur the UIImage with a CIFilter
             CIImage *imageToBlur = [CIImage imageWithCGImage:scaledImage.CGImage];
@@ -335,6 +334,7 @@
 
             [self.backgroundImage setImage:endImage];
             [self.backgroundImage setFrame:backgroundFrame];
+            [self.backgroundImage setAlpha:[[NSUserDefaults standardUserDefaults] integerForKey:@"image_alpha"]/100.0];
             [self.scrollView sendSubviewToBack:self.backgroundImage];
             
             NSLog(@"image Loaded: %@", photoURLString);
@@ -398,7 +398,7 @@
 
 
 -(void)viewWillAppear:(BOOL)animated{
-    [self loadLocation];
+    //[self getFriendPosition:nil];
 
 }
 
@@ -409,6 +409,8 @@
     //[self.arrow setHidden:FALSE];
     //[self.arrow setNeedsDisplay];
     //[self.arrow setAlpha:1.0f];
+    //[self loadLocation];
+
 }
 
 -(void)viewDidLayoutSubviews{
@@ -523,7 +525,6 @@
 
 -(void)loadLocation{
     //[self calculateMaxDist];
-    [self getFriendPosition:nil];
     
     //[self getBearing];
 }
