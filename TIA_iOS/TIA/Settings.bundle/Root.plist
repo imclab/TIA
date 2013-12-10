@@ -44,6 +44,16 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 			<key>Title</key>
+			<string>Enable Push on Background Location Update</string>
+			<key>Key</key>
+			<string>enable_push_background_location</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
 			<string>Fetch Instagram Photos</string>
 			<key>Key</key>
 			<string>fetch_instagram</string>

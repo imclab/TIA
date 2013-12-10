@@ -535,39 +535,26 @@
     }
 
     //pull up to send push notification
-    else if(scrollView.contentOffset.y>=100 && self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""] &&                             self.hasAnother && [[NSUserDefaults standardUserDefaults] boolForKey:@"enable_send_push_notifications"]
+    else if(scrollView.contentOffset.y>=100 && self.heart.selected==FALSE && ![self.mainMessage.text isEqualToString:@""] && self.hasAnother && [[NSUserDefaults standardUserDefaults] boolForKey:@"enable_send_push_notifications"]
 ){
         // Create our Installation query
         NSLog(@"scrolled :%f ",scrollView.contentOffset.y);
 
-        //reverse geocode location message
-        CLGeocoder *geocoder = [[CLGeocoder alloc] init] ;
-        CLLocation *myLocation=[[CLLocation alloc] initWithLatitude:dele.myLat longitude:dele.myLng];
-        [geocoder reverseGeocodeLocation:myLocation
-                       completionHandler:^(NSArray *placemarks, NSError *error) {
-                           if (error){
-                               NSLog(@"Geocode failed with error: %@", error);
-                               return;
-                           }
-                           CLPlacemark *placemark = [placemarks objectAtIndex:0];
-                           NSLog(@"placemark.%@",placemark);
-                           //NSString*  pushMess = [NSString stringWithFormat:@"♥ %@ From %@.",self.mainMessage.text, placemark.thoroughfare];
-                            NSString*  pushMess = [NSString stringWithFormat:@"♥ %@",self.mainMessage.text];
-                           NSLog(@"pushMess %@",pushMess);
-                           
-                           PFQuery *pushQuery = [PFInstallation query];
-                           [pushQuery whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString];
-                           // Send push notification to query
-                           PFPush *push = [[PFPush alloc] init];
-                           [push setQuery:pushQuery]; // Set our Installation query
-                           [push setMessage:pushMess];
-                           [push sendPushInBackground];
-                           
-                           //[dele alert:@"Sent push notification to your other."];
-                           //
-                           [self.heart setSelected:YES];
-                           
-                       }];
+
+        NSString*  pushMess = [NSString stringWithFormat:@"♥ %@",self.mainMessage.text];
+       NSLog(@"pushMess %@",pushMess);
+       
+       PFQuery *pushQuery = [PFInstallation query];
+       [pushQuery whereKey:@"vendorUUID" equalTo:self.otherUserVendorIDString];
+       // Send push notification to query
+       PFPush *push = [[PFPush alloc] init];
+       [push setQuery:pushQuery]; // Set our Installation query
+       [push setMessage:pushMess];
+       [push sendPushInBackground];
+       
+       //[dele alert:@"Sent push notification to your other."];
+       [self.heart setSelected:YES];
+        
     }
     
 

@@ -135,14 +135,15 @@
                 //NSLog(@"%@", object.objectId);
                 
                    //update lat lng of user
-                    object[@"lat"] = [NSNumber numberWithFloat:self.myLat];
-                    object[@"lng"] = [NSNumber numberWithFloat:self.myLng];
-                    object[@"speed"] = [NSNumber numberWithFloat:self.speed];
-                    object[@"altitude"] = [NSNumber numberWithFloat:self.altitude];
-                    object[@"accuracy"] = [NSNumber numberWithFloat:self.accuracy];
+                object[@"lat"] = [NSNumber numberWithFloat:self.myLat];
+                object[@"lng"] = [NSNumber numberWithFloat:self.myLng];
+                object[@"speed"] = [NSNumber numberWithFloat:self.speed];
+                object[@"altitude"] = [NSNumber numberWithFloat:self.altitude];
+                object[@"accuracy"] = [NSNumber numberWithFloat:self.accuracy];
 
-                    [object saveInBackground];
-                    
+                [object saveInBackground];
+                NSLog(@"updated on parse");
+    
             }
             
             //user not found. save new entry to database
@@ -160,7 +161,8 @@
 
                 [object saveInBackground];
                 deviceAddedToParse=true;
-                
+                NSLog(@"added new entry on parse");
+
             }
             
             if(deviceAddedToParse) self.viewController.locationViewController.mainMessage.text=@"Just added you. We'll connect you to another soon.";
@@ -180,6 +182,9 @@
 
 -(void) sendBackgroundLocationToServer:(CLLocation *)newLocation
 {
+    NSLog(@"ping in background");
+
+    
     // REMEMBER. We are running in the background if this is being executed.
     // We can't assume normal network access.
     // bgTask is defined as an instance variable of type UIBackgroundTaskIdentifier
@@ -194,44 +199,75 @@
                    }];
                   
                   // ANY CODE WE PUT HERE IS OUR BACKGROUND TASK
-                        
-                self.speed = newLocation.speed;
-                self.altitude= newLocation.altitude;
-                self.altitudeAccuracy= newLocation.verticalAccuracy;
-                
-                // update the display with the new location data
-                
-                if(self.myLat!=newLocation.coordinate.latitude){
-                    
-                    self.myLat=newLocation.coordinate.latitude;
-                    self.myLng=newLocation.coordinate.longitude;
+    
+    // update parse
 
-                    [self updateUserLocation];
-                }
+    self.speed = newLocation.speed;
+    self.altitude= newLocation.altitude;
+    self.altitudeAccuracy= newLocation.verticalAccuracy;
+    self.myLat=newLocation.coordinate.latitude;
+    self.myLng=newLocation.coordinate.longitude;
+    [self updateUserLocation];
 
+    
+    if([[NSUserDefaults standardUserDefaults] boolForKey:@"enable_push_background_location"]){
         
+           [self.viewController.locationViewController getFriendPosition:nil];
+           
+           //get message about me for other and push
+            NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f,%i", self.myLat, self.myLng, 2];
+            NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+
+            [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                
+                if(!error){
+                    NSString *mainMess = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                    NSLog(@"background push message: %@",mainMess);
+
+                        //send push
+                   PFQuery *pushQuery = [PFInstallation query];
+                   [pushQuery whereKey:@"vendorUUID" equalTo:[self.viewController.locationViewController otherUserVendorIDString]];
+                   // Send push notification to query
+                   PFPush *push = [[PFPush alloc] init];
+                   [push setQuery:pushQuery]; // Set our Installation query
+                   [push setMessage:mainMess];
+                   [push sendPushInBackground];
+                }
+           
+              }];
+    }
+
+
     
-              // AFTER ALL THE UPDATES, close the task
     
-              if (bgTask != UIBackgroundTaskInvalid)
-              {
-                  [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-                   bgTask = UIBackgroundTaskInvalid;
-              }
+
+  // AFTER ALL THE UPDATES, close the task
+
+  if (bgTask != UIBackgroundTaskInvalid)
+  {
+      [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+       bgTask = UIBackgroundTaskInvalid;
+  }
 
 }
 
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
 
+    NSLog(@"location update");
+
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground)
     {
+        NSLog(@"location update in background");
+
         [self sendBackgroundLocationToServer:newLocation];
+
     }
     else
     {
  
-        
+        NSLog(@"location update in foreground");
+
         // test the age of the location measurement to determine if the measurement is cached
         // in most cases you will not want to rely on cached measurements
         NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
@@ -317,9 +353,11 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     [self.locationManager startMonitoringSignificantLocationChanges];
+    NSLog(@"entered background, start monitoring significant changes");
 
 
 }
