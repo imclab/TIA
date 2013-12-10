@@ -48,7 +48,7 @@
 			<key>Key</key>
 			<string>fetch_instagram</string>
 			<key>DefaultValue</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -58,7 +58,7 @@
 			<key>Key</key>
 			<string>fetch_flickr</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>
