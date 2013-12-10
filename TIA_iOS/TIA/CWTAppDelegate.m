@@ -178,34 +178,85 @@
 
 }
 
+-(void) sendBackgroundLocationToServer:(CLLocation *)newLocation
+{
+    // REMEMBER. We are running in the background if this is being executed.
+    // We can't assume normal network access.
+    // bgTask is defined as an instance variable of type UIBackgroundTaskIdentifier
+    
+    // Note that the expiration handler block simply ends the task. It is important that we always
+    // end tasks that we have started.
+    
+    bgTask = [[UIApplication sharedApplication]
+              beginBackgroundTaskWithExpirationHandler:
+              ^{
+                  [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                   }];
+                  
+                  // ANY CODE WE PUT HERE IS OUR BACKGROUND TASK
+                        
+                self.speed = newLocation.speed;
+                self.altitude= newLocation.altitude;
+                self.altitudeAccuracy= newLocation.verticalAccuracy;
+                
+                // update the display with the new location data
+                
+                if(self.myLat!=newLocation.coordinate.latitude){
+                    
+                    self.myLat=newLocation.coordinate.latitude;
+                    self.myLng=newLocation.coordinate.longitude;
+
+                    [self updateUserLocation];
+                }
+
+        
+    
+              // AFTER ALL THE UPDATES, close the task
+    
+              if (bgTask != UIBackgroundTaskInvalid)
+              {
+                  [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+                   bgTask = UIBackgroundTaskInvalid;
+              }
+
+}
+
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
 
-    
-    // test the age of the location measurement to determine if the measurement is cached
-    // in most cases you will not want to rely on cached measurements
-    NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-    if (locationAge > 5.0) return; //5 seconds
-    
-    // test that the horizontal accuracy does not indicate an invalid measurement
-    self.accuracy=newLocation.horizontalAccuracy;
-    if (self.accuracy < 0) return;
-    
-    self.speed = newLocation.speed;
-    self.altitude= newLocation.altitude;
-    self.altitudeAccuracy= newLocation.verticalAccuracy;
-
-    // update the display with the new location data
-    
-    if(self.myLat!=newLocation.coordinate.latitude){
-        
-        self.myLat=newLocation.coordinate.latitude;
-        self.myLng=newLocation.coordinate.longitude;
-
-        [(CWTViewController*)self.window.rootViewController updateViewControllersWithLatLng: [[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]];
-        
-        [self updateUserLocation];
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground)
+    {
+        [self sendBackgroundLocationToServer:newLocation];
+    }
+    else
+    {
  
+        
+        // test the age of the location measurement to determine if the measurement is cached
+        // in most cases you will not want to rely on cached measurements
+        NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
+        if (locationAge > 5.0) return; //5 seconds
+        
+        // test that the horizontal accuracy does not indicate an invalid measurement
+        self.accuracy=newLocation.horizontalAccuracy;
+        if (self.accuracy < 0) return;
+        
+        self.speed = newLocation.speed;
+        self.altitude= newLocation.altitude;
+        self.altitudeAccuracy= newLocation.verticalAccuracy;
+
+        // update the display with the new location data
+        
+        if(self.myLat!=newLocation.coordinate.latitude){
+            
+            self.myLat=newLocation.coordinate.latitude;
+            self.myLng=newLocation.coordinate.longitude;
+
+            [(CWTViewController*)self.window.rootViewController updateViewControllersWithLatLng: [[NSUserDefaults standardUserDefaults] integerForKey:@"currentDestinationN"]];
+            
+            [self updateUserLocation];
+     
+        }
     }
     
     
@@ -259,7 +310,6 @@
     [self.locationManager stopUpdatingHeading];
     [self.locationManager stopUpdatingLocation];
     
-    [self.locationManager startMonitoringSignificantLocationChanges];
     NSLog(@"resign active");
     
     
@@ -269,7 +319,8 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-   
+    [self.locationManager startMonitoringSignificantLocationChanges];
+
 
 }
 
@@ -278,7 +329,6 @@
     NSLog(@"will enter foreground");
 
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    [self.locationManager stopMonitoringSignificantLocationChanges];
 
     
 
@@ -313,6 +363,7 @@
     self.locationManager.distanceFilter = 1.0f;
 
     // Once configured, the location manager must be "started".
+    [self.locationManager stopMonitoringSignificantLocationChanges];
     [self.locationManager startUpdatingLocation];
     
     //for background cell tower position changes

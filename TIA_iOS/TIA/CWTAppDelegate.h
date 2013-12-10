@@ -17,7 +17,7 @@
 @interface CWTAppDelegate : UIResponder <UIApplicationDelegate>{
     //MTStatusBarOverlay *overlay;
     BOOL deviceAddedToParse;
-    
+    UIBackgroundTaskIdentifier bgTask;
 }
 
 @property (strong, nonatomic) UIWindow *window;
@@ -42,6 +42,7 @@
 
 
 @property (nonatomic) BOOL hasInternet;
+
 
 
 @end
