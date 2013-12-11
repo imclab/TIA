@@ -80,14 +80,10 @@
     
     
     
-    self.backgroundImage = [[UIImageView alloc] init];
-    //    [self.backgroundImage setImage:[UIImage imageNamed:@"arrow-dn.png"]];
-    [self.scrollView addSubview: self.backgroundImage];
-    
-    
-    
-    
-    
+    self.backgroundPhoto = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 320)];
+    [self.scrollView addSubview: self.backgroundPhoto];
+    //self.backgroundPhoto.backgroundColor=[UIColor colorWithRed:1 green:0 blue:0 alpha:1];
+
     
     //stats
     self.displayText=[[UILabel alloc] initWithFrame:CGRectMake(20, screen.size.height+120, 320, 100)];
@@ -279,7 +275,7 @@
 
 -(void)getInstagramImage
 {
-    NSString *Client_ID=@"ba3eb3445c4c42d8902a74d5641761f3";
+    NSString *Client_ID=@"ba3eb3445c4c42d8902a74d5641761f3"; 
     NSString *urlString = [NSString stringWithFormat:@"https://api.instagram.com/v1/media/search?lat=%f&lng=%f&client_id=%@",self.dlat,self.dlng, Client_ID];
 
     
@@ -306,7 +302,7 @@
             
             CGRect screen = [[UIScreen mainScreen] applicationFrame];
             //int bleed=320;
-            int imageSize=screen.size.height*[[NSUserDefaults standardUserDefaults] integerForKey:@"image_scale"]/100.0;
+            int imageSize=screen.size.height*[[NSUserDefaults standardUserDefaults] floatForKey:@"image_scale"]/100.0;
             
             UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(imageSize,imageSize)];
             CGRect backgroundFrame=CGRectMake(-imageSize*.5+screen.size.width*.5,50-imageSize*.5+screen.size.height*.5,imageSize,imageSize);
@@ -315,14 +311,14 @@
             CIImage *imageToBlur = [CIImage imageWithCGImage:scaledImage.CGImage];
             CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
             [gaussianBlurFilter setValue:imageToBlur forKey: @"inputImage"];
-            [gaussianBlurFilter setValue:[NSNumber numberWithFloat: [[NSUserDefaults standardUserDefaults] integerForKey:@"blur_radius"] ] forKey: @"inputRadius"];
+            [gaussianBlurFilter setValue:[NSNumber numberWithFloat: [[NSUserDefaults standardUserDefaults] floatForKey:@"blur_radius"] ] forKey: @"inputRadius"];
             CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
             UIImage *endImage = [[UIImage alloc] initWithCIImage:resultImage];
-            
-            [self.backgroundImage setImage:endImage];
-            [self.backgroundImage setFrame:backgroundFrame];
-            [self.backgroundImage setAlpha:[[NSUserDefaults standardUserDefaults] integerForKey:@"image_alpha"]/100.0];
-            [self.scrollView sendSubviewToBack:self.backgroundImage];
+
+            [self.backgroundPhoto setImage:endImage];
+            [self.backgroundPhoto setFrame:backgroundFrame];
+            [self.backgroundPhoto setAlpha:[[NSUserDefaults standardUserDefaults] floatForKey:@"image_alpha"]/100.0];
+            [self.scrollView sendSubviewToBack:self.backgroundPhoto];
             
 
     }];
@@ -379,8 +375,9 @@
             
             CGRect screen = [[UIScreen mainScreen] applicationFrame];
             //int bleed=320;
-            int imageSize=screen.size.height*[[NSUserDefaults standardUserDefaults] integerForKey:@"image_scale"]/100.0;
-            
+            int imageSize=screen.size.height*[[NSUserDefaults standardUserDefaults] floatForKey:@"image_scale"]/100.0f;
+            //int imageSize=screen.size.height*2.0f;
+
             UIImage *scaledImage = [self imageWithImage:image scaledToSize:CGSizeMake(imageSize,imageSize)];
             CGRect backgroundFrame=CGRectMake(-imageSize*.5+screen.size.width*.5,50-imageSize*.5+screen.size.height*.5,imageSize,imageSize);
             
@@ -388,15 +385,16 @@
             CIImage *imageToBlur = [CIImage imageWithCGImage:scaledImage.CGImage];
             CIFilter *gaussianBlurFilter = [CIFilter filterWithName: @"CIGaussianBlur"];
             [gaussianBlurFilter setValue:imageToBlur forKey: @"inputImage"];
-            [gaussianBlurFilter setValue:[NSNumber numberWithFloat: [[NSUserDefaults standardUserDefaults] integerForKey:@"blur_radius"] ] forKey: @"inputRadius"];
+            [gaussianBlurFilter setValue:[NSNumber numberWithFloat: [[NSUserDefaults standardUserDefaults] floatForKey:@"blur_radius"] ] forKey: @"inputRadius"];
             CIImage *resultImage = [gaussianBlurFilter valueForKey: @"outputImage"];
             UIImage *endImage = [[UIImage alloc] initWithCIImage:resultImage];
 
-            [self.backgroundImage setImage:endImage];
-            [self.backgroundImage setFrame:backgroundFrame];
-            [self.backgroundImage setAlpha:[[NSUserDefaults standardUserDefaults] integerForKey:@"image_alpha"]/100.0];
-            [self.scrollView sendSubviewToBack:self.backgroundImage];
+            [self.backgroundPhoto setImage:endImage];
+            [self.backgroundPhoto setFrame:backgroundFrame];
+            [self.backgroundPhoto setAlpha:[[NSUserDefaults standardUserDefaults] floatForKey:@"image_alpha"]/100.0f];
+            [self.scrollView sendSubviewToBack:self.backgroundPhoto];
             
+            NSLog(@"image alpha: %f", [[NSUserDefaults standardUserDefaults] floatForKey:@"image_scale"]);
             NSLog(@"image Loaded: %@", photoURLString);
 
         }
@@ -741,10 +739,9 @@
                         self.dlng= [[object objectForKey:@"lng"] floatValue];
                         
                         
-                        if([[NSUserDefaults standardUserDefaults] boolForKey:@"fetch_flickr"])[self getFlickrImage];
-                       
-                        
-                       else if([[NSUserDefaults standardUserDefaults] boolForKey:@"fetch_instagram"])[self getInstagramImage];else [self.backgroundImage setImage:nil];
+                        if([[NSUserDefaults standardUserDefaults] boolForKey:@"fetch_flickr"]==YES)[self getFlickrImage];
+                       else if([[NSUserDefaults standardUserDefaults] boolForKey:@"fetch_instagram"]==YES)[self getInstagramImage];
+                       else [self.backgroundPhoto setImage:nil];
 
                         
                         

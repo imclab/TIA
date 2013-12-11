@@ -96,10 +96,36 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes : UIRemoteNotificationTypeSound];
     
     deviceAddedToParse=false;
+    
+    [self registerDefaultsFromSettingsBundle];
 
     
     return YES;
 }
+
+
+- (void)registerDefaultsFromSettingsBundle {
+    NSString *settingsBundle = [[NSBundle mainBundle] pathForResource:@"Settings" ofType:@"bundle"];
+    if(!settingsBundle) {
+        NSLog(@"Could not find Settings.bundle");
+        return;
+    }
+    
+    NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:[settingsBundle stringByAppendingPathComponent:@"Root.plist"]];
+    NSArray *preferences = [settings objectForKey:@"PreferenceSpecifiers"];
+    
+    NSMutableDictionary *defaultsToRegister = [[NSMutableDictionary alloc] initWithCapacity:[preferences count]];
+    for(NSDictionary *prefSpecification in preferences) {
+        NSString *key = [prefSpecification objectForKey:@"Key"];
+        if(key) {
+            [defaultsToRegister setObject:[prefSpecification objectForKey:@"DefaultValue"] forKey:key];
+        }
+    }
+    
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaultsToRegister];
+}
+
+
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     // Store the deviceToken in the current installation and save it to Parse.
@@ -107,6 +133,10 @@
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
     [currentInstallation setObject:[UIDevice currentDevice].identifierForVendor.UUIDString forKey:@"vendorUUID"];
     [currentInstallation saveInBackground];
+    
+    
+    
+    
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
@@ -152,6 +182,7 @@
 
                 //add user to parse Class
                 PFObject *object = [PFObject objectWithClassName:@"TIA_Users"];
+                
                 [object setObject:[UIDevice currentDevice].identifierForVendor.UUIDString forKey:@"vendorUUID"];
                 [object setObject:[NSNumber numberWithFloat:self.myLat] forKey:@"lat"];
                 [object setObject:[NSNumber numberWithFloat:self.myLng] forKey:@"lng"];
@@ -159,6 +190,15 @@
                 [object setObject:[NSNumber numberWithFloat:self.altitude] forKey:@"altitude"];
                 [object setObject:[NSNumber numberWithFloat:self.accuracy] forKey:@"accuracy"];
 
+                if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground)
+                {
+                    [object setObject:@"YES" forKey:@"update_from_background"];
+                    
+                }
+                else [object setObject:@"NO" forKey:@"update_from_background"];
+    
+                
+                
                 [object saveInBackground];
                 deviceAddedToParse=true;
                 NSLog(@"added new entry on parse");

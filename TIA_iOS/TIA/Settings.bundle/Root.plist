@@ -82,7 +82,7 @@
 			<key>Key</key>
 			<string>blur_radius</string>
 			<key>DefaultValue</key>
-			<integer>50</integer>
+			<real>50</real>
 			<key>MinimumValue</key>
 			<integer>0</integer>
 			<key>MaximumValue</key>
@@ -100,7 +100,7 @@
 			<key>Key</key>
 			<string>image_scale</string>
 			<key>DefaultValue</key>
-			<integer>200</integer>
+			<real>200</real>
 			<key>MinimumValue</key>
 			<integer>100</integer>
 			<key>MaximumValue</key>
@@ -118,7 +118,7 @@
 			<key>Key</key>
 			<string>image_alpha</string>
 			<key>DefaultValue</key>
-			<integer>90</integer>
+			<real>90</real>
 			<key>MinimumValue</key>
 			<integer>0</integer>
 			<key>MaximumValue</key>
