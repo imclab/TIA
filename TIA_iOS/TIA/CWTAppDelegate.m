@@ -176,11 +176,32 @@
     }];
     
     
-
-
+    
+    
+    
+    //save location log
+    PFObject *object = [PFObject objectWithClassName:@"TIA_Log"];
+    [object setObject:[UIDevice currentDevice].identifierForVendor.UUIDString forKey:@"vendorUUID"];
+    [object setObject:[NSNumber numberWithFloat:self.myLat] forKey:@"lat"];
+    [object setObject:[NSNumber numberWithFloat:self.myLng] forKey:@"lng"];
+    [object setObject:[NSNumber numberWithFloat:self.speed] forKey:@"speed"];
+    [object setObject:[NSNumber numberWithFloat:self.altitude] forKey:@"altitude"];
+    [object setObject:[NSNumber numberWithFloat:self.accuracy] forKey:@"accuracy"];
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground)
+    {
+        [object setObject:@"YES" forKey:@"update_from_background"];
+        
+    }
+    else [object setObject:@"NO" forKey:@"update_from_background"];
+    
+    
+    [object saveInBackground];
+    NSLog(@"logged on parse");
+    
+    
 }
 
--(void) sendBackgroundLocationToServer:(CLLocation *)newLocation
+-(void) sendBackgroundLocationToServer:(CLLocation *)newLocation oldLocation:(CLLocation*) oldLocation
 {
     NSLog(@"ping in background");
 
@@ -210,14 +231,14 @@
     [self updateUserLocation];
 
     
+    
+     //push
+    
     if([[NSUserDefaults standardUserDefaults] boolForKey:@"enable_push_background_location"]){
-        
            [self.viewController.locationViewController getFriendPosition:nil];
-           
            //get message about me for other and push
             NSString *url = [NSString stringWithFormat:@"http://tia-poems.herokuapp.com/%f,%f,%i", self.myLat, self.myLng, 2];
             NSURLRequest *req = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-
             [NSURLConnection sendAsynchronousRequest:req queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
                 
                 if(!error){
@@ -233,13 +254,12 @@
                    [push setMessage:mainMess];
                    [push sendPushInBackground];
                 }
-           
               }];
     }
-
-
     
     
+    
+
 
   // AFTER ALL THE UPDATES, close the task
 
@@ -259,8 +279,14 @@
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground)
     {
         NSLog(@"location update in background");
+        
+        
+        //only update if location is 100meters from old location
+        CLLocationDistance dist = [newLocation distanceFromLocation:oldLocation];
 
-        [self sendBackgroundLocationToServer:newLocation];
+        if(dist>100){
+                [self sendBackgroundLocationToServer:newLocation oldLocation:oldLocation];
+            }
 
     }
     else
@@ -341,10 +367,11 @@
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
+    [self.locationManager startMonitoringSignificantLocationChanges];
+
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     [self.locationManager stopUpdatingHeading];
-    [self.locationManager stopUpdatingLocation];
     
     NSLog(@"resign active");
     
@@ -356,9 +383,13 @@
     
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    [self.locationManager startMonitoringSignificantLocationChanges];
-    NSLog(@"entered background, start monitoring significant changes");
+    NSLog(@"entered background");
 
+    [self.locationManager stopUpdatingLocation];
+    
+    
+    
+    
 
 }
 
